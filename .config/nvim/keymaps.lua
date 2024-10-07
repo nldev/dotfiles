@@ -31,7 +31,7 @@ DefKeymap({
   fuzzy_help = { '<leader>?', mode = { 'n' }, desc = 'Fuzzy help' },
   fuzzy_buffers = { '<leader><space>', mode = { 'n' }, desc = 'Fuzzy buffers' },
   fuzzy_notes = { 'n', prefix = 'notes', mode = { 'n' }, desc = 'Fuzzy [n]otes' },
-  toggle_auto_comments = { '<leader>a', mode = { 'n' }, desc = 'Toggle [a]uto comments' },
+  toggle_auto_comments = { '<leader>A', mode = { 'n' }, desc = 'Toggle auto comments' },
   smart_comma = { '<f13>', mode = { 'i' }, desc = 'Context-aware comma insertion' },
   goto_definition = { 'd', prefix = 'finder', mode = { 'n' }, desc = 'Goto [d]efinition' },
   goto_type_definition = { 't', prefix = 'finder', mode = { 'n' }, desc = 'Goto [t]ype definition' },
