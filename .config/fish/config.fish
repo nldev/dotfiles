@@ -1,3 +1,7 @@
+# settings
+set fish_greeting ''
+
+
 # homebrew
 if test (uname) = 'Linux'
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -46,7 +50,7 @@ function tmuxout
     if tmux info &>/dev/null
         tmux detach
     else
-        echo "Not in a tmux session."
+        echo 'Not in a tmux session.'
     end
 end
 
@@ -58,7 +62,7 @@ function check_yadm_updates
     set local_commit (yadm rev-parse @)
     set remote_commit (yadm rev-parse @{u})
     if test "$local_commit" != "$remote_commit"
-        echo "Your yadm repo is not up-to-date with the remote. Run 'yadm pull' to sync."
+        echo 'Your yadm repo is not up-to-date with the remote. Run "yadm pull" to sync.'
     end
 end
 
