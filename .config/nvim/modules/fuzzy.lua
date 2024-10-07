@@ -23,6 +23,7 @@ local module = {
           width = 0.5,
         },
       },
+      files = { silent = true },
     })
     UseKeymap('fuzzy_files', function () fzf.files() end)
     UseKeymap('fuzzy_grep', function () fzf.lgrep_curbuf() end)
