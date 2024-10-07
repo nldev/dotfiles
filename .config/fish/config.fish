@@ -22,7 +22,7 @@ alias fixnvr='rm -f /tmp/nvimsocket'
 
 
 # neovim
-function e 
+function e
   if test -S /tmp/nvimsocket
     nvr --remote "$argv"
   else
