@@ -37,6 +37,8 @@ DefKeymap({
   goto_type_definition = { 't', prefix = 'finder', mode = { 'n' }, desc = 'Goto [t]ype definition' },
   goto_implementation = { 'i', prefix = 'finder', mode = { 'n' }, desc = 'Goto [i]mplementation' },
   rename = { '<leader>r', mode = { 'n' }, desc = 'Rename symbol' },
-  show_diagnostic_window = { '<leader>d', mode = { 'n' }, desc = 'Show [d]iagnostics window' },
+  show_diagnostics = { '<leader>d', mode = { 'n' }, desc = 'Show [d]iagnostics' },
+  code_actions = { '<leader>a', mode = { 'n' }, desc = 'Show code [a]ctions' },
+  code_actions_range = { '<leader>a', mode = { 'v' }, desc = 'Show code [a]ctions' },
 })
 

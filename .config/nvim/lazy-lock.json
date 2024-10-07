@@ -6,6 +6,7 @@
   "cmp-nvim-lsp-signature-help": { "branch": "main", "commit": "031e6ba70b0ad5eee49fd2120ff7a2e325b17fa7" },
   "cmp-path": { "branch": "main", "commit": "91ff86cd9c29299a64f968ebb45846c485725f23" },
   "editorconfig.nvim": { "branch": "master", "commit": "5b9e303e1d6f7abfe616ce4cc8d3fffc554790bf" },
+  "fastaction.nvim": { "branch": "main", "commit": "45ce9a6ef9c8c1db80bf48383a18e1c1c4a488ea" },
   "faster.nvim": { "branch": "main", "commit": "e85c5bdff0cd1e17cbee855ae23c25e7b8e597cb" },
   "flash.nvim": { "branch": "main", "commit": "34c7be146a91fec3555c33fe89c7d643f6ef5cf1" },
   "fzf-lua": { "branch": "main", "commit": "1e03541de4d8a169defe83bb4d7abfba450c63a1" },
