@@ -1,0 +1,5 @@
+[[opener.edit]]
+run = 'sh -c "if [ -S /tmp/nvimsocket ]; then nvr --remote \"$1\"; else nvim --listen /tmp/nvimsocket \"$1\"; fi" _ "{file}" && tmux select-window -t vim &'
+desc = "nvim"
+block = false
+
