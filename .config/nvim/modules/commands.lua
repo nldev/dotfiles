@@ -3,11 +3,6 @@ local module = {
   desc = 'useful command line utilities',
   plugins = {},
   fn = function ()
-    -- :DeleteFile
-    vim.api.nvim_create_user_command('DeleteFile', function ()
-      vim.cmd("exec 'silent !rm %' | bdelete!")
-    end, { nargs = 0 })
-
     -- :KillAllBuffers
     vim.api.nvim_create_user_command('KillAllBuffers', function ()
       vim.cmd('bufdo! bwipeout!')
@@ -16,6 +11,11 @@ local module = {
     -- :WhereAmI
     vim.api.nvim_create_user_command('WhereAmI', function ()
       vim.cmd("echo expand('%:p')")
+    end, { nargs = 0 })
+
+    -- :Delete
+    vim.api.nvim_create_user_command('Delete', function ()
+      vim.cmd("exec 'silent !rm %' | bdelete!")
     end, { nargs = 0 })
 
     -- :Rename
