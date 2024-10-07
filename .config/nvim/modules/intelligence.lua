@@ -58,7 +58,7 @@ local module = {
         }
       end,
     }
-    require('lspconfig').tsserver.setup({})
+    require('lspconfig').ts_ls.setup({})
     UseKeymap('show_diagnostic_window', function () vim.diagnostic.open_float() end)
     UseKeymap('goto_definition', function () vim.lsp.buf.definition() end)
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
