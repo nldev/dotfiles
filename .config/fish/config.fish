@@ -1,3 +1,10 @@
+# homebrew
+if test (uname) = 'Linux'
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+end
+
+
+
 # aliases
 alias rl='source ~/.config/fish/config.fish'
 alias in='tmuxin'
@@ -6,11 +13,7 @@ alias td='tmux detach-client -a -s main'
 alias tk='tmux kill-server'
 alias pac='yay -S --noconfirm --answeredit No'
 alias unpac='sudo pacman -Rns --noconfirm'
-
-
-
-# keybinds
-bind \ce accept-autosuggestion
+alias fixnvr='rm -f /tmp/nvimsocket'
 
 
 
@@ -48,5 +51,21 @@ function tmuxout
 end
 
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# yadm
+function check_yadm_updates
+    yadm fetch > /dev/null 2>&1
+    set local_commit (yadm rev-parse @)
+    set remote_commit (yadm rev-parse @{u})
+    if test "$local_commit" != "$remote_commit"
+        echo "Your yadm repo is not up-to-date with the remote. Run 'yadm pull' to sync."
+    end
+end
+
+check_yadm_updates
+
+
+
+# fzf
 fzf --fish | source
+
