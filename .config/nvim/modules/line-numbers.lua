@@ -20,6 +20,7 @@ local module = {
     })
 
     -- disable line numbers in terminal buffers
+    -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function()
         vim.wo.number = false
@@ -28,6 +29,7 @@ local module = {
     })
 
     -- enable line numbers for regular file buffers
+    -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('BufEnter', {
       callback = function()
         if vim.bo.buftype == '' then
