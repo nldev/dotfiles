@@ -40,7 +40,7 @@ local module = {
     local servers = {
       lua_ls = {},
       html = { filetypes = { 'html', 'twig', 'hbs'} },
-      tsserver = {},
+      ts_ls = {},
       pyright = {},
       -- clangd = {},
     }
