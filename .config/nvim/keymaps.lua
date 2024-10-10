@@ -3,6 +3,7 @@ DefPrefix({
   open_vim = { '<leader>ov', desc = 'Open n[v]im config' },
   finder = { '<leader>f', desc = '[F]inders' },
   notes = { '<leader>n', desc = '[N]otes' },
+  snipe = { '<leader>s', desc = 'Bookmark[s]' },
 })
 
 DefKeymap({
@@ -38,7 +39,12 @@ DefKeymap({
   goto_implementation = { 'i', prefix = 'finder', mode = { 'n' }, desc = 'Goto [i]mplementation' },
   rename = { '<leader>r', mode = { 'n' }, desc = 'Rename symbol' },
   show_diagnostics = { '<leader>d', mode = { 'n' }, desc = 'Show [d]iagnostics' },
-  -- code_actions = { '<leader>a', mode = { 'n' }, desc = 'Show code [a]ctions' },
-  -- code_actions_range = { '<leader>a', mode = { 'v' }, desc = 'Show code [a]ctions' },
+  code_actions = { '<leader>a', mode = { 'n' }, desc = 'Show code [a]ctions' },
+  code_actions_range = { '<leader>a', mode = { 'v' }, desc = 'Show code [a]ctions' },
+  snipe_add = { 'a', prefix = 'snipe', mode = { 'n'}, desc = '[A]dd to bookmark list' },
+  snipe_add_line = { 'l', prefix = 'snipe', mode = { 'n'}, desc = 'Add to bookmark list with [l]ine:col' },
+  snipe_select = { 's', prefix = 'snipe', mode = { 'n'}, desc = '[S]how bookmark list' },
+  snipe_delete = { 'd', prefix = 'snipe', mode = { 'n'}, desc = '[D]elete from bookmark list' },
+  snipe_clear = { 'c', prefix = 'snipe', mode = { 'n'}, desc = '[C]lear bookmark list' },
 })
 

@@ -20,7 +20,7 @@ local module = {
     --   end
     --   vim.api.nvim_set_current_buf(current_buf)
     -- end)
-  end
+  end,
 }
 
 return module

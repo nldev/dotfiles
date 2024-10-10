@@ -28,7 +28,7 @@ local module = {
     -- current line / total lines
     vim.opt.statusline:append('L:%l/%L ')
 
-    -- Percentage through the file
+    -- percentage through the file
     vim.opt.statusline:append('[%p%%]')
   end,
 }

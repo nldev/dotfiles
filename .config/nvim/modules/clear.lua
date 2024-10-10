@@ -6,8 +6,8 @@ local module = {
     UseKeymap('clear', function ()
       local is_nofile = vim.bo.buftype == 'nofile'
 
-      -- close lsp info window
-      if vim.bo.filetype == 'markdown' and is_nofile then
+      -- close current buffer if nofile
+      if is_nofile then
         vim.api.nvim_win_close(0, true)
       end
 
@@ -26,7 +26,7 @@ local module = {
           if vim.api.nvim_buf_get_option(buf, 'modified') then
             goto continue
           end
-          if buf_name ~= "" and vim.fn.filereadable(buf_name) == 0 then
+          if buf_name ~= '' and vim.fn.filereadable(buf_name) == 0 then
             vim.api.nvim_buf_delete(buf, { force = true })
           end
           ::continue::

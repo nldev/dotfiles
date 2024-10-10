@@ -15,9 +15,9 @@ alias in='tmuxin'
 alias out='tmuxout'
 alias td='tmux detach-client -a -s main'
 alias tk='tmux kill-server'
-alias pac='yay -S --noconfirm --answeredit No'
-alias unpac='sudo pacman -Rns --noconfirm'
 alias fixnvr='rm -f /tmp/nvimsocket'
+# alias pac='yay -S --noconfirm --answeredit No'
+# alias unpac='sudo pacman -Rns --noconfirm'
 
 
 
