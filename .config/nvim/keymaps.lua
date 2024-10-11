@@ -3,7 +3,7 @@ DefPrefix({
   open_vim = { '<leader>ov', desc = 'Open n[v]im config' },
   finder = { '<leader>f', desc = '[F]inders' },
   notes = { '<leader>n', desc = '[N]otes' },
-  snipe = { '<leader>s', desc = 'Bookmark[s]' },
+  speed_dial = { '<leader>s', desc = '[S]peed dial' },
 })
 
 DefKeymap({
@@ -41,10 +41,14 @@ DefKeymap({
   show_diagnostics = { '<leader>d', mode = { 'n' }, desc = 'Show [d]iagnostics' },
   code_actions = { '<leader>a', mode = { 'n' }, desc = 'Show code [a]ctions' },
   code_actions_range = { '<leader>a', mode = { 'v' }, desc = 'Show code [a]ctions' },
-  snipe_add = { 'a', prefix = 'snipe', mode = { 'n'}, desc = '[A]dd to bookmark list' },
-  snipe_add_line = { 'l', prefix = 'snipe', mode = { 'n'}, desc = 'Add to bookmark list with [l]ine:col' },
-  snipe_select = { 's', prefix = 'snipe', mode = { 'n'}, desc = '[S]how bookmark list' },
-  snipe_delete = { 'd', prefix = 'snipe', mode = { 'n'}, desc = '[D]elete from bookmark list' },
-  snipe_clear = { 'c', prefix = 'snipe', mode = { 'n'}, desc = '[C]lear bookmark list' },
+  speed_dial_add = { 'a', prefix = 'speed_dial', mode = { 'n' }, desc = '[A]dd to speed dial' },
+  speed_dial_select = { 's', prefix = 'speed_dial', mode = { 'n' }, desc = '[S]peed dial list' },
+  speed_dial_1 = { '<leader>1', mode = { 'n' }, desc = 'Speed dial [1]' },
+  speed_dial_2 = { '<leader>2', mode = { 'n' }, desc = 'Speed dial [2]' },
+  speed_dial_3 = { '<leader>3', mode = { 'n' }, desc = 'Speed dial [3]' },
+  speed_dial_4 = { '<leader>4', mode = { 'n' }, desc = 'Speed dial [4]' },
+  speed_dial_5 = { '<leader>5', mode = { 'n' }, desc = 'Speed dial [5]' },
+  speed_dial_prev = { 'p', prefix = 'speed_dial', mode = { 'n' }, desc = '[P]revious speed dial' },
+  speed_dial_next = { 'n', prefix = 'speed_dial', mode = { 'n' }, desc = '[N]ext speed dial' },
 })
 

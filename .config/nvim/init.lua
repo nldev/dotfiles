@@ -1,4 +1,4 @@
-local config = vim.fn.stdpath('config')
+local config = vim.fn.stdpath'config'
 
 -- run module prerequisites
 dofile(config .. '/api.lua')
@@ -9,7 +9,7 @@ dofile(config .. '/keymaps.lua')
 Load(config .. '/modules')
 
 -- load contextual modules
-Load('~/.context/nvim')
+Load'~/.context/nvim'
 
 -- initialize modules
 Init()

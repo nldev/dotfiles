@@ -6,8 +6,13 @@ local module = {
     UseKeymap('clear', function ()
       local is_nofile = vim.bo.buftype == 'nofile'
 
-      -- close current buffer if nofile
-      if is_nofile then
+      -- close lsp info window
+      if vim.bo.filetype == 'markdown' and is_nofile then
+        vim.api.nvim_win_close(0, true)
+      end
+
+      -- close harpoon window
+      if vim.bo.filetype == 'harpoon' then
         vim.api.nvim_win_close(0, true)
       end
 
