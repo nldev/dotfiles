@@ -27,16 +27,12 @@ function Scratch ()
     if previous_window then
       vim.api.nvim_set_current_win(previous_window)
     end
+    vim.cmd('echo ""')
     return
   end
   if current_file == scratch_file then
     vim.cmd('write')
-    local win_count = #vim.api.nvim_tabpage_list_wins(0)
-    if win_count > 1 then
-      vim.cmd('close')
-    else
-      vim.cmd('bdelete')
-    end
+    vim.cmd('bdelete')
     if previous_window and vim.api.nvim_win_is_valid(previous_window) then
       vim.api.nvim_set_current_win(previous_window)
     end
