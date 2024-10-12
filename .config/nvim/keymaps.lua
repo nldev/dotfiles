@@ -2,10 +2,9 @@ DefPrefix({
   open = { '<leader>o', desc = '[O]pen' },
   open_vim = { '<leader>ov', desc = 'Open n[v]im config' },
   finder = { '<leader>f', desc = '[F]inders' },
-  notes = { '<leader>n', desc = '[N]otes' },
+  note = { '<leader>n', desc = '[N]otes' },
   speed_dial = { '<leader>s', desc = '[S]peed dial' },
 })
-
 DefKeymap({
   clear = { '<c-c>', mode = { 'n' }, desc = '[C]lear session' },
   write_file = { '<c-s>', mode = { 'n', 'x', 'o', 'i' }, desc = '[W]rite' },
@@ -31,7 +30,6 @@ DefKeymap({
   fuzzy_grep = { '<leader>/', mode = { 'n' }, desc = 'Fuzzy grep' },
   fuzzy_help = { '<leader>?', mode = { 'n' }, desc = 'Fuzzy help' },
   fuzzy_buffers = { '<leader><space>', mode = { 'n' }, desc = 'Fuzzy buffers' },
-  fuzzy_notes = { 'n', prefix = 'notes', mode = { 'n' }, desc = 'Fuzzy [n]otes' },
   toggle_auto_comments = { '<leader>A', mode = { 'n' }, desc = 'Toggle auto comments' },
   smart_comma = { '<f13>', mode = { 'i' }, desc = 'Context-aware comma insertion' },
   goto_definition = { 'd', prefix = 'finder', mode = { 'n' }, desc = 'Goto [d]efinition' },
@@ -50,5 +48,14 @@ DefKeymap({
   speed_dial_5 = { '<leader>5', mode = { 'n' }, desc = 'Speed dial [5]' },
   speed_dial_prev = { 'p', prefix = 'speed_dial', mode = { 'n' }, desc = '[P]revious speed dial' },
   speed_dial_next = { 'n', prefix = 'speed_dial', mode = { 'n' }, desc = '[N]ext speed dial' },
+  splitjoin = { '<leader>j', mode = { 'n' }, desc = 'Split[j]oin' },
+  note_inbox = { 'a', prefix = 'note', mode = { 'n' }, desc = 'Create fleeting note' },
+  note_create = { 'c', prefix = 'note', mode = { 'n' }, desc = '[C]reate permanent note' },
+  note_reference = { 'r', prefix = 'note', mode = { 'n' }, desc = 'Create [r]eference note' },
+  note_blog = { 'b', prefix = 'note', mode = { 'n' }, desc = 'Create [b]log post' },
+  note_directory = { 'i', prefix = 'note', mode = { 'n' }, desc = 'Create d[i]rectory note' },
+  note_explore = { 'N', prefix = 'note', mode = { 'n' }, desc = 'Explore notes' },
+  note_fuzzy = { 'n', prefix = 'note', mode = { 'n' }, desc = '[F]uzzy notes' },
+  scratch = { '<leader>;', mode = { 'n' }, desc = 'Toggle scratch' }
 })
 

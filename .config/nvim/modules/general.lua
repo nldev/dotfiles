@@ -54,6 +54,9 @@ local module = {
 
     -- set number line width to 1
     vim.opt.numberwidth = 1
+
+    -- hide concealed text
+    vim.opt.conceallevel = 2
   end
 }
 

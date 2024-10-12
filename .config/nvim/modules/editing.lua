@@ -2,6 +2,8 @@ local module = {
   name = 'editing',
   desc = 'text editing enhancements',
   plugins = {
+    -- splitjoin
+    { 'echasnovski/mini.splitjoin', version = false },
     -- automatic pair insertion
     { 'echasnovski/mini.pairs', version = false },
     -- surround operations
@@ -34,6 +36,17 @@ local module = {
      },
     }
 
+    -- mini.splitjoin
+    local splitjoin = require'mini.splitjoin'
+    splitjoin.setup{
+      mappings = {
+        toggle = '',
+        split = '',
+        join = '',
+      },
+    }
+    UseKeymap('splitjoin', function () splitjoin.toggle() end)
+
     -- smart comma
     UseKeymap('smart_comma', function ()
       local line = vim.api.nvim_get_current_line()
@@ -60,7 +73,7 @@ local module = {
         local word_end = after_cursor:match('^%w*')
         local insert_pos = col + #word_end + 1
         vim.api.nvim_set_current_line(before_cursor .. word_end .. ', ' .. after_cursor:sub(#word_end + 1))
-        vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], insert_pos + 1 }) -- Move cursor after comma and space
+        vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], insert_pos + 1 })
       end
     end)
   end,
