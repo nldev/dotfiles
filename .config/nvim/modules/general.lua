@@ -46,9 +46,6 @@ local module = {
     -- enable GUI terminal colors
     vim.o.termguicolors = true
 
-    -- hide fill characters
-    vim.opt.fillchars = { eob = ' ' }
-
     -- set number line width to 1
     vim.opt.numberwidth = 1
 

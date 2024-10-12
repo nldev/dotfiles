@@ -12,6 +12,7 @@ local module = {
 		vim.opt.expandtab = true
     vim.o.shiftwidth = 2
     vim.o.tabstop = 2
+    -- FIXME: use UseKeymap
     vim.api.nvim_set_keymap('i', '<cr>', 'v:lua.__smart_newline__()', { noremap = true, expr = true, silent = true })
   end
 }

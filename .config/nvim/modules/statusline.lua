@@ -16,6 +16,9 @@ local module = {
     -- right-align remaining statusline
     vim.opt.statusline:append('%=')
 
+    -- buffer language
+    vim.opt.statusline:append('%{!empty(&filetype) ? &filetype : &buftype} ')
+
     -- hex value of char under cursor
     vim.opt.statusline:append('[0x%B] ')
 

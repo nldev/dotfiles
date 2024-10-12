@@ -1,6 +1,7 @@
 local module = {
   name = 'editing',
   desc = 'text editing enhancements',
+  dependencies = { 'files' },
   plugins = {
     -- Single-line <-> Multiline code
     { 'echasnovski/mini.splitjoin', version = false },
@@ -78,6 +79,15 @@ local module = {
         vim.api.nvim_set_current_line(before_cursor .. word_end .. ', ' .. after_cursor:sub(#word_end + 1))
         vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], insert_pos + 1 })
       end
+    end)
+
+    -- write file
+    UseKeymap('write_file', function ()
+      if vim.bo.filetype == 'minifiles' then
+        require'mini.files'.synchronize()
+        return
+      end
+      vim.cmd('w')
     end)
   end,
 }

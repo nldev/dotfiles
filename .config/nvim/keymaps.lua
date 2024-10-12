@@ -53,7 +53,6 @@ DefKeymap({
   note_inbox = { 'a', prefix = 'note', mode = { 'n' }, desc = 'Create fleeting note' },
   note_create = { 'c', prefix = 'note', mode = { 'n' }, desc = '[C]reate permanent note' },
   note_reference = { 'r', prefix = 'note', mode = { 'n' }, desc = 'Create [r]eference note' },
-  note_blog = { 'b', prefix = 'note', mode = { 'n' }, desc = 'Create [b]log post' },
   note_directory = { 'i', prefix = 'note', mode = { 'n' }, desc = 'Create d[i]rectory note' },
   note_explore = { 'N', prefix = 'note', mode = { 'n' }, desc = 'Explore notes' },
   note_fuzzy = { 'n', prefix = 'note', mode = { 'n' }, desc = '[F]uzzy notes' },

@@ -1,15 +1,15 @@
 local module = {
-  name = 'line-numbers',
-  desc = 'configuration for line numbers',
+  name = 'number-line',
+  desc = 'configuration for number line',
   plugins = {},
   fn = function ()
-    -- Ensure line numbers are on by default.
+    -- Ensure number line is on by default.
     vim.wo.number = true
 
-    -- Ensure relative numbers are off by default.
+    -- Ensure relative number line is off by default.
     vim.wo.relativenumber = false
 
-    -- Use relative numbers in visual mode.
+    -- Use relative number line in visual mode.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
@@ -22,7 +22,7 @@ local module = {
       end,
     })
 
-    -- Do not use relative numbers in normal or insert mode.
+    -- Do not use relative number line in normal or insert mode.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('ModeChanged', {
       pattern = { '*:n', '*:i' },
@@ -31,7 +31,7 @@ local module = {
       end,
     })
 
-    -- Disable line numbers in terminal buffers.
+    -- Disable number line in terminal buffers.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()
@@ -40,7 +40,7 @@ local module = {
       end,
     })
 
-    -- Disable line numbers in text buffers.
+    -- Disable number line in text buffers.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('BufEnter', {
       callback = function ()
@@ -54,7 +54,7 @@ local module = {
       end,
     })
 
-    -- Enable line numbers in text and terminal buffers when in visual mode.
+    -- Enable number line in text and terminal buffers when in visual mode.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
@@ -66,7 +66,7 @@ local module = {
       end,
     })
 
-    -- Disable line numbers in text and terminal buffers when in normal or insert mode.
+    -- Disable number line in text and terminal buffers when in normal or insert mode.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('ModeChanged', {
       pattern = { '*:n', '*:i' },

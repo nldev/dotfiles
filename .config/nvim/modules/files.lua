@@ -15,7 +15,6 @@ local module = {
         width_preview = 60,
       },
     })
-    UseKeymap('write_file', function () vim.cmd('w') end)
     UseKeymap('open_file_browser', function () files.open(vim.fn.getcwd()) end)
     UseKeymap('open_config_vim_autocmds', function () vim.cmd('e ~/.config/nvim/autocmds.lua') end)
     UseKeymap('open_config_vim_context', function () files.open('~/.context/nvim', false) end)

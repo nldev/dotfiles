@@ -19,6 +19,9 @@ local triggers = {
   { mode = 'x', keys = '"' },
   { mode = 'i', keys = '<c-r>' },
   { mode = 'c', keys = '<c-r>' },
+  -- folds
+  { mode = 'n', keys = 'z' },
+  { mode = 'x', keys = 'z' },
 }
 
 local function generate_clues ()
@@ -27,6 +30,7 @@ local function generate_clues ()
     miniclue.gen_clues.marks(),
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
+    miniclue.gen_clues.z(),
   }
   for _, definition in pairs(_G.__prefixes__) do
     table.insert(clues, {

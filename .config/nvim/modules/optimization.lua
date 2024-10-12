@@ -1,5 +1,5 @@
 local module = {
-  name = 'optimizations',
+  name = 'optimization',
   desc = 'performance improvements',
   plugins = {
     'pteroctopus/faster.nvim',

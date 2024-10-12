@@ -46,7 +46,8 @@ local module = {
 
       -- close mini.files window
       if vim.bo.filetype == 'minifiles' then
-        require('mini.files').close()
+        require'mini.files'.synchronize()
+        require'mini.files'.close()
       end
 
       -- close lsp info window
