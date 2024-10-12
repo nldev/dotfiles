@@ -25,11 +25,11 @@ local module = {
     -- buffer number
     vim.opt.statusline:append('B:%n ')
 
-    -- current line / total lines
-    vim.opt.statusline:append('L:%l/%L ')
-
     -- column number
     vim.opt.statusline:append('C:%v ')
+
+    -- current line / total lines
+    vim.opt.statusline:append('L:%l/%L ')
 
     -- percentage through the file
     vim.opt.statusline:append('[%p%%]')
