@@ -59,7 +59,7 @@ local module = {
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
       callback = function ()
-        if vim.bo.filetype == 'markdown' or vim.bo.buftype == 'terminal' then
+        if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'text' or vim.bo.buftype == 'terminal' then
           vim.wo.number = true
           vim.wo.relativenumber = true
         end
