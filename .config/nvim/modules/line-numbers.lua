@@ -6,8 +6,11 @@ local module = {
     -- Ensure line numbers are on by default.
     vim.wo.number = true
 
-    -- Use relative numbers in visual mode.
+    -- Ensure relative numbers are off by default.
     vim.wo.relativenumber = false
+
+    -- Use relative numbers in visual mode.
+    -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
       callback = function ()
@@ -37,7 +40,7 @@ local module = {
       end,
     })
 
-    -- Disable line numbers in markdown buffers.
+    -- Disable line numbers in text buffers.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('BufEnter', {
       callback = function ()
@@ -45,8 +48,32 @@ local module = {
         if vim.bo.buftype == '' then
           vim.wo.number = true
         end
-        if vim.bo.filetype == 'markdown' then
+        if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'text' then
           vim.wo.number = false
+        end
+      end,
+    })
+
+    -- Enable line numbers in text and terminal buffers when in visual mode.
+    -- FIXME: should use UseAutocmd
+    vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
+      pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
+      callback = function ()
+        if vim.bo.filetype == 'markdown' or vim.bo.buftype == 'terminal' then
+          vim.wo.number = true
+          vim.wo.relativenumber = true
+        end
+      end,
+    })
+
+    -- Disable line numbers in text and terminal buffers when in normal or insert mode.
+    -- FIXME: should use UseAutocmd
+    vim.api.nvim_create_autocmd('ModeChanged', {
+      pattern = { '*:n', '*:i' },
+      callback = function ()
+        if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'text' or vim.bo.buftype == 'terminal' then
+          vim.opt.number = false
+          vim.opt.relativenumber = false
         end
       end,
     })

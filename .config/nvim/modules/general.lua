@@ -27,7 +27,7 @@ local module = {
     -- save undo history
     vim.o.undofile = true
 
-    -- case-insensitive searching UNLESS \C or capital in search
+    -- case-insensitive searching
     vim.o.ignorecase = true
     vim.o.smartcase = true
 
@@ -48,9 +48,6 @@ local module = {
 
     -- hide fill characters
     vim.opt.fillchars = { eob = ' ' }
-
-    -- set conceal level
-    vim.opt.conceallevel = 2
 
     -- set number line width to 1
     vim.opt.numberwidth = 1

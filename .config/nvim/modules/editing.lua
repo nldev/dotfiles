@@ -2,13 +2,16 @@ local module = {
   name = 'editing',
   desc = 'text editing enhancements',
   plugins = {
-    -- splitjoin
+    -- Single-line <-> Multiline code
     { 'echasnovski/mini.splitjoin', version = false },
-    -- automatic pair insertion
+
+    -- Automatic pair insertion
     { 'echasnovski/mini.pairs', version = false },
-    -- surround operations
+
+    -- Surround operations
     { 'echasnovski/mini.surround', version = false },
-    -- toggle characters at end of line
+
+    -- Toggle characters at end of line
     {
       'saifulapm/chartoggle.nvim',
       opts = {
