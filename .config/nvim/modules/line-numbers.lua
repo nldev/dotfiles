@@ -22,19 +22,22 @@ local module = {
     -- disable line numbers in terminal buffers
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('TermOpen', {
-      callback = function()
+      callback = function ()
         vim.wo.number = false
         vim.wo.relativenumber = false
       end,
     })
 
-    -- enable line numbers for regular file buffers
+    -- enable line numbers for non-markdown buffers only
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('BufEnter', {
-      callback = function()
+      callback = function ()
         vim.wo.relativenumber = false
         if vim.bo.buftype == '' then
           vim.wo.number = true
+        end
+        if vim.bo.filetype == 'markdown' then
+          vim.wo.number = false
         end
       end,
     })

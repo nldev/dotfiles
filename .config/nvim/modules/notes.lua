@@ -80,12 +80,6 @@ local module = {
       vim.cmd('ObsidianNew 04 - References/' .. name .. '.md')
     end)
 
-    -- create blog post
-    UseKeymap('note_blog', function ()
-      local name = vim.fn.input('Blog post title: ')
-      vim.cmd('ObsidianNew 05 - Blogs/' .. name .. '.md')
-    end)
-
     -- create directory note
     UseKeymap('note_directory', function ()
       local name = vim.fn.input('Directory note title: ')

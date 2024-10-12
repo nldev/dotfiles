@@ -5,6 +5,7 @@ local module = {
 }
 
 local previous_window = nil
+local saved_layout = nil
 local scratch_file = vim.fn.expand('~/.local/share/nvim/scratch.txt')
 
 function Scratch ()
@@ -24,21 +25,29 @@ function Scratch ()
     vim.api.nvim_set_current_win(scratch_win)
     vim.cmd('write')
     vim.cmd('bdelete')
+    if saved_layout then
+      vim.cmd(saved_layout)
+      saved_layout = nil
+    end
     if previous_window then
       vim.api.nvim_set_current_win(previous_window)
     end
-    vim.cmd('echo ""')
     return
   end
   if current_file == scratch_file then
     vim.cmd('write')
     vim.cmd('bdelete')
+    if saved_layout then
+      vim.cmd(saved_layout) -- Execute the saved layout commands
+      saved_layout = nil
+    end
+
     if previous_window and vim.api.nvim_win_is_valid(previous_window) then
       vim.api.nvim_set_current_win(previous_window)
     end
-    vim.cmd('echo ""')
     return
   end
+  saved_layout = vim.fn.winrestcmd() -- Saves the current window layout as a string
   previous_window = vim.api.nvim_get_current_win()
   if total_lines <= 26 then
     vim.cmd(run)
