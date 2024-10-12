@@ -28,11 +28,12 @@ local module = {
       ensure_installed = ({ 'lua', 'vim', 'vimdoc', 'typescript', 'html', 'python' }),
       sync_install = false,
       highlight = { enable = true },
-      indent = { enable = false }, -- treesitter indenta doesn't work well at the moment
+      indent = { enable = false }, -- treesitter indent doesn't work well at the moment
     })
 
     -- lsp
-    local function on_attach (client, bufnr)
+    local function on_attach ()
+    -- local function on_attach (client, bufnr)
     end
     require('mason').setup()
     require('mason-lspconfig').setup()

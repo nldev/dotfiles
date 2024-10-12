@@ -5,6 +5,7 @@ DefPrefix({
   note = { '<leader>n', desc = '[N]otes' },
   speed_dial = { '<leader>s', desc = '[S]peed dial' },
 })
+
 DefKeymap({
   clear = { '<c-c>', mode = { 'n' }, desc = '[C]lear session' },
   write_file = { '<c-s>', mode = { 'n', 'x', 'o', 'i' }, desc = '[W]rite' },

@@ -1,12 +1,12 @@
 local module = {
   name = 'line-numbers',
-  desc = 'configuration for line numbesr',
+  desc = 'configuration for line numbers',
   plugins = {},
   fn = function ()
-    -- make line numbers default
+    -- Ensure line numbers are on by default.
     vim.wo.number = true
 
-    -- use relative number in visual modes
+    -- Use relative numbers in visual mode.
     vim.wo.relativenumber = false
     vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
       pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
@@ -19,7 +19,16 @@ local module = {
       end,
     })
 
-    -- disable line numbers in terminal buffers
+    -- Do not use relative numbers in normal or insert mode.
+    -- FIXME: should use UseAutocmd
+    vim.api.nvim_create_autocmd('ModeChanged', {
+      pattern = { '*:n', '*:i' },
+      callback = function ()
+        vim.opt.relativenumber = false
+      end,
+    })
+
+    -- Disable line numbers in terminal buffers.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()
@@ -28,7 +37,7 @@ local module = {
       end,
     })
 
-    -- enable line numbers for non-markdown buffers only
+    -- Disable line numbers in markdown buffers.
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('BufEnter', {
       callback = function ()

@@ -13,6 +13,8 @@ function Scratch ()
   local total_lines = vim.api.nvim_get_option('lines')
   local run = 'edit ' .. scratch_file
   local scratch_win = nil
+
+  -- Find scratch window if it exists.
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
     local buf = vim.api.nvim_win_get_buf(win)
     local buf_name = vim.api.nvim_buf_get_name(buf)
@@ -21,6 +23,8 @@ function Scratch ()
       break
     end
   end
+
+  -- Close scratch window if it exists and is not the current window.
   if scratch_win and scratch_win ~= vim.api.nvim_get_current_win() then
     vim.api.nvim_set_current_win(scratch_win)
     vim.cmd('write')
@@ -32,8 +36,11 @@ function Scratch ()
     if previous_window then
       vim.api.nvim_set_current_win(previous_window)
     end
+    vim.cmd('echo ""')
     return
   end
+
+  -- Close scratch window if it is the current window.
   if current_file == scratch_file then
     vim.cmd('write')
     vim.cmd('bdelete')
@@ -41,13 +48,15 @@ function Scratch ()
       vim.cmd(saved_layout) -- Execute the saved layout commands
       saved_layout = nil
     end
-
     if previous_window and vim.api.nvim_win_is_valid(previous_window) then
       vim.api.nvim_set_current_win(previous_window)
     end
+    vim.cmd('echo ""')
     return
   end
-  saved_layout = vim.fn.winrestcmd() -- Saves the current window layout as a string
+
+  -- Open scratch window if it isn't already open.
+  saved_layout = vim.fn.winrestcmd()
   previous_window = vim.api.nvim_get_current_win()
   if total_lines <= 26 then
     vim.cmd(run)
