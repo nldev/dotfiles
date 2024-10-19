@@ -40,8 +40,8 @@ function tmux-in
   if tmux has-session -t main 2>/dev/null
     tmux attach-session -t main
   else
-    tmux new-session -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
-    tmux new-window -t main:1 -n mail 'fish' # FIXME: implement
+    tmux new-session -d -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
+    tmux new-window -t main:1 -n mail 'fish'
     tmux select-window -t main:0
     tmux attach-session -t main
   end
