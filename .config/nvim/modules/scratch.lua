@@ -45,7 +45,7 @@ function Scratch ()
     vim.cmd('write')
     vim.cmd('bdelete')
     if saved_layout then
-      vim.cmd(saved_layout) -- Execute the saved layout commands
+      vim.cmd(saved_layout)
       saved_layout = nil
     end
     if previous_window and vim.api.nvim_win_is_valid(previous_window) then

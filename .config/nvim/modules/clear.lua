@@ -1,6 +1,6 @@
 local module = {
   name = 'clear',
-  desc = 'defines a clear session command for buffers, prompt, etc',
+  desc = 'defines a clear command for prompt, buffers, etc',
   plugins = {},
   fn = function ()
     UseKeymap('clear', function ()

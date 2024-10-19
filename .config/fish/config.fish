@@ -2,6 +2,7 @@
 set fish_greeting ''
 
 
+
 # homebrew
 if test (uname) = 'Linux'
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
@@ -10,19 +11,21 @@ end
 
 
 # aliases
+alias e='edit-file'
 alias rl='source ~/.config/fish/config.fish'
-alias in='tmuxin'
-alias out='tmuxout'
+alias in='tmux-in'
+alias out='tmux-out'
 alias td='tmux detach-client -a -s main'
 alias tk='tmux kill-server'
 alias fixnvr='rm -f /tmp/nvimsocket'
+alias phpv='switch-php-version'
 # alias pac='yay -S --noconfirm --answeredit No'
 # alias unpac='sudo pacman -Rns --noconfirm'
 
 
 
 # neovim
-function e
+function edit-file
   if test -S /tmp/nvimsocket
     nvr --remote "$argv"
   else
@@ -33,25 +36,43 @@ end
 
 
 # tmux
-function tmuxin
+function tmux-in
   if tmux has-session -t main 2>/dev/null
     tmux attach-session -t main
   else
-    tmux new-session -s main -n fish -d  'fish'
-    tmux new-window -t main:1 -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
-    tmux new-window -t main:2 -n task 'fish -c "taskwarrior-tui; fish"'
-    tmux new-window -t main:3 -n mail 'fish' # FIXME: implement
-    tmux select-window -t main:1
+    tmux new-session -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
+    tmux new-window -t main:1 -n mail 'fish' # FIXME: implement
+    tmux select-window -t main:0
     tmux attach-session -t main
   end
 end
 
-function tmuxout
+function tmux-out
   if tmux info &>/dev/null
     tmux detach
   else
     echo 'Not in a tmux session.'
   end
+end
+
+
+
+# php
+function switch-php-version
+  if test (count $argv) -eq 0
+    echo 'Usage: switch-php-version <version>'
+    return 1
+  end
+  set php_version $argv[1]
+  set brew_php_path (brew --prefix php@$php_version)
+  if not test -d $brew_php_path
+      echo "PHP $php_version not installed. Installing..."
+      brew install php@$php_version
+  end
+  echo "Switching to PHP $php_version..."
+  brew unlink php > /dev/null 2>&1
+  brew link --force --overwrite php@$php_version
+  php -v
 end
 
 

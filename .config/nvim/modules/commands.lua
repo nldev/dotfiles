@@ -3,6 +3,12 @@ local module = {
   desc = 'useful command line utilities',
   plugins = {},
   fn = function ()
+    -- :CharCode
+    vim.api.nvim_create_user_command('CharCode', function ()
+      local char_code = string.format('0x%02X', vim.fn.char2nr(vim.fn.getline("."):sub(vim.fn.col("."), vim.fn.col("."))))
+      vim.fn.setreg('+', char_code)
+      vim.cmd('echo "' .. char_code .. '"')
+    end, { nargs = 0 })
     -- :KillAllBuffers
     vim.api.nvim_create_user_command('KillAllBuffers', function ()
       vim.cmd('bufdo! bwipeout!')

@@ -32,8 +32,10 @@ local module = {
     })
 
     -- lsp
-    local function on_attach ()
-    -- local function on_attach (client, bufnr)
+    local function on_attach (_, bufnr)
+      	if vim.b[bufnr].diagnostics_disabled or vim.g.diagnostics_disabled then
+      		vim.diagnostic.disable(bufnr)
+      	end
     end
     require('mason').setup()
     require('mason-lspconfig').setup()
@@ -64,6 +66,7 @@ local module = {
     UseKeymap('goto_definition', function () vim.lsp.buf.definition() end)
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
     UseKeymap('goto_implementation', function () vim.lsp.buf.implementation() end)
+    UseKeymap('toggle_diagnostics', function () ToggleDiagnostics(true) end)
     UseKeymap('rename', function ()
       local current_name = vim.fn.expand('<cword>')
       vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (new_name)
@@ -75,6 +78,28 @@ local module = {
     end)
   end,
 }
+
+vim.g.diagnostics_active = true
+
+_G.ToggleDiagnostics = function (is_global)
+  local vars, bufnr, cmd
+	if is_global then
+		vars = vim.g
+		bufnr = nil
+	else
+		vars = vim.b
+		bufnr = 0
+	end
+	vars.diagnostics_disabled = not vars.diagnostics_disabled
+	if vars.diagnostics_disabled then
+		cmd = 'disable'
+		vim.api.nvim_echo({ { 'diagnostics OFF' } }, false, {})
+	else
+		cmd = 'enable'
+		vim.api.nvim_echo({ { 'diagnostics ON'} }, false, {})
+	end
+	vim.schedule(function () vim.diagnostic[cmd](bufnr) end)
+end
 
 return module
 

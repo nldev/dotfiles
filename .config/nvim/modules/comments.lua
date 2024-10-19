@@ -9,16 +9,16 @@ local module = {
   },
 }
 
-local auto_comments = false
+local auto_comment = false
 
 local toggle_auto_comments = function ()
-  auto_comments = not auto_comments
-  if auto_comments then
+  auto_comment = not auto_comment
+  if auto_comment then
     vim.opt_local.formatoptions = table.concat(vim.opt_local.formatoptions:get(), '') .. 'cro'
-    print('auto-comments ON')
+    print('auto-comment ON')
   else
     vim.opt_local.formatoptions:remove({ 'c', 'r', 'o' })
-    print('auto-comments OFF')
+    print('auto-comment OFF')
   end
 end
 
@@ -45,7 +45,7 @@ module.fn = function ()
   }
   UseKeymap('toggle_auto_comments', function () toggle_auto_comments() end)
   UseAutocmd('no_auto_comments', function ()
-    if not auto_comments then
+    if not auto_comment then
       vim.opt_local.formatoptions:remove({ 'c', 'r', 'o' })
     end
   end)

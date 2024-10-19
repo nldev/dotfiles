@@ -1,5 +1,5 @@
 local module = {
-  name = 'completion',
+  name = 'completions',
   desc = 'setup autocompletion suggestions',
   dependencies = { 'intelligence' },
   plugins = {

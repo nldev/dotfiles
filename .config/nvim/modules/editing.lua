@@ -22,6 +22,9 @@ local module = {
     },
   },
   fn = function ()
+    -- virtual edit for visual block mode
+    -- vim.opt.virtualedit = 'block'
+
     -- mini.pairs
     require'mini.pairs'.setup()
 

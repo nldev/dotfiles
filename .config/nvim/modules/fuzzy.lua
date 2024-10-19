@@ -10,8 +10,8 @@ local module = {
     },
   },
   fn = function ()
-    local fzf = require('fzf-lua')
-    fzf.setup({
+    local fzf = require'fzf-lua'
+    fzf.setup{
       -- 'max-perf',
       winopts = {
         height = 0.5,
@@ -24,7 +24,7 @@ local module = {
         },
       },
       files = { silent = true },
-    })
+    }
     UseKeymap('fuzzy_files', function () fzf.files() end)
     UseKeymap('fuzzy_grep', function () fzf.lgrep_curbuf() end)
     UseKeymap('fuzzy_help', function () fzf.helptags() end)
@@ -36,6 +36,7 @@ local module = {
     UseKeymap('fuzzy_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
     UseKeymap('fuzzy_code_actions', function () fzf.lsp_code_actions() end)
     UseKeymap('fuzzy_live_grep', function () fzf.live_grep() end)
+    UseKeymap('fuzzy_command_history', function () fzf.command_history() end)
     -- FIXME: clean up code * use fzf hook rather than autocmd
     -- vim.api.nvim_create_autocmd({"BufEnter", "WinEnter"}, {
     --   callback = function ()
