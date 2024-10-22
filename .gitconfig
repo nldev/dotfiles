@@ -4,5 +4,5 @@
 	email = nldev00@pm.me
 	name = bogus
 [init]
-	defaultBranch = --main
+	defaultBranch = main
 

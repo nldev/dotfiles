@@ -6,7 +6,7 @@ local module = {
     'lewis6991/gitsigns.nvim',
   },
   fn = function ()
-    require('gitsigns').setup()
+    require'gitsigns'.setup()
   end
 }
 

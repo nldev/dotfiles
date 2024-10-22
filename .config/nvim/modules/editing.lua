@@ -70,14 +70,14 @@ local module = {
       end
       local before_cursor = line:sub(1, col)
       local after_cursor = line:sub(col + 1)
-      local open_quote = before_cursor:match('.*([\'"`])[^\'"`]*$')
+      local open_quote = before_cursor:match'.*([\'"`])[^\'"`]*$'
       local close_quote_pos = open_quote and after_cursor:find(open_quote)
       if open_quote and close_quote_pos then
         local insert_pos = col + close_quote_pos
         vim.api.nvim_set_current_line(before_cursor .. after_cursor:sub(1, close_quote_pos) .. ', ' .. after_cursor:sub(close_quote_pos + 1))
         vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], insert_pos + 2 })
       else
-        local word_end = after_cursor:match('^%w*')
+        local word_end = after_cursor:match'^%w*'
         local insert_pos = col + #word_end + 1
         vim.api.nvim_set_current_line(before_cursor .. word_end .. ', ' .. after_cursor:sub(#word_end + 1))
         vim.api.nvim_win_set_cursor(0, { vim.api.nvim_win_get_cursor(0)[1], insert_pos + 1 })
@@ -90,7 +90,8 @@ local module = {
         require'mini.files'.synchronize()
         return
       end
-      vim.cmd('w')
+      vim.cmd'w'
+      vim.cmd'echo ""'
     end)
   end,
 }

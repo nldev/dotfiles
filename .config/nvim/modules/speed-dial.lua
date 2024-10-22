@@ -4,7 +4,7 @@ local module = {
   dependencies = { 'files' },
   plugins = {
     {
-      'ThePrimeagen/harpoon',
+      'theprimeagen/harpoon',
       branch = 'harpoon2',
       dependencies = { 'nvim-lua/plenary.nvim' },
     },

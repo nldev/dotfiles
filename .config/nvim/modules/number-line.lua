@@ -35,8 +35,18 @@ local module = {
     -- FIXME: should use UseAutocmd
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()
-        vim.wo.number = false
-        vim.wo.relativenumber = false
+        if vim.bo.buftype == 'terminal' then
+          vim.wo.number = false
+          vim.wo.relativenumber = false
+        end
+      end,
+    })
+    vim.api.nvim_create_autocmd('BufEnter', {
+      callback = function ()
+        if vim.bo.buftype == 'terminal' then
+          vim.wo.number = false
+          vim.wo.relativenumber = false
+        end
       end,
     })
 
@@ -77,7 +87,7 @@ local module = {
         end
       end,
     })
-  end
+  end,
 }
 
 return module
