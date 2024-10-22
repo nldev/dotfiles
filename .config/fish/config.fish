@@ -19,8 +19,11 @@ alias td='tmux detach-client -a -s main'
 alias tk='tmux kill-server'
 alias fixnvr='rm -f /tmp/nvimsocket'
 alias phpv='switch-php-version'
-# alias pac='yay -S --noconfirm --answeredit No'
-# alias unpac='sudo pacman -Rns --noconfirm'
+
+
+
+# paths
+set -U fish_user_paths $fish_user_paths ~/.config/composer/vendor/bin
 
 
 
@@ -78,7 +81,7 @@ end
 
 
 # yadm
-function check_yadm_updates
+function check-yadm-updates
   yadm fetch > /dev/null 2>&1
   set local_commit (yadm rev-parse @)
   set remote_commit (yadm rev-parse @{u})
@@ -87,10 +90,37 @@ function check_yadm_updates
   end
 end
 
-check_yadm_updates
+check-yadm-updates
 
 
 
 # fzf
 fzf --fish | source
+
+
+
+# wsl only
+function is-wsl
+  if test -e /proc/sys/fs/binfmt_misc/WSLInterop
+    return 0
+  end
+  return 1
+end
+
+if test -d /mnt/e/sync/notes/me
+  if is-wsl
+    if not mountpoint -q /home/$USER/notes
+      sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
+    end
+  end
+end
+
+
+
+# arch linux only
+if string match -q "*ARCH*" $os_info
+  alias pac='yay -S --noconfirm --answeredit No'
+  alias unpac='sudo pacman -Rns --noconfirm'
+  return 0
+end
 
