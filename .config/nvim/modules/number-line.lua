@@ -18,7 +18,7 @@ local module = {
           vim.wo.relativenumber = false
           return
         end
-        vim.wo.relativenumber = not not vim.fn.mode():match('[vV\22]')
+        vim.wo.relativenumber = not not vim.fn.mode():match'[vV\22]'
       end,
     })
 

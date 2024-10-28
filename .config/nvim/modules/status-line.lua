@@ -1,5 +1,5 @@
 local module = {
-  name = 'statusline',
+  name = 'status-line',
   desc = 'configures the status line',
   plugins = {},
   dependencies = { 'git', 'terminal' },
@@ -37,38 +37,41 @@ local function status_normal ()
   vim.opt.statusline = ''
 
   -- buffer name
-  vim.opt.statusline:append'%{v:lua.GetBufferName()}%m'
+  vim.opt.statusline:append'%{v:lua.GetBufferName()}'
+
+  -- modified status
+  vim.opt.statusline:append'%m'
 
   -- git branch name (only if inside repo)
-  vim.opt.statusline:append'%{get(b:,"gitsigns_head","") != "" ? "<".get(b:,"gitsigns_head","").">" : ""} '
+  vim.opt.statusline:append' %{get(b:,"gitsigns_head","") != "" ? "<".get(b:,"gitsigns_head","").">" : ""}'
 
   -- git status
-  vim.opt.statusline:append'%{get(b:,"gitsigns_status","")}'
+  vim.opt.statusline:append' %{get(b:,"gitsigns_status","")}'
 
   -- right-align remaining statusline
   vim.opt.statusline:append'%='
 
   -- buffer language
-  vim.opt.statusline:append'%{!empty(&filetype) ? &filetype : &buftype} '
+  vim.opt.statusline:append'%{!empty(&filetype) ? &filetype : &buftype}'
 
   -- hex value of char under cursor
-  -- vim.opt.statusline:append'[0x%B] '
+  -- vim.opt.statusline:append' [0x%B]'
 
   -- buffer number
-  -- vim.opt.statusline:append'B:%n '
+  -- vim.opt.statusline:append' B:%n'
 
   -- column number
-  -- vim.opt.statusline:append'C:%v '
+  -- vim.opt.statusline:append' C:%v'
 
   -- line / column
-  vim.opt.statusline:append'%l:%v '
+  vim.opt.statusline:append' %l:%v '
 
   -- current line / total lines
-  -- vim.opt.statusline:append'L:%l/%L '
+  -- vim.opt.statusline:append' L:%l/%L'
 
   -- percentage through the file
   -- vim.opt.statusline:append'[%p%%]'
-  vim.opt.statusline:append'%p%% '
+  vim.opt.statusline:append' %p%%'
 end
 
 module.fn = function ()

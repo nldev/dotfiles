@@ -11,7 +11,7 @@ end
 
 
 # aliases
-alias e='edit-file'
+alias e='editor'
 alias rl='source ~/.config/fish/config.fish'
 alias in='tmux-in'
 alias out='tmux-out'
@@ -28,11 +28,11 @@ set -U fish_user_paths $fish_user_paths ~/.config/composer/vendor/bin
 
 
 # neovim
-function edit-file
+function editor
   if test -S /tmp/nvimsocket
-    nvr --remote "$argv"
+    nvr --remote
   else
-    nvim --listen /tmp/nvimsocket "$argv"
+    nvim --listen /tmp/nvimsocket
   end
 end
 

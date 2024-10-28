@@ -6,11 +6,11 @@ local module = {
 
 local previous_window = nil
 local saved_layout = nil
-local scratch_file = vim.fn.expand('~/.local/share/nvim/scratch.txt')
+local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.md'
 
 function Scratch ()
   local current_file = vim.api.nvim_buf_get_name(0)
-  local total_lines = vim.api.nvim_get_option('lines')
+  local total_lines = vim.api.nvim_get_option'lines'
   local run = 'edit ' .. scratch_file
   local scratch_win = nil
 
@@ -27,8 +27,8 @@ function Scratch ()
   -- Close scratch window if it exists and is not the current window.
   if scratch_win and scratch_win ~= vim.api.nvim_get_current_win() then
     vim.api.nvim_set_current_win(scratch_win)
-    vim.cmd('write')
-    vim.cmd('bdelete')
+    vim.cmd'write'
+    vim.cmd'bdelete'
     if saved_layout then
       vim.cmd(saved_layout)
       saved_layout = nil
@@ -36,14 +36,14 @@ function Scratch ()
     if previous_window then
       vim.api.nvim_set_current_win(previous_window)
     end
-    vim.cmd('echo ""')
+    vim.cmd'echo ""'
     return
   end
 
   -- Close scratch window if it is the current window.
   if current_file == scratch_file then
-    vim.cmd('write')
-    vim.cmd('bdelete')
+    vim.cmd'write'
+    vim.cmd'bdelete'
     if saved_layout then
       vim.cmd(saved_layout)
       saved_layout = nil
@@ -51,7 +51,7 @@ function Scratch ()
     if previous_window and vim.api.nvim_win_is_valid(previous_window) then
       vim.api.nvim_set_current_win(previous_window)
     end
-    vim.cmd('echo ""')
+    vim.cmd'echo ""'
     return
   end
 
@@ -62,8 +62,8 @@ function Scratch ()
     vim.cmd(run)
   else
     local win_height = math.ceil(total_lines * 0.5)
-    vim.cmd('split')
-    vim.cmd('wincmd K')
+    vim.cmd'split'
+    vim.cmd'wincmd K'
     vim.cmd('resize ' .. win_height)
     vim.cmd('edit ' .. scratch_file)
   end

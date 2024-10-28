@@ -16,14 +16,17 @@ local module = {
     {
       'saifulapm/chartoggle.nvim',
       opts = {
-        leader = ',',
+        leader = '\\',
         keys = { ',', ';', '.', ':' },
       },
     },
+
+    -- Abbreviate / substitute / coerce with multiple variants
+    'tpope/vim-abolish'
   },
   fn = function ()
     -- virtual edit for visual block mode
-    -- vim.opt.virtualedit = 'block'
+    vim.opt.virtualedit = 'block'
 
     -- mini.pairs
     require'mini.pairs'.setup()
@@ -37,9 +40,9 @@ local module = {
        find_left = 'SF',
        highlight = 'Sh',
        replace = 'Sr',
-       update_n_lines = '',
        suffix_last = '',
        suffix_next = '',
+       update_n_lines = '',
      },
     }
 
@@ -92,6 +95,27 @@ local module = {
       end
       vim.cmd'w'
       vim.cmd'echo ""'
+    end)
+
+    -- black hole operations 
+    UseKeymap('black_hole_delete', function () vim.api.nvim_feedkeys('"_d', 'x', false) end)
+    UseKeymap('black_hole_paste', function () vim.api.nvim_feedkeys('"_dhp', 'x', false) end)
+
+    -- sort lines
+    UseKeymap('sort_lines', function () vim.cmd"'<,'>sort" end)
+    UseKeymap('sort_lines_reverse', function () vim.cmd"'<,'>sort!" end)
+    UseKeymap('sort_lines_numeric', function () vim.cmd"'<,'>sort n" end)
+    UseKeymap('sort_lines_numeric_reverse', function () vim.cmd"'<,'>sort! n" end)
+
+    -- insert mode EOL insertions
+    UseKeymap('toggle_eol_comma', function ()
+      vim.cmd'norm \\,,'
+    end)
+    UseKeymap('toggle_eol_period', function ()
+      vim.cmd'norm \\,.'
+    end)
+    UseKeymap('toggle_eol_semicolon', function ()
+      vim.cmd'norm \\,;'
     end)
   end,
 }

@@ -22,6 +22,7 @@ local module = {
           layout = 'horizontal',
           width = 0.5,
         },
+        backdrop = 100,
       },
       files = { silent = true },
     }
@@ -36,30 +37,7 @@ local module = {
     UseKeymap('fuzzy_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
     UseKeymap('fuzzy_code_actions', function () fzf.lsp_code_actions() end)
     UseKeymap('fuzzy_live_grep', function () fzf.live_grep() end)
-    UseKeymap('fuzzy_command_history', function () fzf.fuzzy_command_history() end)
-    -- FIXME: clean up code * use fzf hook rather than autocmd
-    -- vim.api.nvim_create_autocmd({"BufEnter", "WinEnter"}, {
-    --   callback = function ()
-    --     local min_width = 80
-    --     if vim.fn.winwidth(0) < min_width then
-    --       fzf.setup {
-    --         winopts = {
-    --           preview = {
-    --             hidden = 'hidden',
-    --           }
-    --         }
-    --       }
-    --     else
-    --       fzf.setup {
-    --         winopts = {
-    --           preview = {
-    --             hidden = 'nohidden',
-    --           }
-    --         }
-    --       }
-    --     end
-    --   end
-    -- })
+    UseKeymap('fuzzy_command_history', function () fzf.command_history() end)
   end
 }
 

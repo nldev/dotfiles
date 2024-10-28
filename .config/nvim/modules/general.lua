@@ -54,6 +54,9 @@ local module = {
 
     -- hide concealed text
     vim.opt.conceallevel = 2
+
+    -- max scrollback size
+    vim.opt.scrollback = 100000
   end
 }
 

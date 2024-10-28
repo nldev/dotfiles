@@ -15,6 +15,19 @@ local function autocomplete (_, cmd)
   end
 end
 
+function _G.Tdelete (name)
+  local job_id = _G.__terminals__[name]
+  if job_id then
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.bo[buf].buftype == 'terminal' and vim.b[buf].terminal_job_id == job_id then
+        vim.api.nvim_buf_delete(buf, { force = true })
+        vim.cmd'echo ""'
+        return
+      end
+    end
+  end
+end
+
 function _G.Tgo (name)
   local job_id = _G.__terminals__[name]
   if job_id then
@@ -35,7 +48,7 @@ function _G.Tnew (name)
   vim.cmd'echo ""'
 end
 
-function _G.Tname(name, is_silent)
+function _G.Tname (name, is_silent)
   if not name then
     print 'Error: Usage is Tname term_name'
     return
@@ -137,6 +150,19 @@ module.fn = function ()
       end
     end,
   })
+  vim.api.nvim_create_autocmd('VimLeavePre', {
+    callback = function ()
+      local bufs = vim.api.nvim_list_bufs()
+      for _, buf in ipairs(bufs) do
+        if vim.bo[buf].buftype == 'terminal' then
+          local job_id = vim.b.terminal_job_id
+          if job_id then
+            vim.fn.jobstop(job_id)
+          end
+        end
+      end
+    end
+  })
   vim.api.nvim_create_user_command('Tname', function (opts)
     _G.Tname(opts.args)
   end, { nargs = 1 })
@@ -149,6 +175,9 @@ module.fn = function ()
   vim.api.nvim_create_user_command('Tlist', function ()
     _G.Tlist()
   end, { nargs = 0 })
+  vim.api.nvim_create_user_command('Tdelete', function (opts)
+    _G.Tdelete(opts.args)
+  end, { nargs = 1, complete = autocomplete })
   vim.api.nvim_create_user_command('T', function (opts)
     local args = vim.split(opts.args, ' ', { plain = true, trimempty = true })
     if #args < 1 then

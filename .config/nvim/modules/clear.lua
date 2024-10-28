@@ -3,6 +3,7 @@ local module = {
   desc = 'defines a clear command for prompt, buffers, etc',
   plugins = {},
   fn = function ()
+    UseKeymap('reload_file', function () vim.cmd'e' end)
     UseKeymap('clear', function ()
       local is_nofile = vim.bo.buftype == 'nofile'
 
@@ -26,23 +27,6 @@ local module = {
       local is_diagnostics = first_line and first_line:find('Diagnostics:')
       if is_nofile and first_line and is_diagnostics then
         vim.api.nvim_win_close(0, true)
-      end
-
-      -- unload buffers without files
-      local buffers = vim.api.nvim_list_bufs()
-      for _, buf in ipairs(buffers) do
-        if vim.bo.buftype ~= 'terminal' then
-          if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
-            local buf_name = vim.api.nvim_buf_get_name(buf)
-            if vim.api.nvim_buf_get_option(buf, 'modified') then
-              goto continue
-            end
-            if buf_name ~= '' and vim.fn.filereadable(buf_name) == 0 then
-              vim.api.nvim_buf_delete(buf, { force = true })
-            end
-            ::continue::
-          end
-        end
       end
 
       -- clear search highlights

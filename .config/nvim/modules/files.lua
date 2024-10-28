@@ -18,7 +18,9 @@ local module = {
         use_as_default_explorer = false,
       },
     }
-    UseKeymap('open_file_browser', function () files.open(vim.api.nvim_buf_get_name(4), false) end)
+    UseKeymap('empty_file', function () vim.cmd'enew | set filetype=text' end)
+    UseKeymap('empty_json_file', function () vim.cmd'enew | set filetype=json' end)
+    UseKeymap('open_file_browser', function () files.open(vim.api.nvim_buf_get_name(0), false) end)
     UseKeymap('open_persistent_file_browser', function () files.open(vim.fn.getcwd()) end)
     UseKeymap('open_home', function () files.open'~' end)
     UseKeymap('open_dev', function () files.open'~/dev' end)
