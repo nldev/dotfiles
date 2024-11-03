@@ -20,9 +20,9 @@ local module = {
   fn = function ()
     -- treesitter
     local treesitter_configs = require'nvim-treesitter.configs'
-    treesitter_configs.setup({
+    treesitter_configs.setup{
       auto_install = true,
-      ensure_installed = ({
+      ensure_installed = {
         'bash',
         'css',
         'dockerfile',
@@ -41,7 +41,7 @@ local module = {
         'vim',
         'vimdoc',
         'yaml',
-      }),
+      },
       highlight = { enable = true },
       indent = { enable = false },
       fold = { enable = true },
@@ -141,7 +141,7 @@ local module = {
           },
         },
       },
-    })
+    }
     local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
     vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move_next)
     vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_previous)
@@ -159,23 +159,29 @@ local module = {
       	vim.diagnostic.disable(bufnr)
       end
     end
-    require('mason').setup()
-    require('mason-lspconfig').setup()
-    require('lazydev').setup()
+    require'mason'.setup()
+    require'mason-lspconfig'.setup()
+    require'lazydev'.setup()
     local servers = {
       lua_ls = {},
-      html = { filetypes = { 'html', 'twig', 'hbs'} },
+      html = {
+        filetypes = {
+          'html',
+          'twig',
+          'hbs',
+        },
+      },
       ts_ls = {},
       pyright = {},
       -- clangd = {},
     }
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
-    local mason_lspconfig = require 'mason-lspconfig'
-    mason_lspconfig.setup { ensure_installed = vim.tbl_keys(servers) }
-    mason_lspconfig.setup_handlers {
+    capabilities = require'cmp_nvim_lsp'.default_capabilities(capabilities)
+    local mason_lspconfig = require'mason-lspconfig'
+    mason_lspconfig.setup{ ensure_installed = vim.tbl_keys(servers) }
+    mason_lspconfig.setup_handlers{
       function (server_name)
-        require('lspconfig')[server_name].setup {
+        require'lspconfig'[server_name].setup {
           capabilities = capabilities,
           on_attach = on_attach,
           settings = servers[server_name],
@@ -183,7 +189,7 @@ local module = {
         }
       end,
     }
-    require('lspconfig').ts_ls.setup({})
+    require'lspconfig'.ts_ls.setup{}
     UseKeymap('show_diagnostics', function () vim.diagnostic.open_float() end)
     UseKeymap('goto_definition', function () vim.lsp.buf.definition() end)
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
@@ -191,11 +197,11 @@ local module = {
     UseKeymap('toggle_diagnostics', function () ToggleDiagnostics(true) end)
     UseKeymap('lsp_info', function () vim.lsp.buf.hover() end)
     UseKeymap('rename', function ()
-      local current_name = vim.fn.expand('<cword>')
+      local current_name = vim.fn.expand'<cword>'
       vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (new_name)
         if new_name and #new_name > 0 then
           vim.lsp.buf.rename(new_name)
-          vim.cmd('echo ""')
+          vim.cmd'echo ""'
         end
       end)
     end)

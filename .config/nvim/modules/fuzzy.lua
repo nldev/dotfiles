@@ -4,10 +4,21 @@ local module = {
   plugins = {
     {
       'ibhagwan/fzf-lua',
-      -- dependencies = { 'echasnovski/mini.icons' },
-      config = function ()
-      end,
+      config = function () end,
     },
+    {
+      'nvim-telescope/telescope.nvim',
+      dependencies = { 'nvim-lua/plenary.nvim' },
+    },
+    {
+      'prochri/telescope-all-recent.nvim',
+      dependencies = {
+        'nvim-telescope/telescope.nvim',
+        'kkharji/sqlite.lua',
+        -- 'stevearc/dressing.nvim',
+      },
+      opts = {},
+    }
   },
   fn = function ()
     local fzf = require'fzf-lua'
@@ -26,18 +37,41 @@ local module = {
       },
       files = { silent = true },
     }
-    UseKeymap('fuzzy_files', function () fzf.files() end)
-    UseKeymap('fuzzy_grep', function () fzf.grep_curbuf() end)
-    UseKeymap('fuzzy_help', function () fzf.helptags() end)
-    UseKeymap('fuzzy_buffers', function () fzf.buffers() end)
-    UseKeymap('fuzzy_symbols', function () fzf.lsp_document_symbols() end)
-    UseKeymap('fuzzy_workspace_symbols', function () fzf.lsp_workspace_symbols() end)
-    UseKeymap('fuzzy_references', function () fzf.lsp_references() end)
-    UseKeymap('fuzzy_diagnostics', function () fzf.diagnostics_document() end)
+    require'telescope'.setup{
+      defaults = {
+        layout_strategy = 'horizontal',
+        layout_config = {
+          height = math.floor(vim.o.lines / 2),
+          width = vim.o.columns,
+          anchor = 'S',
+          anchor_padding = 0,
+          prompt_position = 'bottom',
+          preview_width= 0.5,
+          preview_cutoff = 60,
+        },
+      },
+    }
+    require'telescope-all-recent'.setup{
+      default = { sorting = 'frecency' },
+    }
+    local telescope = require'telescope.builtin'
+    UseKeymap('fuzzy_files', function () telescope.find_files() end)
+    UseKeymap('fuzzy_live_grep', function () telescope.live_grep() end)
+    UseKeymap('fuzzy_help', function () telescope.help_tags() end)
+    UseKeymap('fuzzy_buffers', function () telescope.buffers() end)
+    UseKeymap('fuzzy_symbols', function () telescope.lsp_document_symbols() end)
+    UseKeymap('fuzzy_references', function () telescope.lsp_references() end)
+    UseKeymap('fuzzy_diagnostics', function () telescope.diagnostics() end)
+    UseKeymap('fuzzy_command_history', function () telescope.command_history() end)
+    UseKeymap('fuzzy_grep', function ()
+      if vim.api.nvim_buf_line_count(0) > 1500 then
+        fzf.grep_curbuf()
+      else
+        telescope.current_buffer_fuzzy_find()
+      end
+    end)
     UseKeymap('fuzzy_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
     UseKeymap('fuzzy_code_actions', function () fzf.lsp_code_actions() end)
-    UseKeymap('fuzzy_live_grep', function () fzf.live_grep() end)
-    UseKeymap('fuzzy_command_history', function () fzf.command_history() end)
   end
 }
 

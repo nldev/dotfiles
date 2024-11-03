@@ -24,6 +24,16 @@ local module = {
     'maxmx03/solarized.nvim',
     'mofiqul/dracula.nvim',
     'lettertwo/laserwave.nvim',
+    'ntbbloodbath/doom-one.nvim',
+    'projekt0n/github-nvim-theme',
+    'ribru17/bamboo.nvim',
+    'olivercederborg/poimandres.nvim',
+    'scottmckendry/cyberdream.nvim',
+    'alexvzyl/nordic.nvim',
+    'bluz71/vim-nightfly-colors',
+    'maxmx03/fluoromachine.nvim',
+    'dgox16/oldworld.nvim',
+    'edeneast/nightfox.nvim',
   },
   fn = function ()
     -- Fix colors
@@ -73,6 +83,8 @@ local module = {
       vim.cmd'hi FlashLabel      guibg=#cccccc guifg=#000000'
       vim.cmd'hi IncSearch       guibg=#ff69b4 guifg=#000000'
       vim.cmd'hi Search          guibg=#aabbff guifg=#000000'
+      vim.cmd'set cursorline'
+      vim.cmd'highlight clear CursorLine'
     end
 
     -- Load persisted theme
@@ -83,34 +95,35 @@ local module = {
       colors()
     end
     override_colors()
-    vim.cmd'set cursorline'
-    vim.cmd'highlight clear CursorLine'
 
     -- Persist theme function
     local function persist_colorscheme(scheme)
       local config_file = vim.fn.stdpath('data') .. '/colorscheme.lua'
       local file = io.open(config_file, 'w')
       if file then
-        file:write('vim.cmd("colorscheme ' .. scheme .. '")\n')
+        file:write('vim.cmd\'color ' .. scheme .. '\'')
         file:close()
       end
       override_colors()
     end
 
     -- Switch color scheme keymap
+    local telescope = require'telescope.builtin'
+    local actions = require'telescope.actions'
+    local action_state = require'telescope.actions.state'
     UseKeymap(
       'fuzzy_color_schemes',
       function ()
-        require'fzf-lua'.colorschemes{
-          actions = {
-            ['default'] = function (selected)
-              local colorscheme = selected[1]
-              vim.cmd('colorscheme ' .. colorscheme)
-              vim.cmd'highlight clear CursorLine'
-              persist_colorscheme(colorscheme)
-              override_colors()
-            end,
-          }
+        telescope.colorscheme{
+          attach_mappings = function ()
+            actions.select_default:replace(function (prompt_bufnr)
+              local selection = action_state.get_selected_entry().value
+              vim.cmd('color ' .. selection)
+              persist_colorscheme(selection)
+              actions.close(prompt_bufnr)
+            end)
+            return true
+          end,
         }
       end
     )

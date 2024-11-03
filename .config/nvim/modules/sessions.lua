@@ -3,13 +3,15 @@ local module = {
   desc = 'session management',
   plugins = {
     'folke/persistence.nvim',
+    'vladdoster/remember.nvim',
   },
   fn = function ()
+    -- Remember column / line.
+    require'remember'
     -- Load last session.
     local persistence = require'persistence'
     persistence.setup()
     persistence.load{ last = true }
-
     -- Remove pre-existing terminal buffers.
     vim.defer_fn(function ()
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -18,7 +20,7 @@ local module = {
           vim.api.nvim_buf_delete(buf, { force = true })
         end
       end
-    end, 1000)
+    end, 0)
   end,
 }
 

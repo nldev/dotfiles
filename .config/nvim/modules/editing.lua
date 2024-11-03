@@ -1,7 +1,7 @@
 local module = {
   name = 'editing',
   desc = 'text editing enhancements',
-  dependencies = { 'files' },
+  dependencies = { 'files', 'quickfix' },
   plugins = {
     -- Single-line <-> Multiline code
     { 'echasnovski/mini.splitjoin', version = false },
@@ -98,8 +98,12 @@ local module = {
     end)
 
     -- black hole operations 
-    UseKeymap('black_hole_delete', function () vim.api.nvim_feedkeys('"_d', 'x', false) end)
-    UseKeymap('black_hole_paste', function () vim.api.nvim_feedkeys('"_dhp', 'x', false) end)
+    UseKeymap('black_hole_delete', function ()
+      vim.api.nvim_feedkeys('"_d', 'x', false)
+    end)
+    UseKeymap('black_hole_paste', function ()
+      vim.api.nvim_feedkeys('"_dhp', 'x', false)
+    end)
 
     -- sort lines
     UseKeymap('sort_lines', function () vim.cmd"'<,'>sort" end)
@@ -108,15 +112,9 @@ local module = {
     UseKeymap('sort_lines_numeric_reverse', function () vim.cmd"'<,'>sort! n" end)
 
     -- insert mode EOL insertions
-    UseKeymap('toggle_eol_comma', function ()
-      vim.cmd'norm \\,,'
-    end)
-    UseKeymap('toggle_eol_period', function ()
-      vim.cmd'norm \\,.'
-    end)
-    UseKeymap('toggle_eol_semicolon', function ()
-      vim.cmd'norm \\,;'
-    end)
+    UseKeymap('toggle_eol_comma', function () vim.cmd'norm \\,' end)
+    UseKeymap('toggle_eol_period', function () vim.cmd'norm \\.' end)
+    UseKeymap('toggle_eol_semicolon', function () vim.cmd'norm \\;' end)
   end,
 }
 

@@ -12,6 +12,11 @@ local module = {
         vim.api.nvim_win_close(0, true)
       end
 
+      -- close telescope window
+      if vim.bo.filetype == 'TelescopePrompt' then
+        vim.cmd'bd!'
+      end
+
       -- close harpoon window
       if vim.bo.filetype == 'harpoon' then
         vim.api.nvim_win_close(0, true)

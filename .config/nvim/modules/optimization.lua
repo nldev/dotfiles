@@ -5,8 +5,8 @@ local module = {
     'pteroctopus/faster.nvim',
   },
   fn = function ()
-    require('faster').setup()
-  end
+    require'faster'.setup()
+  end,
 }
 
 return module

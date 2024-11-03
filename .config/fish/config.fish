@@ -99,6 +99,11 @@ fzf --fish | source
 
 
 
+# zoxide
+zoxide init fish | source
+
+
+
 # wsl only
 function is-wsl
   if test -e /proc/sys/fs/binfmt_misc/WSLInterop
@@ -108,11 +113,11 @@ function is-wsl
 end
 
 if test -d /mnt/e/sync/notes/me
-  if is-wsl
-    if not mountpoint -q /home/$USER/notes
-      sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
-    end
-  end
+#  if is-wsl
+#    if not mountpoint -q /home/$USER/notes
+#      sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
+#    end
+#  end
 end
 
 

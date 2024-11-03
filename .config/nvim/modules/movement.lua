@@ -2,6 +2,7 @@ local module = {
   name = 'movement',
   desc = 'vim movement stuff',
   plugins = {
+    'chrisgrieser/nvim-spider',
     {
       'folke/flash.nvim',
       opts = {
@@ -14,7 +15,15 @@ local module = {
     },
   },
   fn = function ()
+    local spider = require'spider'
     local flash = require'flash'
+    spider.setup{
+      skipInsignificantPunctuation = false,
+      consistentOperatorPending = false,
+    }
+    vim.keymap.set({ 'n', 'o', 'x' }, 'w', function () spider.motion'w' end, { desc = 'Spider w' })
+    vim.keymap.set({ 'n', 'o', 'x' }, 'e', function () spider.motion'e' end, { desc = 'Spider e' })
+    vim.keymap.set({ 'n', 'o', 'x' }, 'b', function () spider.motion'b' end, { desc = 'Spider b' })
     UseKeymap('jump', function () flash.jump() end)
     UseKeymap('jump_treesitter', function () flash.treesitter() end)
   end

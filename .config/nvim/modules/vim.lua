@@ -1,8 +1,14 @@
 local module = {
-  name = 'general',
+  name = 'vim',
   desc = 'general settings',
   plugins = {},
   fn = function ()
+    -- use utf-8 encoding
+    vim.cmd'set encoding=utf-8'
+
+    -- use unix style line endings
+    vim.cmd'set fileformat=unix'
+
     -- do not wrap text
     vim.wo.wrap = false
 
@@ -47,7 +53,7 @@ local module = {
     vim.o.termguicolors = true
 
     -- hide fill characters
-    -- vim.opt.fillchars = { eob = ' ' }
+    vim.opt.fillchars = { eob = ' ' }
 
     -- set number line width to 1
     vim.opt.numberwidth = 1
@@ -57,6 +63,27 @@ local module = {
 
     -- max scrollback size
     vim.opt.scrollback = 100000
+
+    -- keybinds
+    UseKeymap('vim_quit', function ()
+      vim.cmd'cclose'
+      vim.cmd'qa!'
+    end)
+    UseKeymap('vim_kill_buffers', function () 
+      vim.cmd'%bd!'
+      vim.cmd'echo ""'
+    end)
+    UseKeymap('vim_delete_buffer', function () vim.cmd'bd!' end)
+    UseKeymap('vim_only_buffer', function () 
+      local current_buf = vim.api.nvim_get_current_buf()
+      for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then
+          if vim.bo[buf].buftype ~= 'terminal' then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+      end
+    end)
   end
 }
 
