@@ -64,7 +64,7 @@ local module = {
     UseKeymap('fuzzy_diagnostics', function () telescope.diagnostics() end)
     UseKeymap('fuzzy_command_history', function () telescope.command_history() end)
     UseKeymap('fuzzy_grep', function ()
-      if vim.api.nvim_buf_line_count(0) > 1500 then
+      if vim.api.nvim_buf_line_count(0) > 2000 then
         fzf.grep_curbuf()
       else
         telescope.current_buffer_fuzzy_find()
