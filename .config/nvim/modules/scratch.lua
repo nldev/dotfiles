@@ -6,13 +6,16 @@ local module = {
 
 local previous_window = nil
 local saved_layout = nil
-local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.md'
+local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.org'
 
 function Scratch ()
   local current_file = vim.api.nvim_buf_get_name(0)
   local total_lines = vim.api.nvim_get_option'lines'
   local run = 'edit ' .. scratch_file
   local scratch_win = nil
+
+  -- Close quickfix window since it breaks the scratch window.
+  vim.cmd'cclose'
 
   -- Find scratch window if it exists.
   for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do

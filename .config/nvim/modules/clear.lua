@@ -22,6 +22,16 @@ local module = {
         vim.api.nvim_win_close(0, true)
       end
 
+      -- close quickfix window
+      if vim.bo.buftype == 'quickfix' then
+        vim.cmd'wincmd c'
+      end
+
+      -- close help window
+      if vim.bo.buftype == 'help' then
+        vim.cmd'wincmd c'
+      end
+
       -- close netrw buffer
       if vim.bo.filetype == 'netrw' then
         vim.cmd'bd'

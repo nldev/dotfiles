@@ -11,8 +11,10 @@ local module = {
     require'quicker'.setup()
     require'bqf'.setup{
       func_map = {
-        split = '_',          -- <c-x>
-        vsplit = '|',         -- <c-v>
+        split = '_',         -- <c-x>
+        vsplit = '|',        -- <c-v>
+        pscrollup = '',      -- <c-b>
+        pscrolldown = '',    -- <c-f>
         -- open = '',        -- <cr>
         -- openc = '',       -- o
         -- drop = '',        -- O
@@ -30,8 +32,6 @@ local module = {
         -- stogglevm = '',   -- <tab>
         -- stogglebuf = '',  -- '<tab>
         -- sclear = '',      -- z<tab>
-        -- pscrollup = '',   -- <c-b>
-        -- pscrolldown = '', -- <c-f>
         -- pscrollorig = '', -- zo
         -- ptogglemode = '', -- zp
         -- ptoggleitem = '', -- p
@@ -65,6 +65,7 @@ local module = {
         vim.cmd'copen'
       end
     end)
+    UseKeymap('qf_close', function () vim.cmd'cclose' end)
     UseKeymap('qf_next', function () pcall(vim.cmd, 'cn') end)
     UseKeymap('qf_previous', function () pcall(vim.cmd, 'cp') end)
     UseKeymap('qf_first', function () vim.cmd'cfirst' end)

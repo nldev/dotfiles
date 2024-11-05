@@ -60,6 +60,7 @@ local module = {
 
     -- hide concealed text
     vim.opt.conceallevel = 2
+    vim.opt.concealcursor = 'nc'
 
     -- max scrollback size
     vim.opt.scrollback = 100000
@@ -69,12 +70,12 @@ local module = {
       vim.cmd'cclose'
       vim.cmd'qa!'
     end)
-    UseKeymap('vim_kill_buffers', function () 
+    UseKeymap('vim_kill_buffers', function ()
       vim.cmd'%bd!'
       vim.cmd'echo ""'
     end)
     UseKeymap('vim_delete_buffer', function () vim.cmd'bd!' end)
-    UseKeymap('vim_only_buffer', function () 
+    UseKeymap('vim_only_buffer', function ()
       local current_buf = vim.api.nvim_get_current_buf()
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do
         if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then

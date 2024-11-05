@@ -1,6 +1,6 @@
 local module = {
   name = 'speed-dial',
-  desc = 'quick file navigation',
+  desc = 'quick lists',
   dependencies = { 'files' },
   plugins = {
     {

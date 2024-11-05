@@ -18,9 +18,15 @@ local module = {
         use_as_default_explorer = false,
       },
     }
-    UseKeymap('empty_file', function () vim.cmd'enew | set filetype=text' end)
-    UseKeymap('empty_json_file', function () vim.cmd'enew | set filetype=json' end)
-    UseKeymap('empty_lua_file', function () vim.cmd'enew | set filetype=lua' end)
+    local function create_temp_file (extension, filetype)
+      local timestamp = os.date'%Y%m%d-%H%M%S'
+      local filepath = string.format('/tmp/%s.%s', timestamp, extension)
+      vim.cmd('e ' .. filepath)
+      vim.bo.filetype = filetype
+    end
+    UseKeymap('empty_file', function() create_temp_file('txt', 'text') end)
+    UseKeymap('empty_json_file', function() create_temp_file('json', 'json') end)
+    UseKeymap('empty_lua_file', function() create_temp_file('lua', 'lua') end)
     UseKeymap('open_file_browser', function () files.open(vim.api.nvim_buf_get_name(0), false) end)
     UseKeymap('open_project_browser', function () files.open(vim.fn.getcwd(), false) end)
     UseKeymap('open_persistent_file_browser', function () files.open(vim.fn.getcwd()) end)
