@@ -41,6 +41,7 @@ local module = {
         'vim',
         'vimdoc',
         'yaml',
+        'org',
       },
       highlight = { enable = true },
       indent = { enable = false },
