@@ -1,6 +1,6 @@
 local module = {
   name = 'clear',
-  desc = 'defines a clear command for prompt, buffers, etc',
+  desc = 'defines a universael clear / cancel keymap.',
   plugins = {},
   fn = function ()
     UseKeymap('reload_file', function () vim.cmd'e' end)
@@ -37,10 +37,17 @@ local module = {
         vim.cmd'bd'
       end
 
+      -- close org-roam-select window
+      local a = vim.api.nvim_buf_get_name(0)
+      local is_org_roam_select = a:find'org%-roam%-select'
+      if is_org_roam_select then
+        vim.cmd'bd!'
+      end
+
       -- close lsp diagnostics window
-      local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
-      local is_diagnostics = first_line and first_line:find('Diagnostics:')
-      if is_nofile and first_line and is_diagnostics then
+      local b = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+      local is_diagnostics = b and b:find'Diagnostics:'
+      if is_nofile and b and is_diagnostics then
         vim.api.nvim_win_close(0, true)
       end
 

@@ -1,7 +1,9 @@
 local module = {
   name = 'vim',
   desc = 'general settings',
-  plugins = {},
+  plugins = {
+    'airblade/vim-rooter',
+  },
   fn = function ()
     -- use utf-8 encoding
     vim.cmd'set encoding=utf-8'
@@ -65,7 +67,37 @@ local module = {
     -- max scrollback size
     vim.opt.scrollback = 100000
 
+    -- linebreak when wrapping is on
+    vim.wo.linebreak = true
+
     -- keybinds
+    UseKeymap('vim_number_line', function ()
+      if vim.wo.number then
+        print'number line OFF'
+        vim.wo.number = false
+      else
+        print'number line ON'
+        vim.wo.number = true
+      end
+    end)
+    UseKeymap('vim_relative_number_line', function ()
+      if vim.wo.relativenumber then
+        print'relative number line OFF'
+        vim.wo.relativenumber = false
+      else
+        print'relative number line ON'
+        vim.wo.relativenumber = true
+      end
+    end)
+    UseKeymap('vim_wrap', function ()
+      if vim.wo.wrap then
+        print'wrap OFF'
+        vim.wo.wrap = false
+      else
+        print'wrap ON'
+        vim.wo.wrap = true
+      end
+    end)
     UseKeymap('vim_quit', function ()
       vim.cmd'cclose'
       vim.cmd'qa!'

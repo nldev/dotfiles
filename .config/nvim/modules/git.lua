@@ -7,7 +7,7 @@ local module = {
   },
   fn = function ()
     require'gitsigns'.setup()
-  end
+  end,
 }
 
 return module

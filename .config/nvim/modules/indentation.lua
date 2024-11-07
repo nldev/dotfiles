@@ -2,14 +2,15 @@ local module = {
   name = 'indentation',
   desc = 'sets indentation rules',
   plugins = {
-    'gpanders/editorconfig.nvim'
+    'gpanders/editorconfig.nvim',
+    'tpope/vim-sleuth',
   },
   fn = function ()
     vim.cmd('filetype indent on')
     vim.opt.smartindent = true
     vim.opt.autoindent = true
     vim.opt.cindent = true
-		vim.opt.expandtab = true
+    vim.opt.expandtab = true
     vim.o.shiftwidth = 2
     vim.o.tabstop = 2
     -- FIXME: use UseKeymap

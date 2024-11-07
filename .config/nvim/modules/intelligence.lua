@@ -14,6 +14,7 @@ local module = {
         { 'folke/lazydev.nvim', ft = 'lua' },
         { 'williamboman/mason.nvim', config = true },
         'williamboman/mason-lspconfig.nvim',
+        'ray-x/lsp_signature.nvim',
       },
     },
   },
@@ -32,6 +33,7 @@ local module = {
         'javascript',
         'json',
         'lua',
+        'go',
         'markdown',
         'markdown_inline',
         'python',
@@ -174,6 +176,8 @@ local module = {
       },
       ts_ls = {},
       pyright = {},
+      cssls = {},
+      gopls = {},
       -- clangd = {},
     }
     local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -182,7 +186,7 @@ local module = {
     mason_lspconfig.setup{ ensure_installed = vim.tbl_keys(servers) }
     mason_lspconfig.setup_handlers{
       function (server_name)
-        require'lspconfig'[server_name].setup {
+        require'lspconfig'[server_name].setup{
           capabilities = capabilities,
           on_attach = on_attach,
           settings = servers[server_name],
@@ -191,6 +195,11 @@ local module = {
       end,
     }
     require'lspconfig'.ts_ls.setup{}
+    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
+    require'lsp_signature'.setup{
+      toggle_key = '<c-e>',
+    }
     UseKeymap('show_diagnostics', function () vim.diagnostic.open_float() end)
     UseKeymap('goto_definition', function () vim.lsp.buf.definition() end)
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
@@ -213,22 +222,22 @@ vim.g.diagnostics_active = true
 
 _G.ToggleDiagnostics = function (is_global)
   local vars, bufnr, cmd
-	if is_global then
-		vars = vim.g
-		bufnr = nil
-	else
-		vars = vim.b
-		bufnr = 0
-	end
-	vars.diagnostics_disabled = not vars.diagnostics_disabled
-	if vars.diagnostics_disabled then
-		cmd = 'disable'
-		vim.api.nvim_echo({ { 'diagnostics OFF' } }, false, {})
-	else
-		cmd = 'enable'
-		vim.api.nvim_echo({ { 'diagnostics ON'} }, false, {})
-	end
-	vim.schedule(function () vim.diagnostic[cmd](bufnr) end)
+   if is_global then
+     vars = vim.g
+     bufnr = nil
+   else
+     vars = vim.b
+     bufnr = 0
+   end
+  vars.diagnostics_disabled = not vars.diagnostics_disabled
+  if vars.diagnostics_disabled then
+    cmd = 'disable'
+    vim.api.nvim_echo({ { 'diagnostics OFF' } }, false, {})
+  else
+    cmd = 'enable'
+    vim.api.nvim_echo({ { 'diagnostics ON'} }, false, {})
+  end
+  vim.schedule(function () vim.diagnostic[cmd](bufnr) end)
 end
 
 return module

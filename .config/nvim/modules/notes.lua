@@ -24,7 +24,6 @@ local module = {
       pattern = { 'text', 'org', 'markdown' },
       callback = function ()
         vim.wo.wrap = true
-        vim.wo.linebreak = true
       end,
     })
     vim.api.nvim_create_autocmd('FileType', {
@@ -32,14 +31,13 @@ local module = {
       callback = function ()
         if not vim.tbl_contains({ 'text', 'org', 'markdown' }, vim.bo.filetype) then
           vim.wo.wrap = false
-          vim.wo.linebreak = false
         end
       end,
     })
     local org = require'orgmode'
     org.setup{
       org_agenda_files = '~/notes/**/*',
-      org_default_notes_file = '~/notes/Inbox.org',
+      org_default_notes_file = '~/notes/inbox.org',
       mappings = { disable_all = true },
     }
     local roam = require'org-roam'
@@ -74,7 +72,7 @@ local module = {
     UseKeymap('note_normal_insert', function () roam.api.insert_node() end)
     -- UseKeymap('note_fuzzy', function () require'telescope.builtin'.find_files{ cwd = '~/notes' } end)
     UseKeymap('note_fuzzy', function () roam.api.find_node() end)
-    UseKeymap('note_inbox', function () vim.cmd'e ~/notes/Inbox.org' end)
+    UseKeymap('note_inbox', function () vim.cmd'e ~/notes/inbox.org' end)
     UseKeymap('note_schedule', function () org.action'org_mappings.org_schedule' end)
     UseKeymap('note_promote', function () org.action'org_mappings.do_promote' end)
     UseKeymap('note_demote', function () org.action'org_mappings.do_demote' end)
