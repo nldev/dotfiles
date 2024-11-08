@@ -205,7 +205,7 @@ local module = {
         if last_term and _G.__terminals__[last_term] then
           _G.Tgo(last_term)
         else
-          print'Error: Previous terminal does not exist.'
+          print'Error: Previously opened terminal does not exist.'
         end
       end
     end
@@ -277,8 +277,30 @@ local module = {
         _G.Tnumber(i, opts)
       end, { nargs = '?' })
     end
-    UseKeymap('terminal_named', function ()
-      vim.ui.input({ prompt = 'Add named terminal: ', default = '', cancelreturn = nil }, function (name)
+    local function terminal_execute (index)
+      if not term_list[index] then
+        print('Error: Terminal ' .. index .. ' does not exist.')
+        return
+      end
+      vim.ui.input({ prompt = 'Run @ ' .. term_list[index] .. ': ', default = '', cancelreturn = nil }, function (cmd)
+        if cmd and #cmd > 0 then
+          _G.Tsend(term_list[index], cmd)
+        end
+      end)
+    end
+    local function terminal_execute_last ()
+      if last_term and _G.__terminals__[last_term] then
+        vim.ui.input({ prompt = 'Run @ ' .. last_term .. ': ', default = '', cancelreturn = nil }, function (cmd)
+          if cmd and #cmd > 0 then
+            _G.Tsend(last_term, cmd)
+          end
+        end)
+      else
+        print'Error: Previously opened terminal does not exist.'
+      end
+    end
+    UseKeymap('terminal_add', function ()
+      vim.ui.input({ prompt = 'Add terminal: ', default = '', cancelreturn = nil }, function (name)
         if name and #name > 0 then
           _G.Tnew(name)
         end
@@ -295,7 +317,7 @@ local module = {
         end
       end)
     end)
-    UseKeymap('terminal_add', function () Tnew() end)
+    UseKeymap('terminal_quickadd', function () Tnew() end)
     UseKeymap('terminal_switch', function () Tswitch() end)
     -- UseKeymap('terminal_list', function () Tlist() end)
     UseKeymap('terminal_1', function () Tnumber(1) end)
@@ -303,6 +325,12 @@ local module = {
     UseKeymap('terminal_3', function () Tnumber(3) end)
     UseKeymap('terminal_4', function () Tnumber(4) end)
     UseKeymap('terminal_5', function () Tnumber(5) end)
+    UseKeymap('terminal_execute_1', function () terminal_execute(1) end)
+    UseKeymap('terminal_execute_2', function () terminal_execute(2) end)
+    UseKeymap('terminal_execute_3', function () terminal_execute(3) end)
+    UseKeymap('terminal_execute_4', function () terminal_execute(4) end)
+    UseKeymap('terminal_execute_5', function () terminal_execute(5) end)
+    UseKeymap('terminal_execute_last', function () terminal_execute_last() end)
   end,
 }
 

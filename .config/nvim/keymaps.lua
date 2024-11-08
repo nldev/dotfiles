@@ -7,6 +7,7 @@ DefPrefix{
   vim = { '<leader>v', desc = '[V]im' },
   quickfix = { '<leader>q', desc = '[Q]uickfix' },
   terminal = { '<leader>t', desc = '[T]erminal' },
+  terminal_execute = { '<leader>te', desc = 'Terminal [e]xecute' },
   -- git = { '<leader>g', desc = '[G]it' },
 }
 
@@ -112,9 +113,9 @@ DefKeymap{
   qf_diagnostics = { 'z', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix diagnostics' },
   qf_all_diagnostics = { 'Z', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix all diagnostics' },
   qf_delete = { 'd', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix [d]elete' },
-  terminal_named = { 'n', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [n]amed' },
-  terminal_rename = { 'r', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [r]ename' },
   terminal_add = { 'a', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [a]dd' },
+  terminal_rename = { 'r', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [r]ename' },
+  terminal_quickadd = { 'q', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [q]uickadd' },
   terminal_switch = { 't', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal switch' },
   -- terminal_list = { 'l', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [l]ist' },
   terminal_1 = { '1', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [1]' },
@@ -122,5 +123,11 @@ DefKeymap{
   terminal_3 = { '3', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [3]' },
   terminal_4 = { '4', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [4]' },
   terminal_5 = { '5', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [5]' },
+  terminal_execute_1 = { '1', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [1] execute' },
+  terminal_execute_2 = { '2', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [2] execute' },
+  terminal_execute_3 = { '3', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [3] execute' },
+  terminal_execute_4 = { '4', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [4] execute' },
+  terminal_execute_5 = { '5', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [5] execute' },
+  terminal_execute_last = { 'e', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [e]xecute' },
 }
 
