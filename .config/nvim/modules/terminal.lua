@@ -179,21 +179,26 @@ local module = {
         _G.Tsend(term_list[index], command)
       end
     end
+    local last_non_terminal_buf = -1
+    vim.api.nvim_create_autocmd('BufEnter', {
+      callback = function ()
+        vim.defer_fn(function ()
+          if vim.bo.buftype ~= 'terminal' then
+            last_non_terminal_buf = vim.api.nvim_get_current_buf()
+          end
+        end, 0)
+      end,
+    })
     function _G.Tswitch ()
       if vim.bo.buftype == 'terminal' then
-        local current_buf = vim.api.nvim_get_current_buf()
-        local buffers = vim.fn.getbufinfo{ buflisted = 1 }
-        for _, buf in ipairs(buffers) do
-          if buf.bufnr ~= current_buf and buf.name and vim.api.nvim_buf_get_option(buf.bufnr, "buftype") ~= "terminal" then
-            vim.api.nvim_set_current_buf(buf.bufnr)
-            return
-          end
+        if last_non_terminal_buf ~= -1 and vim.api.nvim_buf_is_loaded(last_non_terminal_buf) then
+          vim.api.nvim_set_current_buf(last_non_terminal_buf)
         end
       else
         if last_term and _G.__terminals__[last_term] then
           _G.Tgo(last_term)
         else
-          print('Error: Previous terminal does not exist.')
+          print'Error: Previous terminal does not exist.'
         end
       end
     end
