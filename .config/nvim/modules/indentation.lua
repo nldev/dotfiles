@@ -39,8 +39,8 @@ _G.__smart_newline__ = function ()
       local after_cursor = line:sub(col + 2)
       vim.api.nvim_buf_set_lines(0, row - 1, row, false, { before_cursor })
       vim.api.nvim_buf_set_lines(0, row, row, false, {
-        string.rep(" ", new_indent),
-        string.rep(" ", current_indent) .. char_after .. after_cursor
+        string.rep(' ', new_indent),
+        string.rep(' ', current_indent) .. char_after .. after_cursor
       })
       vim.api.nvim_win_set_cursor(0, { row + 1, new_indent })
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('i<end>', true, false, true), 'n', false)
