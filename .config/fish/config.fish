@@ -15,8 +15,10 @@ alias e='editor'
 alias rl='source ~/.config/fish/config.fish'
 alias in='tmux-in'
 alias out='tmux-out'
-alias td='tmux detach-client -a -s main'
+alias td='tmux-delete'
 alias tk='tmux kill-server'
+alias tl='tmux list-sessions'
+alias tn='tmux display-message -p \'#S\''
 alias fixnvr='rm -f /tmp/nvimsocket'
 alias phpv='switch-php-version'
 
@@ -40,13 +42,21 @@ end
 
 # tmux
 function tmux-in
-  if tmux has-session -t main 2>/dev/null
-    tmux attach-session -t main
+  set -l session_name $argv[1]
+  if test -z "$session_name"
+    set session_name main
+  end
+  if tmux has-session -t $session_name 2>/dev/null
+    tmux attach-session -t $session_name
   else
-    tmux new-session -d -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
-    tmux new-window -t main:1 -n mail 'fish'
-    tmux select-window -t main:0
-    tmux attach-session -t main
+    if test "$session_name" = "main"
+      tmux new-session -d -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
+      tmux new-window -t main:1 -n mail 'fish'
+      tmux select-window -t main:0
+    else
+      tmux -f "$XDG_CONFIG_HOME/.tmux.no-binds.conf" new-session -d -s $session_name -n fish 'fish'
+    end
+    tmux attach-session -t $session_name
   end
 end
 
@@ -56,6 +66,14 @@ function tmux-out
   else
     echo 'Not in a tmux session.'
   end
+end
+
+function tmux-delete
+  set -l session_name $argv[1]
+  if test -z "$session_name"
+    set current_session (tmux display-message -p '#S')
+  end
+  tmux kill-session -t "$session_name"
 end
 
 

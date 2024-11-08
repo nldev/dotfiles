@@ -6,6 +6,7 @@ DefPrefix{
   speed_dial = { '<leader>s', desc = '[S]peed dial' },
   vim = { '<leader>v', desc = '[V]im' },
   quickfix = { '<leader>q', desc = '[Q]uickfix' },
+  terminal = { '<leader>t', desc = '[T]erminal' },
   -- git = { '<leader>g', desc = '[G]it' },
 }
 
@@ -50,7 +51,7 @@ DefKeymap{
   fuzzy_command_history = { '<leader>h', mode = { 'n' }, desc = 'Fuzzy command [h]istory' },
   fuzzy_color_schemes = { 'c', prefix = 'vim', mode = { 'n' }, desc = 'Fuzzy [c]olor schemes' },
   toggle_auto_comments = { '<leader>A', mode = { 'n' }, desc = 'Toggle auto-comment' },
-  smart_comma = { '<f13>', mode = { 'i' }, desc = 'Context-aware comma insertion' },
+  smart_comma = { '<m-,>', mode = { 'i' }, desc = 'Context-aware comma insertion' },
   goto_definition = { 'd', prefix = 'code', mode = { 'n' }, desc = 'Goto [d]efinition' },
   goto_type_definition = { 't', prefix = 'code', mode = { 'n' }, desc = 'Goto [t]ype definition' },
   goto_implementation = { 'i', prefix = 'code', mode = { 'n' }, desc = 'Goto [i]mplementation' },
@@ -111,5 +112,15 @@ DefKeymap{
   qf_diagnostics = { 'z', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix diagnostics' },
   qf_all_diagnostics = { 'Z', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix all diagnostics' },
   qf_delete = { 'd', prefix = 'quickfix', mode = { 'n' }, desc = 'Quickfix [d]elete' },
+  terminal_named = { 'n', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [n]amed' },
+  terminal_rename = { 'r', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [r]ename' },
+  terminal_add = { 'a', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [a]dd' },
+  terminal_switch = { 't', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal switch' },
+  -- terminal_list = { 'l', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [l]ist' },
+  terminal_1 = { '1', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [1]' },
+  terminal_2 = { '2', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [2]' },
+  terminal_3 = { '3', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [3]' },
+  terminal_4 = { '4', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [4]' },
+  terminal_5 = { '5', prefix = 'terminal', mode = { 'n' }, desc = 'Terminal [5]' },
 }
 
