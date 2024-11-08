@@ -51,9 +51,9 @@ local module = {
         },
       },
     }
-    require'telescope-all-recent'.setup{
-      default = { sorting = 'frecency' },
-    }
+    -- require'telescope-all-recent'.setup{
+    --   default = { sorting = 'frecency' },
+    -- }
     local telescope = require'telescope.builtin'
     UseKeymap('fuzzy_files', function () telescope.find_files() end)
     UseKeymap('fuzzy_live_grep', function () telescope.live_grep() end)

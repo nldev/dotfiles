@@ -39,6 +39,10 @@ local module = {
       Tnew(name)
     end
     function _G.Tnew (name)
+      if name and _G.__terminals__[name] then
+        print('Error: A terminal named ' .. name .. ' already exists.')
+        return
+      end
       if not name then
         name = string.format('%08x', math.random(0, 0xffffffff))
       end
@@ -183,7 +187,10 @@ local module = {
     vim.api.nvim_create_autocmd('BufEnter', {
       callback = function ()
         vim.defer_fn(function ()
-          if vim.bo.buftype ~= 'terminal' then
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if vim.bo.buftype == 'terminal' then
+            vim.cmd'norm G$'
+          elseif vim.fn.filereadable(bufname) == 1 then
             last_non_terminal_buf = vim.api.nvim_get_current_buf()
           end
         end, 0)
