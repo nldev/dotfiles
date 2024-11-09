@@ -28,7 +28,7 @@ DefKeymap{
   open_persistent_file_browser = { 'O', prefix = 'open', mode = { 'n' }, desc = 'Persistent explorer' },
   open_home = { 'h', prefix = 'open', mode = { 'n' }, desc = 'Explore [h]ome' },
   open_dev = { 'd', prefix = 'open', mode = { 'n' }, desc = 'Explore [d]ev' },
-  open_root = { 'r', prefix = 'open', mode = { 'n' }, desc = 'Explore [r]oot' },
+  open_root = { '/', prefix = 'open', mode = { 'n' }, desc = 'Explore root' },
   open_config = { 'C', prefix = 'open', mode = { 'n' }, desc = 'Explore config' },
   fuzzy_config = { 'c', prefix = 'open', mode = { 'n' }, desc = 'Fuzzy [c]onfig' },
   open_config_vim_autocmds = { 'a', prefix = 'open_vim', mode = { 'n' }, desc = 'Open nvim/[a]utocmds.lua' },
@@ -129,5 +129,7 @@ DefKeymap{
   terminal_execute_4 = { '4', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [4] execute' },
   terminal_execute_5 = { '5', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [5] execute' },
   terminal_execute_last = { 'e', prefix = 'terminal_execute', mode = { 'n' }, desc = 'Terminal [e]xecute' },
+  open_idea = { 'i', prefix = 'open', mode = { 'n' }, desc = 'Open in [I]DEA' },
+  -- open_rider = { 'r', prefix = 'open', mode = { 'n' }, desc = 'Open in [R]ider' },
 }
 

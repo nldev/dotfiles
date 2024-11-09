@@ -189,7 +189,7 @@ local module = {
         vim.defer_fn(function ()
           local bufname = vim.api.nvim_buf_get_name(0)
           if vim.bo.buftype == 'terminal' then
-            vim.cmd'norm G$'
+            vim.cmd'norm G0'
           elseif vim.fn.filereadable(bufname) == 1 then
             last_non_terminal_buf = vim.api.nvim_get_current_buf()
           end
