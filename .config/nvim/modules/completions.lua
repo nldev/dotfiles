@@ -1,7 +1,7 @@
 local module = {
   name = 'completions',
   desc = 'setup autocompletion suggestions',
-  dependencies = { 'intelligence' },
+  dependencies = { 'intellisense' },
   plugins = {
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/cmp-buffer',

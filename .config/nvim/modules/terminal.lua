@@ -320,6 +320,13 @@ local module = {
     UseKeymap('terminal_quickadd', function () Tnew() end)
     UseKeymap('terminal_switch', function () Tswitch() end)
     -- UseKeymap('terminal_list', function () Tlist() end)
+    UseKeymap('terminal_cancel', function ()
+      if vim.bo.buftype ~= 'terminal' then
+        print'Error: Not inside a terminal buffer.'
+        return
+      end
+      vim.fn.chansend(vim.b.terminal_job_id, '\x03')
+    end)
     UseKeymap('terminal_1', function () Tnumber(1) end)
     UseKeymap('terminal_2', function () Tnumber(2) end)
     UseKeymap('terminal_3', function () Tnumber(3) end)
@@ -331,6 +338,13 @@ local module = {
     UseKeymap('terminal_execute_4', function () terminal_execute(4) end)
     UseKeymap('terminal_execute_5', function () terminal_execute(5) end)
     UseKeymap('terminal_execute_last', function () terminal_execute_last() end)
+    UseKeymap('terminal_detach', function ()
+      vim.api.nvim_feedkeys(
+        vim.api.nvim_replace_termcodes('<c-\\><c-n>', true, false, true),
+        'n',
+        true
+      )
+    end)
   end,
 }
 

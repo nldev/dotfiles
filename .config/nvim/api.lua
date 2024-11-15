@@ -20,7 +20,7 @@ _G.Load = function (path)
   while true do
     local file = vim.loop.fs_scandir_next(scan)
     if not file then break end
-    if file:match("%.lua$") then
+    if file:match'%.lua$' then
       local full_file_path = path .. '/' .. file
       local chunk = loadfile(full_file_path)
       if chunk then
@@ -92,7 +92,7 @@ _G.Init = function ()
     }
   end
   vim.opt.rtp:prepend(lazy_path)
-  require('lazy').setup(plugins)
+  require'lazy'.setup(plugins)
   for _, fn in ipairs(fns) do
     fn()
   end
@@ -140,7 +140,7 @@ _G.DefKeymap = function (keymaps)
 end
 
 _G.DefAutocmd = function (name_or_table, opts)
-    if type(name_or_table) == "table" then
+    if type(name_or_table) == 'table' then
       for name, definition in pairs(name_or_table) do
         if not definition.event or not definition.desc then
           error('Missing required autocmd options for ' .. name)

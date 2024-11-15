@@ -1,7 +1,7 @@
 local module = {
   name = 'quickfix',
   desc = 'quickfix list improvement',
-  dependencies = { 'intelligence' },
+  dependencies = { 'intellisense' },
   plugins = {
     'kevinhwang91/nvim-bqf',
     'stevearc/quicker.nvim',

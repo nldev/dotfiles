@@ -2,7 +2,8 @@ local module = {
   name = 'vim',
   desc = 'general settings',
   plugins = {
-    'airblade/vim-rooter',
+    -- 'airblade/vim-rooter',
+    'karb94/neoscroll.nvim',
   },
   fn = function ()
     -- use utf-8 encoding
@@ -70,6 +71,43 @@ local module = {
     -- linebreak when wrapping is on
     vim.wo.linebreak = true
 
+    -- ensure path includes subdirectories
+    vim.o.path = vim.o.path .. '**'
+
+    -- textobject for current line between whitespace
+    vim.cmd'xnoremap ic g_o^'
+    vim.cmd'onoremap ic :<c-u>normal! vic<cr>'
+
+    -- automatically trim DOS line endings
+    function _G.TrimPaste()
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('p', true, false, true), 'n', false)
+      vim.schedule(function ()
+        local save = vim.fn.winsaveview()
+        vim.cmd'keeppatterns %s/\\s\\+$\\|\\r$//e'
+        vim.fn.winrestview(save)
+      end)
+    end
+    vim.cmd'noremap p :lua _G.TrimPaste()<cr>'
+
+    -- smooth scrolling
+    local neoscroll = require'neoscroll'
+    neoscroll.setup()
+    local keymap = {
+      ['<c-u>'] = function() neoscroll.ctrl_u({ duration = 100 }) end,
+      ['<c-d>'] = function() neoscroll.ctrl_d({ duration = 100 }) end,
+      ['<c-b>'] = function() neoscroll.ctrl_b({ duration = 150 }) end,
+      ['<c-f>'] = function() neoscroll.ctrl_f({ duration = 150 }) end,
+      ['<c-y>'] = function() neoscroll.scroll(-0.1, { move_cursor = false; duration = 100 }) end,
+      ['<c-e>'] = function() neoscroll.scroll(0.1, { move_cursor = false; duration = 100 }) end,
+      ['zt']    = function() neoscroll.zt({ half_win_duration = 100 }) end,
+      ['zz']    = function() neoscroll.zz({ half_win_duration = 100 }) end,
+      ['zb']    = function() neoscroll.zb({ half_win_duration = 100 }) end,
+    }
+    local modes = { 'n', 'v', 'x' }
+    for key, func in pairs(keymap) do
+      vim.keymap.set(modes, key, func)
+    end
+
     -- keybinds
     UseKeymap('vim_number_line', function ()
       if vim.wo.number then
@@ -98,10 +136,6 @@ local module = {
         vim.wo.wrap = true
       end
     end)
-    UseKeymap('vim_quit', function ()
-      vim.cmd'cclose'
-      vim.cmd'qa!'
-    end)
     UseKeymap('vim_kill_buffers', function ()
       vim.cmd'%bd!'
       vim.cmd'echo ""'
@@ -117,6 +151,13 @@ local module = {
         end
       end
     end)
+    UseKeymap('vim_previous_buffer', function () vim.cmd'b#' end)
+    UseKeymap('vim_trim_dos', function ()
+      local save = vim.fn.winsaveview()
+      vim.cmd'keeppatterns %s/\\s\\+$\\|\\r$//e'
+      vim.fn.winrestview(save)
+    end)
+    UseKeymap('select_last_paste', function () vim.cmd'normal! `[v`]' end)
   end
 }
 

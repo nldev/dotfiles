@@ -7,6 +7,11 @@ local module = {
     UseKeymap('clear', function ()
       local is_nofile = vim.bo.buftype == 'nofile'
 
+      -- terminal
+      if vim.bo.buftype == 'terminal' then
+        vim.fn.chansend(vim.b.terminal_job_id, '\x0c')
+      end
+
       -- close lsp info window
       if vim.bo.filetype == 'markdown' and is_nofile then
         vim.api.nvim_win_close(0, true)
@@ -35,6 +40,11 @@ local module = {
       -- close netrw buffer
       if vim.bo.filetype == 'netrw' then
         vim.cmd'bd'
+      end
+
+      -- close undotree
+      if vim.bo.filetype == 'undotree' then
+        vim.api.nvim_win_close(0, true)
       end
 
       -- close org-roam-select window

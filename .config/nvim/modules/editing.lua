@@ -22,7 +22,7 @@ local module = {
     },
 
     -- Abbreviate / substitute / coerce with multiple variants
-    'tpope/vim-abolish'
+    'tpope/vim-abolish',
   },
   fn = function ()
     -- virtual edit for visual block mode
@@ -97,7 +97,7 @@ local module = {
       vim.cmd'echo ""'
     end)
 
-    -- black hole operations 
+    -- black hole operations
     UseKeymap('black_hole_delete', function ()
       vim.api.nvim_feedkeys('"_d', 'x', false)
     end)
@@ -115,6 +115,16 @@ local module = {
     UseKeymap('toggle_eol_comma', function () vim.cmd'norm \\,' end)
     UseKeymap('toggle_eol_period', function () vim.cmd'norm \\.' end)
     UseKeymap('toggle_eol_semicolon', function () vim.cmd'norm \\;' end)
+
+    -- move lines
+    vim.keymap.set('v', 'J', function()
+      local count = vim.v.count1  -- Get the count or default to 1
+      return ":move '>+" .. count .. '<cr>gv=gv'
+    end, { expr = true, silent = true })
+    vim.keymap.set('v', 'K', function()
+      local count = vim.v.count1
+      return ":move '<-" .. (count + 1) .. '<cr>gv=gv'
+    end, { expr = true, silent = true })
   end,
 }
 

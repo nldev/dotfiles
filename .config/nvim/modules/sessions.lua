@@ -3,11 +3,11 @@ local module = {
   desc = 'session management',
   plugins = {
     'folke/persistence.nvim',
-    'vladdoster/remember.nvim',
+    'farmergreg/vim-lastplace',
   },
   fn = function ()
     -- Remember column / line.
-    require'remember'
+    vim.cmd'let g:lastplace_ignore += ",undotree"'
     -- Load last session.
     local persistence = require'persistence'
     persistence.setup()

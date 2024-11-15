@@ -1,10 +1,12 @@
 local module = {
-  name = 'intelligence',
+  name = 'intellisense',
   desc = 'configures LSPs and treesitter',
   plugins = {
     {
       'nvim-treesitter/nvim-treesitter',
-      dependencies = { 'nvim-treesitter/nvim-treesitter-textobjects' },
+      dependencies = {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+      },
       build = ':TSUpdate',
       event = { 'BufReadPre', 'BufNewFile' },
     },
@@ -22,6 +24,9 @@ local module = {
     -- treesitter
     local treesitter_configs = require'nvim-treesitter.configs'
     treesitter_configs.setup{
+      modules = {},
+      ignore_install = {},
+      sync_install = true,
       auto_install = true,
       ensure_installed = {
         'bash',
@@ -67,8 +72,8 @@ local module = {
             ['if'] = { query = '@call.inner', desc = 'Select inner function call' },
             ['am'] = { query = '@function.outer', desc = 'Select outer method' },
             ['im'] = { query = '@function.inner', desc = 'Select inner method' },
-            ['ac'] = { query = '@class.outer', desc = 'Select outer class' },
-            ['ic'] = { query = '@class.inner', desc = 'Select inner class' },
+            ['ak'] = { query = '@class.outer', desc = 'Select outer class' },
+            ['ik'] = { query = '@class.inner', desc = 'Select inner class' },
             ['ab'] = { query = '@block.outer', desc = 'Select outer block' },
             ['ib'] = { query = '@block.inner', desc = 'Select inner block' },
           },
@@ -93,7 +98,7 @@ local module = {
             [']b'] = { query = '@block.outer', desc = 'Next block' },
             [']f'] = { query = '@call.outer', desc = 'Next function call' },
             [']m'] = { query = '@function.outer', desc = 'Next method' },
-            [']c'] = { query = '@class.outer', desc = 'Next class' },
+            [']k'] = { query = '@class.outer', desc = 'Next class' },
             [']i'] = { query = '@conditional.outer', desc = 'Next conditional' },
             [']l'] = { query = '@loop.outer', desc = 'Next loop' },
             [']s'] = { query = '@scope', query_group = 'locals', desc = 'Next scope' },
@@ -103,7 +108,7 @@ local module = {
             [']B'] = { query = '@block.outer', desc = 'Next block end' },
             [']F'] = { query = '@call.outer', desc = 'Next function call end' },
             [']M'] = { query = '@function.outer', desc = 'Next method end' },
-            [']C'] = { query = '@class.outer', desc = 'Next class end' },
+            [']K'] = { query = '@class.outer', desc = 'Next class end' },
             [']I'] = { query = '@conditional.outer', desc = 'Next conditional end' },
             [']L'] = { query = '@loop.outer', desc = 'Next loop end' },
           },
@@ -111,7 +116,7 @@ local module = {
             ['[b'] = { query = '@block.outer', desc = 'Prev block start' },
             ['[f'] = { query = '@call.outer', desc = 'Prev function call' },
             ['[m'] = { query = '@function.outer', desc = 'Prev method start' },
-            ['[c'] = { query = '@class.outer', desc = 'Prev class start' },
+            ['[k'] = { query = '@class.outer', desc = 'Prev class start' },
             ['[i'] = { query = '@conditional.outer', desc = 'Prev conditional start' },
             ['[l'] = { query = '@loop.outer', desc = 'Prev loop start' },
           },
@@ -119,7 +124,7 @@ local module = {
             ['[B'] = { query = '@block.outer', desc = 'Prev block end' },
             ['[F'] = { query = '@call.outer', desc = 'Prev function call end' },
             ['[M'] = { query = '@function.outer', desc = 'Prev method end' },
-            ['[C'] = { query = '@class.outer', desc = 'Prev class end' },
+            ['[K'] = { query = '@class.outer', desc = 'Prev class end' },
             ['[I'] = { query = '@conditional.outer', desc = 'Prev conditional end' },
             ['[L'] = { query = '@loop.outer', desc = 'Prev loop end' },
           },
@@ -140,7 +145,7 @@ local module = {
           floating_preview_opts = {},
           peek_definition_code = {
             ['<leader>df'] = { query = '@function.outer', desc = 'Preview outer [f]unction' },
-            ['<leader>dc'] = { query = '@class.outer', desc = 'Preview outer [c]lass' },
+            ['<leader>dk'] = { query = '@class.outer', desc = 'Preview outer [c]lass' },
           },
         },
       },

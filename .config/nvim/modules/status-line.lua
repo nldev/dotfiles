@@ -64,7 +64,7 @@ local function status_normal ()
   -- vim.opt.statusline:append' C:%v'
 
   -- line / column
-  vim.opt.statusline:append' %l:%v '
+  vim.opt.statusline:append' %l:%v'
 
   -- current line / total lines
   -- vim.opt.statusline:append' L:%l/%L'

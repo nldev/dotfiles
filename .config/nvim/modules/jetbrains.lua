@@ -15,7 +15,7 @@ local module = {
       )
       vim.cmd(command)
     end)
-    -- FIXME: need a way to select the solution and possibly format the path
+    -- TODO: need a way to select the solution and possibly format the path
     -- UseKeymap('open_rider', function ()
     --   vim.cmd'rider64.exe --line <line_number> <path_to_solution.sln> <path_to_file.cs>'
     -- end)

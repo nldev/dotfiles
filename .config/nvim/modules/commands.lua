@@ -4,18 +4,18 @@ local module = {
   plugins = {},
   fn = function ()
     -- :Reorder
-    vim.api.nvim_create_user_command('Reorder', function(opts)
+    vim.api.nvim_create_user_command('Reorder', function (opts)
       local start_line = opts.line1
       local end_line = opts.line2
       local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
       local parsed = {}
       for _, line in ipairs(lines) do
-        local number = tonumber(line:match("=%s*(%d+)"))
+        local number = tonumber(line:match'=%s*(%d+)')
         if number then
           table.insert(parsed, { line_content = line, number = number })
         end
       end
-      table.sort(parsed, function(a, b) return a.number < b.number end)
+      table.sort(parsed, function (a, b) return a.number < b.number end)
       local reordered_lines = {}
       for _, entry in ipairs(parsed) do
         table.insert(reordered_lines, entry.line_content)
@@ -26,7 +26,7 @@ local module = {
 
     -- :KillAllBuffers
     vim.api.nvim_create_user_command('KillAllBuffers', function ()
-      vim.cmd('bufdo! bwipeout!')
+      vim.cmd'bufdo! bwipeout!'
     end, { nargs = 0 })
 
     -- :WhereAmI
@@ -36,12 +36,12 @@ local module = {
 
     -- :Delete
     vim.api.nvim_create_user_command('Delete', function ()
-      vim.cmd("exec 'silent !rm %' | bdelete!")
+      vim.cmd'exec \'silent !rm %\' | bdelete!'
     end, { nargs = 0 })
 
     -- :Rename
     vim.api.nvim_create_user_command('Rename', function (args)
-      local current_file = vim.fn.expand('%:p')
+      local current_file = vim.fn.expand'%:p'
       local current_dir = vim.fn.fnamemodify(current_file, ':h')
       local new_name = args.args
       local new_path

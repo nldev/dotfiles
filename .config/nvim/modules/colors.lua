@@ -34,6 +34,10 @@ local module = {
     'maxmx03/fluoromachine.nvim',
     'dgox16/oldworld.nvim',
     'edeneast/nightfox.nvim',
+    'honamduong/hybrid.nvim',
+    'sainnhe/sonokai',
+    'sainnhe/edge',
+    'shatur/neovim-ayu',
   },
   fn = function ()
     -- Fix colors
@@ -42,6 +46,17 @@ local module = {
     -- Enable color code highlighting
     require'nvim-highlight-colors'.setup()
 
+    -- My override colors
+    local function override_colors()
+      vim.cmd'hi FlashCurrent    guibg=#ff69b4 guifg=#000000'
+      vim.cmd'hi FlashMatch      guibg=#aabbff guifg=#000000'
+      vim.cmd'hi FlashLabel      guibg=#cccccc guifg=#000000'
+      vim.cmd'hi IncSearch       guibg=#ff69b4 guifg=#000000'
+      vim.cmd'hi Search          guibg=#aabbff guifg=#000000'
+      vim.cmd'set cursorline'
+      vim.cmd'highlight clear CursorLine'
+    end
+
     -- My color scheme
     local function colors ()
       vim.cmd'hi clear'
@@ -49,7 +64,8 @@ local module = {
         vim.cmd'syntax reset'
       end
       vim.cmd'color off'
-      vim.cmd'hi StatusLine      guibg=#1b1d1e'
+      -- vim.cmd'hi StatusLine      guibg=#1b1d1e'
+      vim.cmd'hi StatusLine      guibg=#ffffff guifg=#000000'
       vim.cmd'hi Normal          guibg=NONE    guifg=#cccccc'
       vim.cmd'hi String                        guifg=#b7bdf8'
       vim.cmd'hi Comment                       guifg=#828a9a'
@@ -73,19 +89,9 @@ local module = {
       vim.cmd'hi CursorLineNr                  guifg=#ffffff'
       vim.cmd'hi clear CursorLine'
       vim.fn.delete(vim.fn.stdpath'data' .. '/colorscheme.lua')
+      override_colors()
     end
     vim.api.nvim_create_user_command('Colors', colors, {})
-
-    -- My override colors
-    local function override_colors()
-      vim.cmd'hi FlashCurrent    guibg=#ff69b4 guifg=#000000'
-      vim.cmd'hi FlashMatch      guibg=#aabbff guifg=#000000'
-      vim.cmd'hi FlashLabel      guibg=#cccccc guifg=#000000'
-      vim.cmd'hi IncSearch       guibg=#ff69b4 guifg=#000000'
-      vim.cmd'hi Search          guibg=#aabbff guifg=#000000'
-      vim.cmd'set cursorline'
-      vim.cmd'highlight clear CursorLine'
-    end
 
     -- Load persisted theme
     local persisted_scheme = vim.fn.stdpath'data' .. '/colorscheme.lua'

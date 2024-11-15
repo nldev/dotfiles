@@ -26,6 +26,7 @@ alias phpv='switch-php-version'
 
 # paths
 set -U fish_user_paths $fish_user_paths ~/.config/composer/vendor/bin
+set -U fish_user_paths $fish_user_paths ~/.config/emacs/bin
 
 
 
@@ -50,6 +51,7 @@ function tmux-in
     tmux attach-session -t $session_name
   else
     if test "$session_name" = "main"
+      cd ~
       tmux new-session -d -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
       tmux new-window -t main:1 -n mail 'fish'
       tmux select-window -t main:0

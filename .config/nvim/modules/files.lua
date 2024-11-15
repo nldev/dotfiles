@@ -27,6 +27,7 @@ local module = {
     UseKeymap('empty_file', function () create_temp_file('txt', 'text') end)
     UseKeymap('empty_json_file', function () create_temp_file('json', 'json') end)
     UseKeymap('empty_lua_file', function () create_temp_file('lua', 'lua') end)
+    UseKeymap('empty_vim_file', function () create_temp_file('vim', 'vim') end)
     UseKeymap('open_file_browser', function () files.open(vim.api.nvim_buf_get_name(0), false) end)
     UseKeymap('open_project_browser', function () files.open(vim.fn.getcwd(), false) end)
     UseKeymap('open_persistent_file_browser', function () files.open(vim.fn.getcwd()) end)
