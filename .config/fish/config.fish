@@ -33,9 +33,9 @@ set -U fish_user_paths $fish_user_paths ~/.config/emacs/bin
 # neovim
 function editor
   if test -S /tmp/nvimsocket
-    nvr --remote
+    nvr --remote $argv
   else
-    nvim --listen /tmp/nvimsocket
+    nvim --listen /tmp/nvimsocket $argv
   end
 end
 
@@ -52,8 +52,9 @@ function tmux-in
   else
     if test "$session_name" = "main"
       cd ~
-      tmux new-session -d -s main -n vim 'fish -c "nvim --listen /tmp/nvimsocket; fish"'
-      tmux new-window -t main:1 -n mail 'fish'
+      fixnvr
+      tmux new-session -d -s main -n vim 'fish -c "e; fish"'
+      tmux new-window -t main:9 -n emacs 'fish -c "emacs; fish"'
       tmux select-window -t main:0
     else
       tmux -f "$XDG_CONFIG_HOME/.tmux.no-binds.conf" new-session -d -s $session_name -n fish 'fish'

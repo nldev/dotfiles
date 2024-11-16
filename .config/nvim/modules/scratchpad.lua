@@ -1,5 +1,5 @@
 local module = {
-  name = 'scratch',
+  name = 'scratchpad',
   desc = 'scratch window utility',
   plugins = {},
 }
@@ -8,7 +8,7 @@ local previous_window = nil
 local saved_layout = nil
 local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.txt'
 
-function Scratch ()
+function _G.Scratchpad ()
   local current_file = vim.api.nvim_buf_get_name(0)
   local total_lines = vim.api.nvim_get_option'lines'
   local run = 'edit ' .. scratch_file
@@ -73,7 +73,7 @@ function Scratch ()
 end
 
 module.fn = function ()
-  UseKeymap('scratch', function () Scratch() end)
+  UseKeymap('scratchpad', function () _G.Scratchpad() end)
 end
 
 return module

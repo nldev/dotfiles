@@ -78,17 +78,6 @@ local module = {
     vim.cmd'xnoremap ic g_o^'
     vim.cmd'onoremap ic :<c-u>normal! vic<cr>'
 
-    -- automatically trim DOS line endings
-    function _G.TrimPaste()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('p', true, false, true), 'n', false)
-      vim.schedule(function ()
-        local save = vim.fn.winsaveview()
-        vim.cmd'keeppatterns %s/\\s\\+$\\|\\r$//e'
-        vim.fn.winrestview(save)
-      end)
-    end
-    vim.cmd'noremap p :lua _G.TrimPaste()<cr>'
-
     -- smooth scrolling
     local neoscroll = require'neoscroll'
     neoscroll.setup()
@@ -152,10 +141,9 @@ local module = {
       end
     end)
     UseKeymap('vim_previous_buffer', function () vim.cmd'b#' end)
-    UseKeymap('vim_trim_dos', function ()
-      local save = vim.fn.winsaveview()
-      vim.cmd'keeppatterns %s/\\s\\+$\\|\\r$//e'
-      vim.fn.winrestview(save)
+    UseKeymap('vim_msdos_remover', function ()
+      pcall(vim.cmd, ':%s/\r//g')
+      vim.cmd'nohlsearch'
     end)
     UseKeymap('select_last_paste', function () vim.cmd'normal! `[v`]' end)
   end

@@ -105,12 +105,6 @@ local module = {
       vim.api.nvim_feedkeys('"_dhp', 'x', false)
     end)
 
-    -- sort lines
-    UseKeymap('sort_lines', function () vim.cmd"'<,'>sort" end)
-    UseKeymap('sort_lines_reverse', function () vim.cmd"'<,'>sort!" end)
-    UseKeymap('sort_lines_numeric', function () vim.cmd"'<,'>sort n" end)
-    UseKeymap('sort_lines_numeric_reverse', function () vim.cmd"'<,'>sort! n" end)
-
     -- insert mode EOL insertions
     UseKeymap('toggle_eol_comma', function () vim.cmd'norm \\,' end)
     UseKeymap('toggle_eol_period', function () vim.cmd'norm \\.' end)

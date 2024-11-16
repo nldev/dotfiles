@@ -4,6 +4,7 @@ local module = {
   fn = function ()
     _G.__terminals__ = {}
     local term_list = {}
+    local term_buf_ids = {}
     local last_term = ''
     local function autocomplete (_, cmd)
       local args = vim.split(cmd, ' ', { plain = true, trimempty = true })
@@ -80,11 +81,13 @@ local module = {
                 end
               end
               _G.__terminals__[stored_name] = nil
+              term_buf_ids[stored_name] = nil
               is_rename = true
               break
             end
           end
           _G.__terminals__[name] = job_id
+          term_buf_ids[name] = vim.fn.bufnr()
           last_term = name
           local buf_id = vim.fn.bufnr'%'
           local augroup = 'term__' .. tostring(buf_id)
@@ -166,6 +169,46 @@ local module = {
         end, 500)
       end
       vim.cmd'echo ""'
+    end
+    function _G.Tcallback(name, command, expected, callback, timeout)
+      timeout = timeout or 5
+      local job_id = _G.__terminals__[name]
+      local start_time = vim.loop.now()
+      local function wait_for_output ()
+        if not job_id then
+          print('Error: Terminal ' .. name .. ' does not exist.')
+          return
+        end
+        local bufnr = term_buf_ids[name]
+        local line_count = vim.api.nvim_buf_line_count(bufnr)
+        if line_count > 0 then
+          local last_line = vim.api.nvim_buf_get_lines(bufnr, line_count - 1, line_count, false)[1]
+          if last_line and string.find(last_line, expected, 1, true) then
+            callback()
+            return
+          end
+        end
+        local elapsed_time = (vim.loop.now() - start_time) / 1000
+        if elapsed_time >= timeout then
+          vim.print('Error: Timeout waiting for expected output \'' .. expected .. '\'', vim.log.levels.WARN)
+          return
+        end
+        vim.defer_fn(wait_for_output, 100)
+      end
+      if job_id then
+        vim.defer_fn(wait_for_output, 500)
+        vim.fn.chansend(job_id, command .. '\r')
+      else
+        Tnew(name)
+        vim.defer_fn(function ()
+          job_id = _G.__terminals__[name]
+          if job_id then
+            vim.defer_fn(wait_for_output, 500)
+            vim.fn.chansend(job_id, command .. '\r')
+          end
+        end, 500)
+      end
+      vim.cmd 'echo ""'
     end
     function _G.Tnumber (index, opts)
       if not term_list[index] then

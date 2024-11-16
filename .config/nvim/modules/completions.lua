@@ -56,7 +56,14 @@ local module = {
       {
         { name = 'cmdline' },
       }),
-      matching = { disallow_symbol_nonprefix_matching = false },
+      matching = {
+        disallow_symbol_nonprefix_matching = false,
+        disallow_fuzzy_matching = false,
+        disallow_fullfuzzy_matching = false,
+        disallow_partial_fuzzy_matching = false,
+        disallow_partial_matching = false,
+        disallow_prefix_unmatching = false,
+      },
     })
     local capabilities = require'cmp_nvim_lsp'.default_capabilities()
     require'lspconfig'['ts_ls'].setup{ capabilities = capabilities }
