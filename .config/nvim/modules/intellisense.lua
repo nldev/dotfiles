@@ -141,7 +141,7 @@ local module = {
         },
         lsp_interop = {
           enable = true,
-          border = 'none',
+          -- border = 'none',
           floating_preview_opts = {},
           peek_definition_code = {
             ['<leader>df'] = { query = '@function.outer', desc = 'Preview outer [f]unction' },
@@ -213,7 +213,6 @@ local module = {
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
     UseKeymap('goto_implementation', function () vim.lsp.buf.implementation() end)
     UseKeymap('toggle_diagnostics', function () ToggleDiagnostics(true) end)
-    UseKeymap('lsp_info', function () vim.lsp.buf.hover() end)
     UseKeymap('rename', function ()
       local current_name = vim.fn.expand'<cword>'
       vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (new_name)

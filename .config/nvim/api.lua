@@ -25,12 +25,11 @@ _G.Load = function (path)
       local chunk = loadfile(full_file_path)
       if chunk then
         local result = chunk()
-        -- Enforce that the module has a name
-	if result and not result.desc then
+        if result and not result.desc then
           print('Module at ' .. full_file_path .. ' is missing a description and was not loaded.')
-	  return
-  	end
-  	if result and result.name then
+          return
+        end
+        if result and result.name then
           _G.__registry__[result.name] = result
           table.insert(_G.__modules__, result)
         else
@@ -92,7 +91,10 @@ _G.Init = function ()
     }
   end
   vim.opt.rtp:prepend(lazy_path)
-  require'lazy'.setup(plugins)
+  if not _G.__load_plugins_once__ then
+    require'lazy'.setup(plugins)
+  end
+  _G.__load_plugins_once__ = true
   for _, fn in ipairs(fns) do
     fn()
   end

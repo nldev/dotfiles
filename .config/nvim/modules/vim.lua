@@ -82,15 +82,15 @@ local module = {
     local neoscroll = require'neoscroll'
     neoscroll.setup()
     local keymap = {
-      ['<c-u>'] = function() neoscroll.ctrl_u({ duration = 100 }) end,
-      ['<c-d>'] = function() neoscroll.ctrl_d({ duration = 100 }) end,
-      ['<c-b>'] = function() neoscroll.ctrl_b({ duration = 150 }) end,
-      ['<c-f>'] = function() neoscroll.ctrl_f({ duration = 150 }) end,
+      ['<c-u>'] = function() neoscroll.ctrl_u{ duration = 100 } end,
+      ['<c-d>'] = function() neoscroll.ctrl_d{ duration = 100 } end,
+      ['<c-b>'] = function() neoscroll.ctrl_b{ duration = 150 } end,
+      ['<c-f>'] = function() neoscroll.ctrl_f{ duration = 150 } end,
       ['<c-y>'] = function() neoscroll.scroll(-0.1, { move_cursor = false; duration = 100 }) end,
       ['<c-e>'] = function() neoscroll.scroll(0.1, { move_cursor = false; duration = 100 }) end,
-      ['zt']    = function() neoscroll.zt({ half_win_duration = 100 }) end,
-      ['zz']    = function() neoscroll.zz({ half_win_duration = 100 }) end,
-      ['zb']    = function() neoscroll.zb({ half_win_duration = 100 }) end,
+      ['zt']    = function() neoscroll.zt{ half_win_duration = 100 } end,
+      ['zz']    = function() neoscroll.zz{ half_win_duration = 100 } end,
+      ['zb']    = function() neoscroll.zb{ half_win_duration = 100 } end,
     }
     local modes = { 'n', 'v', 'x' }
     for key, func in pairs(keymap) do
@@ -98,6 +98,18 @@ local module = {
     end
 
     -- keybinds
+    UseKeymap('vim_quick_delete', function ()
+      vim.api.nvim_feedkeys('dd', 'n', true)
+    end)
+    UseKeymap('vim_signcolumn', function ()
+      if vim.o.signcolumn == 'yes' then
+        print'signcolumn OFF'
+        vim.o.signcolumn = 'no'
+      else
+        print'signcolumn ON'
+        vim.o.signcolumn = 'yes'
+      end
+    end)
     UseKeymap('vim_number_line', function ()
       if vim.wo.number then
         print'number line OFF'
@@ -125,6 +137,27 @@ local module = {
         vim.wo.wrap = true
       end
     end)
+    UseKeymap('vim_tab_quickadd', function ()
+      vim.cmd'tabnew'
+    end)
+    UseKeymap('vim_tab_add', function ()
+      vim.ui.input(
+        { prompt = 'Add named tab: ', default = '', cancelreturn = nil },
+        function (name)
+          if name and #name > 0 then
+            vim.cmd('tabnew ' .. name)
+          end
+        end)
+    end)
+    UseKeymap('vim_tab_prev', function ()
+      vim.cmd'tabprev'
+    end)
+    UseKeymap('vim_tab_next', function ()
+      vim.cmd'tabnext'
+    end)
+    UseKeymap('vim_tab_close', function ()
+      vim.cmd'tabclose'
+    end)
     UseKeymap('vim_kill_buffers', function ()
       vim.cmd'%bd!'
       vim.cmd'echo ""'
@@ -146,6 +179,37 @@ local module = {
       vim.cmd'nohlsearch'
     end)
     UseKeymap('select_last_paste', function () vim.cmd'normal! `[v`]' end)
+    UseKeymap('vim_source', function ()
+      local persistence = require'persistence'
+      if persistence then
+        persistence.save()
+      end
+      local path = vim.fn.stdpath'config'
+      vim.cmd('so ' .. path .. '/init.lua')
+      vim.cmd'nohlsearch'
+      print('init.lua loaded')
+    end)
+    UseKeymap('vim_eval', function ()
+      local filetype = vim.fn.expand'%:e'
+      if filetype == 'lua' or filetype == 'vim' then
+        vim.cmd'so'
+        print(vim.fn.expand'%:p' .. ' loaded')
+      else
+        print('Error: Unsupported filetype for sourcing (' .. filetype .. ')')
+      end
+    end)
+    UseKeymap('goto_mark', function ()
+      vim.api.nvim_feedkeys('`', 'n', true)
+    end)
+    UseKeymap('vim_spell_check', function ()
+      if vim.wo.spell then
+        print'spell check OFF'
+        vim.wo.spell = false
+      else
+        print'spell check ON'
+        vim.wo.spell = true
+      end
+    end)
   end
 }
 

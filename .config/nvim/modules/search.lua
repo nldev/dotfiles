@@ -1,5 +1,5 @@
 local module = {
-  name = 'fuzzy',
+  name = 'search',
   desc = 'fuzzy finders',
   plugins = {
     {
@@ -55,23 +55,23 @@ local module = {
     --   default = { sorting = 'frecency' },
     -- }
     local telescope = require'telescope.builtin'
-    UseKeymap('fuzzy_files', function () telescope.find_files() end)
-    UseKeymap('fuzzy_live_grep', function () telescope.live_grep() end)
-    UseKeymap('fuzzy_help', function () telescope.help_tags() end)
-    UseKeymap('fuzzy_buffers', function () telescope.buffers() end)
-    UseKeymap('fuzzy_symbols', function () telescope.lsp_document_symbols() end)
-    UseKeymap('fuzzy_references', function () telescope.lsp_references() end)
-    UseKeymap('fuzzy_diagnostics', function () telescope.diagnostics() end)
-    UseKeymap('fuzzy_command_history', function () telescope.command_history() end)
-    UseKeymap('fuzzy_grep', function ()
+    UseKeymap('search_files', function () telescope.find_files() end)
+    UseKeymap('search_live_grep', function () telescope.live_grep() end)
+    UseKeymap('search_help', function () telescope.help_tags() end)
+    UseKeymap('search_buffers', function () telescope.buffers() end)
+    UseKeymap('search_symbols', function () telescope.lsp_document_symbols() end)
+    UseKeymap('search_references', function () telescope.lsp_references() end)
+    UseKeymap('search_diagnostics', function () telescope.diagnostics() end)
+    UseKeymap('search_command_history', function () telescope.command_history() end)
+    UseKeymap('search_grep', function ()
       if vim.api.nvim_buf_line_count(0) > 5000 then
         fzf.grep_curbuf()
       else
         telescope.current_buffer_fuzzy_find()
       end
     end)
-    UseKeymap('fuzzy_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
-    UseKeymap('fuzzy_code_actions', function () fzf.lsp_code_actions() end)
+    UseKeymap('search_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
+    UseKeymap('search_code_actions', function () fzf.lsp_code_actions() end)
   end
 }
 

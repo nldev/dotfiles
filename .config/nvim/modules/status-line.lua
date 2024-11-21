@@ -16,23 +16,29 @@ function _G.GetBufferName ()
       end
     end
   end
-  local full_path = vim.fn.expand('%:p')
-  local notes_dir = vim.fn.expand('~/notes')
+  local full_path = vim.fn.expand'%:p'
+  local notes_dir = vim.fn.expand'~/notes'
   if full_path:sub(1, #notes_dir) == notes_dir then
     return full_path:sub(#notes_dir + 2)
   end
-  return vim.fn.expand('%f')
+  return vim.fn.expand'%f'
 end
 
 local function status_simple ()
   -- reset status line
   vim.opt.statusline = ''
 
+  -- hide command
+  vim.o.showcmd = false
+
    -- file path and modified flag
   vim.opt.statusline:append'%f '
 end
 
 local function status_normal ()
+  -- hide command
+  vim.o.showcmd = true
+
   -- reset status line
   vim.opt.statusline = ''
 
@@ -54,38 +60,28 @@ local function status_normal ()
   -- buffer language
   vim.opt.statusline:append'%{!empty(&filetype) ? &filetype : &buftype}'
 
-  -- hex value of char under cursor
-  -- vim.opt.statusline:append' [0x%B]'
+  -- hex char under cursor
+  vim.opt.statusline:append' 0x%B'
 
-  -- buffer number
-  -- vim.opt.statusline:append' B:%n'
-
-  -- column number
-  -- vim.opt.statusline:append' C:%v'
-
-  -- line / column
-  vim.opt.statusline:append' %l:%v'
-
-  -- current line / total lines
-  -- vim.opt.statusline:append' L:%l/%L'
+  -- column
+  vim.opt.statusline:append' %v'
 
   -- percentage through the file
-  -- vim.opt.statusline:append'[%p%%]'
   vim.opt.statusline:append' %p%%'
 end
 
 module.fn = function ()
   -- Use a global statusline.
-  vim.cmd('set laststatus=3')
+  vim.cmd'set laststatus=3'
   -- :StatusNormal
   vim.api.nvim_create_user_command('StatusNormal', function ()
     status_normal()
-    vim.cmd('echo ""')
+    vim.cmd'echo ""'
   end, { nargs = 0 })
   -- :StatusSimple
   vim.api.nvim_create_user_command('StatusSimple', function ()
     status_simple()
-    vim.cmd('echo ""')
+    vim.cmd'echo ""'
   end, { nargs = 0 })
   -- Set default statusline.
   status_normal()

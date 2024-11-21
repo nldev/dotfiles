@@ -6,7 +6,8 @@ local module = {
 
 local previous_window = nil
 local saved_layout = nil
-local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.txt'
+-- local scratch_file = vim.fn.expand'~/.local/share/nvim/scratch.txt'
+local scratch_file = vim.fn.expand'~/notes/inbox.org'
 
 function _G.Scratchpad ()
   local current_file = vim.api.nvim_buf_get_name(0)

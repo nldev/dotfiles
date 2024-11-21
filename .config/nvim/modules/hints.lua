@@ -7,7 +7,10 @@ local module = {
 }
 
 local triggers = {
+  -- leader
   { mode = 'n', keys = '<leader>' },
+  { mode = 'x', keys = '<leader>' },
+  -- windows
   { mode = 'n', keys = '<c-w>' },
   -- marks
   { mode = 'n', keys = "'" },
@@ -22,15 +25,22 @@ local triggers = {
   -- folds
   { mode = 'n', keys = 'z' },
   { mode = 'x', keys = 'z' },
+  -- g
+  { mode = 'n', keys = 'g' },
+  { mode = 'x', keys = 'g' },
+  -- built-in completion
+  { mode = 'i', keys = '<c-x>' },
 }
 
 local function generate_clues ()
   local miniclue = require'mini.clue'
   local clues = {
+    miniclue.gen_clues.builtin_completion(),
     miniclue.gen_clues.marks(),
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
+    miniclue.gen_clues.g(),
   }
   for _, definition in pairs(_G.__prefixes__) do
     table.insert(clues, {

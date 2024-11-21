@@ -1,7 +1,7 @@
 local module = {
   name = 'files',
   desc = 'file browsing',
-  dependencies = { 'fuzzy' },
+  dependencies = { 'search' },
   plugins = {
     { 'echasnovski/mini.files', version = false },
   },
@@ -28,9 +28,9 @@ local module = {
     UseKeymap('empty_json_file', function () create_temp_file('json', 'json') end)
     UseKeymap('empty_lua_file', function () create_temp_file('lua', 'lua') end)
     UseKeymap('empty_vim_file', function () create_temp_file('vim', 'vim') end)
-    UseKeymap('fuzzy_config', function () require'telescope.builtin'.find_files{ cwd = '~/.config' } end)
-    UseKeymap('fuzzy_vim_context', function () require'telescope.builtin'.find_files{ cwd = '~/.context/nvim' } end)
-    UseKeymap('fuzzy_vim_modules', function () require'telescope.builtin'.find_files{ cwd = '~/.config/nvim/modules' } end)
+    UseKeymap('search_config', function () require'telescope.builtin'.find_files{ cwd = '~/.config' } end)
+    UseKeymap('search_vim_context', function () require'telescope.builtin'.find_files{ cwd = '~/.context/nvim' } end)
+    UseKeymap('search_vim_modules', function () require'telescope.builtin'.find_files{ cwd = '~/.config/nvim/modules' } end)
     UseKeymap('open_config', function () files.open('~/.config', false) end)
     UseKeymap('open_config_vim_api', function () vim.cmd'e ~/.config/nvim/api.lua' end)
     UseKeymap('open_config_vim_autocmds', function () vim.cmd'e ~/.config/nvim/autocmds.lua' end)

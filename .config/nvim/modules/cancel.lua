@@ -1,6 +1,6 @@
 local module = {
-  name = 'clear',
-  desc = 'defines a universael clear / cancel keymap.',
+  name = 'cancel',
+  desc = 'defines a universal clear and cancel keymap.',
   plugins = {},
   fn = function ()
     UseKeymap('reload_file', function () vim.cmd'e' end)

@@ -1,7 +1,7 @@
 local module = {
   name = 'colors',
   desc = 'defines colorscheme and highlighting',
-  dependencies = { 'fuzzy' },
+  dependencies = { 'search' },
   plugins = {
     'brenoprata10/nvim-highlight-colors',
     -- themes
@@ -44,7 +44,7 @@ local module = {
     vim.cmd'set termguicolors'
 
     -- Enable color code highlighting
-    require'nvim-highlight-colors'.setup()
+    require'nvim-highlight-colors'.setup{}
 
     -- My override colors
     local function override_colors()
@@ -104,7 +104,7 @@ local module = {
 
     -- Persist theme function
     local function persist_colorscheme(scheme)
-      local config_file = vim.fn.stdpath('data') .. '/colorscheme.lua'
+      local config_file = vim.fn.stdpath'data' .. '/colorscheme.lua'
       local file = io.open(config_file, 'w')
       if file then
         file:write('vim.cmd\'color ' .. scheme .. '\'')
@@ -113,12 +113,11 @@ local module = {
       override_colors()
     end
 
-    -- Switch color scheme keymap
     local telescope = require'telescope.builtin'
     local actions = require'telescope.actions'
     local action_state = require'telescope.actions.state'
     UseKeymap(
-      'fuzzy_color_schemes',
+      'search_color_schemes',
       function ()
         telescope.colorscheme{
           attach_mappings = function ()

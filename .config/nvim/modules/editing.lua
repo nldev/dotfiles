@@ -7,7 +7,7 @@ local module = {
     { 'echasnovski/mini.splitjoin', version = false },
 
     -- Automatic pair insertion
-    { 'echasnovski/mini.pairs', version = false },
+    'tmsvg/pear-tree',
 
     -- Surround operations
     { 'echasnovski/mini.surround', version = false },
@@ -28,8 +28,12 @@ local module = {
     -- virtual edit for visual block mode
     vim.opt.virtualedit = 'block'
 
-    -- mini.pairs
-    require'mini.pairs'.setup()
+    -- pear-tree
+    vim.cmd'let g:pear_tree_smart_openers = 1'
+    vim.cmd'let g:pear_tree_smart_closers = 1'
+    vim.cmd'let g:pear_tree_smart_backspace = 1'
+    vim.cmd'let g:pear_tree_map_special_keys = 0'
+    vim.cmd'imap <BS> <Plug>(PearTreeBackspace)'
 
     -- mini.surround
     require'mini.surround'.setup{
@@ -111,15 +115,21 @@ local module = {
     UseKeymap('toggle_eol_semicolon', function () vim.cmd'norm \\;' end)
 
     -- move lines
-    vim.keymap.set('v', 'J', function()
+    vim.keymap.set('v', '<c-j>', function()
       local count = vim.v.count1  -- Get the count or default to 1
       return ":move '>+" .. count .. '<cr>gv=gv'
     end, { expr = true, silent = true })
-    vim.keymap.set('v', 'K', function()
+    vim.keymap.set('v', '<c-k>', function()
       local count = vim.v.count1
       return ":move '<-" .. (count + 1) .. '<cr>gv=gv'
     end, { expr = true, silent = true })
   end,
+
+  -- fix whitespace
+  UseKeymap('fix_whitespace', function ()
+    vim.cmd'retab'
+    vim.cmd'%s/\\s\\+$//e'
+  end)
 }
 
 return module
