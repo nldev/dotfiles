@@ -8,10 +8,12 @@ local module = {
   fn = function ()
     -- Remember column / line.
     vim.cmd'let g:lastplace_ignore += ",undotree"'
+
     -- Load last session.
     local persistence = require'persistence'
     persistence.setup()
     persistence.load{ last = true }
+
     -- Remove pre-existing terminal buffers.
     vim.defer_fn(function ()
       for _, buf in ipairs(vim.api.nvim_list_bufs()) do

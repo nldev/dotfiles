@@ -1,3 +1,4 @@
+--- FIXME: Bug causes tabs to close when scratchpad is opened.
 local module = {
   name = 'scratchpad',
   desc = 'scratch window utility',
