@@ -388,6 +388,12 @@ local module = {
         true
       )
     end)
+    vim.api.nvim_create_autocmd('TermOpen', {
+      callback = function ()
+        vim.api.nvim_buf_set_keymap(0, 'n', '<m-d>', 'i<m-d><c-\\><c-n>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(0, 'n', '<m-u>', 'i<m-u><c-\\><c-n>', { noremap = true, silent = true })
+      end,
+    })
   end,
 }
 

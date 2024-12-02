@@ -11,6 +11,10 @@ local module = {
       dependencies = { 'nvim-lua/plenary.nvim' },
     },
     {
+      'nvim-telescope/telescope-fzf-native.nvim',
+      build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release',
+    },
+    {
       'prochri/telescope-all-recent.nvim',
       dependencies = {
         'nvim-telescope/telescope.nvim',
@@ -51,6 +55,7 @@ local module = {
         },
       },
     }
+    require'telescope'.load_extension'fzf'
     -- require'telescope-all-recent'.setup{
     --   default = { sorting = 'frecency' },
     -- }
@@ -72,6 +77,9 @@ local module = {
     end)
     UseKeymap('search_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
     UseKeymap('search_code_actions', function () fzf.lsp_code_actions() end)
+    -- UseKeymap('search_given', function ()
+    --   require'telescope.builtin'.find_files{ cwd = '~/notes' }
+    -- end)
   end
 }
 

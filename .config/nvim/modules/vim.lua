@@ -3,7 +3,7 @@ local module = {
   desc = 'general settings',
   plugins = {
     -- 'airblade/vim-rooter',
-    'karb94/neoscroll.nvim',
+    -- 'karb94/neoscroll.nvim',
   },
   fn = function ()
     -- use utf-8 encoding
@@ -79,54 +79,27 @@ local module = {
     vim.cmd'onoremap ic :<c-u>normal! vic<cr>'
 
     -- smooth scrolling
-    local neoscroll = require'neoscroll'
-    neoscroll.setup()
-    local keymap = {
-      ['<c-u>'] = function() neoscroll.ctrl_u{ duration = 100 } end,
-      ['<c-d>'] = function() neoscroll.ctrl_d{ duration = 100 } end,
-      ['<c-b>'] = function() neoscroll.ctrl_b{ duration = 150 } end,
-      ['<c-f>'] = function() neoscroll.ctrl_f{ duration = 150 } end,
-      ['<c-y>'] = function() neoscroll.scroll(-0.1, { move_cursor = false; duration = 100 }) end,
-      ['<c-e>'] = function() neoscroll.scroll(0.1, { move_cursor = false; duration = 100 }) end,
-      ['zt']    = function() neoscroll.zt{ half_win_duration = 100 } end,
-      ['zz']    = function() neoscroll.zz{ half_win_duration = 100 } end,
-      ['zb']    = function() neoscroll.zb{ half_win_duration = 100 } end,
-    }
-    local modes = { 'n', 'v', 'x' }
-    for key, func in pairs(keymap) do
-      vim.keymap.set(modes, key, func)
-    end
+    -- local neoscroll = require'neoscroll'
+    -- neoscroll.setup()
+    -- local keymap = {
+    --   ['<c-u>'] = function() neoscroll.ctrl_u{ duration = 100 } end,
+    --   ['<c-d>'] = function() neoscroll.ctrl_d{ duration = 100 } end,
+    --   ['<c-b>'] = function() neoscroll.ctrl_b{ duration = 150 } end,
+    --   ['<c-f>'] = function() neoscroll.ctrl_f{ duration = 150 } end,
+    --   ['<c-y>'] = function() neoscroll.scroll(-0.1, { move_cursor = false; duration = 100 }) end,
+    --   ['<c-e>'] = function() neoscroll.scroll(0.1, { move_cursor = false; duration = 100 }) end,
+    --   ['zt']    = function() neoscroll.zt{ half_win_duration = 100 } end,
+    --   ['zz']    = function() neoscroll.zz{ half_win_duration = 100 } end,
+    --   ['zb']    = function() neoscroll.zb{ half_win_duration = 100 } end,
+    -- }
+    -- local modes = { 'n', 'v', 'x' }
+    -- for key, func in pairs(keymap) do
+    --   vim.keymap.set(modes, key, func)
+    -- end
 
     -- keybinds
     UseKeymap('vim_quick_delete', function ()
       vim.api.nvim_feedkeys('dd', 'n', true)
-    end)
-    UseKeymap('vim_signcolumn', function ()
-      if vim.o.signcolumn == 'yes' then
-        print'signcolumn OFF'
-        vim.o.signcolumn = 'no'
-      else
-        print'signcolumn ON'
-        vim.o.signcolumn = 'yes'
-      end
-    end)
-    UseKeymap('vim_number_line', function ()
-      if vim.wo.number then
-        print'number line OFF'
-        vim.wo.number = false
-      else
-        print'number line ON'
-        vim.wo.number = true
-      end
-    end)
-    UseKeymap('vim_relative_number_line', function ()
-      if vim.wo.relativenumber then
-        print'relative number line OFF'
-        vim.wo.relativenumber = false
-      else
-        print'relative number line ON'
-        vim.wo.relativenumber = true
-      end
     end)
     UseKeymap('vim_wrap', function ()
       if vim.wo.wrap then
@@ -136,27 +109,6 @@ local module = {
         print'wrap ON'
         vim.wo.wrap = true
       end
-    end)
-    UseKeymap('vim_tab_quickadd', function ()
-      vim.cmd'tabnew'
-    end)
-    UseKeymap('vim_tab_add', function ()
-      vim.ui.input(
-        { prompt = 'Add named tab: ', default = '', cancelreturn = nil },
-        function (name)
-          if name and #name > 0 then
-            vim.cmd('tabnew ' .. name)
-          end
-        end)
-    end)
-    UseKeymap('vim_tab_prev', function ()
-      vim.cmd'tabprev'
-    end)
-    UseKeymap('vim_tab_next', function ()
-      vim.cmd'tabnext'
-    end)
-    UseKeymap('vim_tab_close', function ()
-      vim.cmd'tabclose'
     end)
     UseKeymap('vim_kill_buffers', function ()
       vim.cmd'%bd!'
@@ -201,6 +153,7 @@ local module = {
     UseKeymap('goto_mark', function ()
       vim.api.nvim_feedkeys('`', 'n', true)
     end)
+    UseKeymap('select_between_space', function () vim.cmd'norm! v^og_o' end)
     UseKeymap('vim_spell_check', function ()
       if vim.wo.spell then
         print'spell check OFF'
@@ -209,6 +162,9 @@ local module = {
         print'spell check ON'
         vim.wo.spell = true
       end
+    end)
+    UseKeymap('vim_quit', function ()
+      vim.cmd':qa!'
     end)
   end
 }

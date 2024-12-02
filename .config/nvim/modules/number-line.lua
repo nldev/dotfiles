@@ -4,93 +4,69 @@ local module = {
   plugins = {},
   fn = function ()
     -- Ensure number line is on by default.
-    vim.wo.number = true
+    vim.o.number = true
 
     -- Ensure relative number line is off by default.
-    vim.wo.relativenumber = false
+    vim.o.relativenumber = false
 
-    -- Use relative number line in visual mode.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
-      pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
+    -- Ensure signcolumn is on by default.
+    vim.o.signcolumn = 'yes'
+
+    -- Apply settings to all existing windows.
+    local function apply_settings ()
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        vim.api.nvim_win_set_option(win, 'number', vim.o.number)
+        vim.api.nvim_win_set_option(win, 'relativenumber', vim.o.relativenumber)
+        vim.api.nvim_win_set_option(win, 'signcolumn', vim.o.signcolumn)
+      end
+    end
+    apply_settings()
+
+    -- Ensure all new windows and buffers inherit these settings.
+    vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'VimResized' }, {
       callback = function ()
-        if not vim.wo.number then
-          vim.wo.relativenumber = false
-          return
-        end
-        vim.wo.relativenumber = not not vim.fn.mode():match'[vV\22]'
-      end,
+        vim.wo.number = vim.o.number
+        vim.wo.relativenumber = vim.o.relativenumber
+        vim.wo.signcolumn = vim.o.signcolumn
+      end
     })
 
-    -- Do not use relative number line in normal or insert mode.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd('ModeChanged', {
-      pattern = { '*:n', '*:i' },
-      callback = function ()
-        vim.opt.relativenumber = false
-      end,
-    })
+    -- Keymaps
+    UseKeymap('vim_signcolumn', function ()
+      if vim.o.signcolumn == 'yes' then
+        vim.o.signcolumn = 'no'
+        apply_settings()
+        print'signcolumn OFF'
+      else
+        vim.o.signcolumn = 'yes'
+        apply_settings()
+        print'signcolumn ON'
+      end
+    end)
 
-    -- Disable number line in terminal buffers.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd('TermOpen', {
-      callback = function ()
-        if vim.bo.buftype == 'terminal' then
-          vim.wo.number = false
-          vim.wo.relativenumber = false
-        end
-      end,
-    })
-    vim.api.nvim_create_autocmd('BufEnter', {
-      callback = function ()
-        if vim.bo.buftype == 'terminal' then
-          vim.wo.number = false
-          vim.wo.relativenumber = false
-        end
-      end,
-    })
+    UseKeymap('vim_number_line', function ()
+      if vim.wo.number then
+        vim.wo.number = false
+        apply_settings()
+        print'number line OFF'
+      else
+        vim.wo.number = true
+        apply_settings()
+        print'number line ON'
+      end
+    end)
 
-    -- Disable number line in text buffers.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd('BufEnter', {
-      callback = function ()
+    UseKeymap('vim_relative_number_line', function ()
+      if vim.wo.relativenumber then
         vim.wo.relativenumber = false
-        if vim.bo.buftype == '' then
-          vim.wo.number = true
-        end
-        if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'text' or vim.bo.filetype == 'org' then
-          vim.wo.number = false
-        end
-      end,
-    })
-
-    -- Enable number line in text and terminal buffers when in visual mode.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd({ 'ModeChanged' }, {
-      pattern = { 'n:v', 'v:n', 'n:V', 'V:n', 'n:\22', '\22:n' },
-      callback = function ()
-        if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'text' or vim.bo.buftype == 'terminal' or vim.bo.filetype == 'org' then
-          vim.wo.number = true
-          vim.wo.relativenumber = true
-        end
-      end,
-    })
-
-    -- Disable number line in text and terminal buffers when in normal or insert mode.
-    -- FIXME: should use UseAutocmd
-    vim.api.nvim_create_autocmd('ModeChanged', {
-      pattern = { '*:n', '*:i' },
-      callback = function ()
-        if vim.bo.filetype == 'markdown'
-          or vim.bo.filetype == 'text'
-          or vim.bo.buftype == 'terminal'
-          or vim.bo.filetype == 'org'
-        then
-          vim.opt.number = false
-          vim.opt.relativenumber = false
-        end
-      end,
-    })
+        apply_settings()
+        print'relative number line OFF'
+      else
+        vim.wo.relativenumber = true
+        apply_settings()
+        print'relative number line ON'
+      end
+    end)
   end,
 }
 

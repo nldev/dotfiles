@@ -12,12 +12,19 @@ end
 
 # aliases
 alias e='editor'
+alias p='pueue'
+alias pd='pueue remove'
+alias pa='pueue add'
+alias pga='pueue group add'
+alias pgd='pueue group remove'
+alias pp='pueue parallel'
 alias rl='source ~/.config/fish/config.fish'
 alias in='tmux-in'
 alias out='tmux-out'
 alias td='tmux-delete'
-alias tk='tmux kill-server'
-alias tl='tmux list-sessions'
+alias tk='tmux-kill'
+alias tka='tmux-kill-all'
+alias tl='ls /tmp/tmux-1000'
 alias tn='tmux display-message -p \'#S\''
 alias fixnvr='rm -f /tmp/nvimsocket'
 alias phpv='switch-php-version'
@@ -47,19 +54,27 @@ function tmux-in
   if test -z "$session_name"
     set session_name main
   end
-  if tmux has-session -t $session_name 2>/dev/null
-    tmux attach-session -t $session_name
+  if tmux -L $session_name has-session -t $session_name 2>/dev/null
+    if test "$session_name" = "main"
+      tmux -L $session_name attach-session -t main
+    else
+      tmux -L $session_name attach-session -t $session_name
+    end
   else
     if test "$session_name" = "main"
       cd ~
       fixnvr
-      tmux new-session -d -s main -n vim 'fish -c "e; fish"'
+      if not pgrep pueued > /dev/null
+        pueued -d > /dev/null 2>&1
+      end
+      tmux new-session -d -s main -n vim 'rm -f /tmp/nvimsocket; fish -c "e; fish"'
       tmux new-window -t main:9 -n emacs 'fish -c "emacs; fish"'
       tmux select-window -t main:0
+      tmux attach-session -t $session_name
     else
-      tmux -f "$XDG_CONFIG_HOME/.tmux.no-binds.conf" new-session -d -s $session_name -n fish 'fish'
+      tmux -L $session_name -f $HOME/.tmux.nested.conf new-session -d -s $session_name -n fish 'fish'
+      tmux -L $session_name attach-session -t $session_name
     end
-    tmux attach-session -t $session_name
   end
 end
 
@@ -74,9 +89,34 @@ end
 function tmux-delete
   set -l session_name $argv[1]
   if test -z "$session_name"
-    set current_session (tmux display-message -p '#S')
+    set session_name main
   end
-  tmux kill-session -t "$session_name"
+  if test "$session_name" = "main"
+    tmux kill-session -t main
+  else
+    tmux -L $session_name kill-session -t $session_name
+  end
+end
+
+function tmux-kill
+  set -l session_name $argv[1]
+  if test -z "$session_name"
+    set session_name main
+  end
+  if test "$session_name" = "main"
+    tmux -L default kill-server
+    rm -f /tmp/tmux-1000/default
+  else
+    tmux -L $session_name kill-session -t $session_name
+    rm -f /tmp/tmux-1000/$session_name
+  end
+end
+
+function tmux-kill-all
+  for file in /tmp/tmux-1000/*
+    set session_name (basename $file)
+    tmux -L $session_name kill-server
+  end
 end
 
 

@@ -14,11 +14,8 @@ local module = {
 
     -- Toggle characters at end of line
     {
-      'saifulapm/chartoggle.nvim',
-      opts = {
-        leader = '\\',
-        keys = { ',', ';', '.', ':' },
-      },
+      'saifulapm/commasemi.nvim',
+      opts = { commands = true },
     },
 
     -- Abbreviate / substitute / coerce with multiple variants
@@ -97,6 +94,14 @@ local module = {
         require'mini.files'.synchronize()
         return
       end
+      local buf = vim.api.nvim_get_current_buf()
+      local buf_name = vim.api.nvim_buf_get_name(buf)
+      local is_writable = vim.bo[buf].modifiable and vim.bo[buf].modifiable
+      if buf_name == '' then
+        return
+      elseif not is_writable then
+        return
+      end
       vim.cmd'w'
       vim.cmd'echo ""'
     end)
@@ -110,9 +115,8 @@ local module = {
     end)
 
     -- insert mode EOL insertions
-    UseKeymap('toggle_eol_comma', function () vim.cmd'norm \\,' end)
-    UseKeymap('toggle_eol_period', function () vim.cmd'norm \\.' end)
-    UseKeymap('toggle_eol_semicolon', function () vim.cmd'norm \\;' end)
+    UseKeymap('toggle_eol_comma', function () vim.cmd'CommaToggle' end)
+    UseKeymap('toggle_eol_semicolon', function () vim.cmd'SemiToggle' end)
 
     -- move lines
     vim.keymap.set('v', '<c-j>', function()
@@ -123,13 +127,17 @@ local module = {
       local count = vim.v.count1
       return ":move '<-" .. (count + 1) .. '<cr>gv=gv'
     end, { expr = true, silent = true })
-  end,
 
-  -- fix whitespace
-  UseKeymap('fix_whitespace', function ()
-    vim.cmd'retab'
-    vim.cmd'%s/\\s\\+$//e'
-  end)
+    -- fix whitespace
+    UseKeymap('fix_whitespace', function ()
+      vim.cmd'retab'
+      vim.cmd'%s/\\s\\+$//e'
+    end)
+
+    -- remove empty lines
+    vim.cmd[[ command! -range=% RemoveEmptyLines :<line1>,<line2>s/^\s*\n//g | noh ]]
+    UseKeymap('remove_empty_lines', function () vim.cmd'RemoveEmptyLines' end)
+  end,
 }
 
 return module

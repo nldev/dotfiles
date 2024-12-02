@@ -10,6 +10,8 @@ local module = {
       -- terminal
       if vim.bo.buftype == 'terminal' then
         vim.fn.chansend(vim.b.terminal_job_id, '\x0c')
+        vim.fn.chansend(vim.b.terminal_job_id, '\x1b')
+        vim.cmd'norm G0'
       end
 
       -- close lsp info window
