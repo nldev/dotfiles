@@ -21,6 +21,15 @@ local module = {
     },
   },
   fn = function ()
+    -- local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
+    -- parser_config.org = {
+    --   install_info = {
+    --     url = 'https://github.com/milisims/tree-sitter-org',
+    --     revision = 'main',
+    --     files = { 'src/parser.c', 'src/scanner.c' },
+    --   },
+    --   filetype = 'org',
+    -- }
     -- treesitter
     local treesitter_configs = require'nvim-treesitter.configs'
     treesitter_configs.setup{
@@ -150,7 +159,7 @@ local module = {
         },
       },
     }
-    local ts_repeat_move = require 'nvim-treesitter.textobjects.repeatable_move'
+    local ts_repeat_move = require'nvim-treesitter.textobjects.repeatable_move'
     vim.keymap.set({ 'n', 'x', 'o' }, ';', ts_repeat_move.repeat_last_move_next)
     vim.keymap.set({ 'n', 'x', 'o' }, ',', ts_repeat_move.repeat_last_move_previous)
     vim.keymap.set({ 'n', 'x', 'o' }, 'f', ts_repeat_move.builtin_f_expr, { expr = true })
