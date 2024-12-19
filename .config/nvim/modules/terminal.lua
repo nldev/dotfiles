@@ -2,6 +2,8 @@ local module = {
   name = 'terminal',
   desc = 'terminal-related commands',
   fn = function ()
+    vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
+    -- terminal system
     _G.__terminals__ = {}
     local term_list = {}
     local term_buf_ids = {}
@@ -149,7 +151,7 @@ local module = {
     function _G.Tlist ()
       if vim.tbl_isempty(_G.__terminals__) then
         print'Error: No named terminals exist.'
-      return
+        return
       end
       for index, name in pairs(term_list) do
         print(tostring(index) .. ': ' .. name)
@@ -382,11 +384,7 @@ local module = {
     UseKeymap('terminal_execute_5', function () terminal_execute(5) end)
     UseKeymap('terminal_execute_last', function () terminal_execute_last() end)
     UseKeymap('terminal_detach', function ()
-      vim.api.nvim_feedkeys(
-        vim.api.nvim_replace_termcodes('<c-\\><c-n>', true, false, true),
-        'n',
-        true
-      )
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<c-\\><c-n>', true, false, true), 'n', true)
     end)
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()

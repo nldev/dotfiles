@@ -70,7 +70,7 @@ module.fn = function ()
         width = 'auto',
       },
       width = 120,
-      delay = 200,
+      delay = 500,
     },
   }
 end

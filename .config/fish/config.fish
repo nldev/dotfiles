@@ -1,5 +1,10 @@
 # settings
 set fish_greeting ''
+if set -q SSH_CLIENT; or set -q SSH_TTY
+  set -gx IS_TMUX_REMOTE 1
+else
+  set -gx IS_TMUX_REMOTE 0
+end
 
 
 
@@ -7,6 +12,11 @@ set fish_greeting ''
 if test (uname) = 'Linux'
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 end
+
+
+
+# constants
+set DOCKER_DIR '/mnt/e/sync/docker'
 
 
 
@@ -40,7 +50,7 @@ set -U fish_user_paths $fish_user_paths ~/.config/emacs/bin
 # neovim
 function editor
   if test -S /tmp/nvimsocket
-    nvr --remote $argv
+    nvr $argv
   else
     nvim --listen /tmp/nvimsocket $argv
   end
@@ -55,11 +65,7 @@ function tmux-in
     set session_name main
   end
   if tmux -L $session_name has-session -t $session_name 2>/dev/null
-    if test "$session_name" = "main"
-      tmux -L $session_name attach-session -t main
-    else
-      tmux -L $session_name attach-session -t $session_name
-    end
+    tmux -L $session_name attach-session -t $session_name
   else
     if test "$session_name" = "main"
       cd ~
@@ -67,10 +73,10 @@ function tmux-in
       if not pgrep pueued > /dev/null
         pueued -d > /dev/null 2>&1
       end
-      tmux new-session -d -s main -n vim 'rm -f /tmp/nvimsocket; fish -c "e; fish"'
-      tmux new-window -t main:9 -n emacs 'fish -c "emacs; fish"'
-      tmux select-window -t main:0
-      tmux attach-session -t $session_name
+      tmux -L $session_name new-session -d -s main -n vim 'rm -f /tmp/nvimsocket; fish -c "e; fish"'
+      tmux -L $session_name new-window -t main:9 -n emacs 'fish -c "emacs; fish"'
+      tmux -L $session_name select-window -t main:0
+      tmux -L $session_name attach-session -t $session_name
     else
       tmux -L $session_name -f $HOME/.tmux.nested.conf new-session -d -s $session_name -n fish 'fish'
       tmux -L $session_name attach-session -t $session_name
@@ -91,11 +97,7 @@ function tmux-delete
   if test -z "$session_name"
     set session_name main
   end
-  if test "$session_name" = "main"
-    tmux kill-session -t main
-  else
-    tmux -L $session_name kill-session -t $session_name
-  end
+  tmux -L $session_name kill-session -t $session_name
 end
 
 function tmux-kill
@@ -103,13 +105,8 @@ function tmux-kill
   if test -z "$session_name"
     set session_name main
   end
-  if test "$session_name" = "main"
-    tmux -L default kill-server
-    rm -f /tmp/tmux-1000/default
-  else
-    tmux -L $session_name kill-session -t $session_name
-    rm -f /tmp/tmux-1000/$session_name
-  end
+  tmux -L $session_name kill-session -t $session_name
+  rm -f /tmp/tmux-1000/$session_name
 end
 
 function tmux-kill-all

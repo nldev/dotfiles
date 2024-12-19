@@ -3,9 +3,14 @@ local module = {
   desc = 'configures LSPs and treesitter',
   plugins = {
     {
+      'nvimtools/none-ls.nvim',
+      dependencies = { 'nvim-lua/plenary.nvim' },
+    },
+    {
       'nvim-treesitter/nvim-treesitter',
       dependencies = {
         'nvim-treesitter/nvim-treesitter-textobjects',
+        'wansmer/treesj',
       },
       build = ':TSUpdate',
       event = { 'BufReadPre', 'BufNewFile' },
@@ -21,16 +26,7 @@ local module = {
     },
   },
   fn = function ()
-    -- local parser_config = require 'nvim-treesitter.parsers'.get_parser_configs()
-    -- parser_config.org = {
-    --   install_info = {
-    --     url = 'https://github.com/milisims/tree-sitter-org',
-    --     revision = 'main',
-    --     files = { 'src/parser.c', 'src/scanner.c' },
-    --   },
-    --   filetype = 'org',
-    -- }
-    -- treesitter
+    vim.g.diagnostics_active = true
     local treesitter_configs = require'nvim-treesitter.configs'
     treesitter_configs.setup{
       modules = {},
@@ -43,13 +39,14 @@ local module = {
         'dockerfile',
         'fish',
         'gitignore',
+        'go',
         'html',
         'javascript',
         'json',
         'lua',
-        'go',
         'markdown',
         'markdown_inline',
+        'org',
         'python',
         'query',
         'tsx',
@@ -57,7 +54,6 @@ local module = {
         'vim',
         'vimdoc',
         'yaml',
-        'org',
       },
       highlight = { enable = true },
       indent = { enable = false },
@@ -104,6 +100,7 @@ local module = {
           enable = true,
           set_jumps = true,
           goto_next_start = {
+            [']a'] = { query = '@parameter.outer', desc = 'Next [a]rgument' },
             [']b'] = { query = '@block.outer', desc = 'Next [b]lock' },
             [']c'] = { query = '@call.outer', desc = 'Next [c]all' },
             [']f'] = { query = '@function.outer', desc = 'Next [f]unction' },
@@ -114,6 +111,7 @@ local module = {
             [']z'] = { query = '@fold', query_group = 'folds', desc = 'Next fold' },
           },
           goto_next_end = {
+            [']A'] = { query = '@parameter.outer', desc = 'Next argument end' },
             [']B'] = { query = '@block.outer', desc = 'Next block end' },
             [']C'] = { query = '@call.outer', desc = 'Next call end' },
             [']F'] = { query = '@function.outer', desc = 'Next function end' },
@@ -122,6 +120,7 @@ local module = {
             [']L'] = { query = '@loop.outer', desc = 'Next loop end' },
           },
           goto_previous_start = {
+            ['[a'] = { query = '@parameter.outer', desc = 'Prev argument start' },
             ['[b'] = { query = '@block.outer', desc = 'Prev [b]lock start' },
             ['[c'] = { query = '@call.outer', desc = 'Prev [c]all' },
             ['[f'] = { query = '@function.outer', desc = 'Prev [f]unction start' },
@@ -130,6 +129,7 @@ local module = {
             ['[l'] = { query = '@loop.outer', desc = 'Prev [l]oop start' },
           },
           goto_previous_end = {
+            ['[A'] = { query = '@parameter.outer', desc = 'Prev argument end' },
             ['[B'] = { query = '@block.outer', desc = 'Prev block end' },
             ['[C'] = { query = '@call.outer', desc = 'Prev function call end' },
             ['[F'] = { query = '@function.outer', desc = 'Prev method end' },
@@ -150,7 +150,7 @@ local module = {
         },
         lsp_interop = {
           enable = true,
-          -- border = 'none',
+          border = 'rounded',
           floating_preview_opts = {},
           peek_definition_code = {
             ['<leader>df'] = { query = '@function.outer', desc = 'Preview outer [f]unction' },
@@ -171,11 +171,6 @@ local module = {
     vim.keymap.set({ 'n', 'x', 'o' }, ']h', next_hunk_repeat)
     vim.keymap.set({ 'n', 'x', 'o' }, '[h', prev_hunk_repeat)
     -- lsp
-    local function on_attach (_, bufnr)
-      if vim.b[bufnr].diagnostics_disabled or vim.g.diagnostics_disabled then
-      	vim.diagnostic.disable(bufnr)
-      end
-    end
     require'mason'.setup()
     require'mason-lspconfig'.setup()
     require'lazydev'.setup()
@@ -198,6 +193,11 @@ local module = {
     capabilities = require'cmp_nvim_lsp'.default_capabilities(capabilities)
     local mason_lspconfig = require'mason-lspconfig'
     mason_lspconfig.setup{ ensure_installed = vim.tbl_keys(servers) }
+    local function on_attach (_, bufnr)
+      if vim.b[bufnr].diagnostics_disabled or vim.g.diagnostics_disabled then
+        vim.diagnostic.disable(bufnr)
+      end
+    end
     mason_lspconfig.setup_handlers{
       function (server_name)
         require'lspconfig'[server_name].setup{
@@ -214,9 +214,15 @@ local module = {
     vim.diagnostic.config{
       float = { border = 'rounded' },
     }
-    require'lsp_signature'.setup{
-      toggle_key = '<c-e>',
-    }
+    require'lsp_signature'.setup{ toggle_key = '<c-e>' }
+    -- local null = require'null-ls'
+    -- null.setup{
+    --   sources = {
+    --     null.builtins.formatting.stylua,
+    --     null.builtins.diagnostics.eslint,
+    --     null.builtins.completion.spell,
+    --   },
+    -- }
     UseKeymap('show_diagnostics', function () vim.diagnostic.open_float() end)
     UseKeymap('goto_definition', function () vim.lsp.buf.definition() end)
     UseKeymap('goto_type_definition', function () vim.lsp.buf.type_definition() end)
@@ -224,9 +230,9 @@ local module = {
     UseKeymap('toggle_diagnostics', function () ToggleDiagnostics(true) end)
     UseKeymap('rename', function ()
       local current_name = vim.fn.expand'<cword>'
-      vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (new_name)
-        if new_name and #new_name > 0 then
-          vim.lsp.buf.rename(new_name)
+      vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (name)
+        if name and #name > 0 then
+          vim.lsp.buf.rename(name)
           vim.cmd'echo ""'
         end
       end)
@@ -234,17 +240,15 @@ local module = {
   end,
 }
 
-vim.g.diagnostics_active = true
-
 _G.ToggleDiagnostics = function (is_global)
   local vars, bufnr, cmd
-   if is_global then
-     vars = vim.g
-     bufnr = nil
-   else
-     vars = vim.b
-     bufnr = 0
-   end
+  if is_global then
+    vars = vim.g
+    bufnr = nil
+  else
+    vars = vim.b
+    bufnr = 0
+  end
   vars.diagnostics_disabled = not vars.diagnostics_disabled
   if vars.diagnostics_disabled then
     cmd = 'disable'

@@ -1,11 +1,8 @@
 local module = {
   name = 'editing',
   desc = 'text editing enhancements',
-  dependencies = { 'files', 'quickfix' },
+  dependencies = { 'files', 'quickfix', 'intellisense' },
   plugins = {
-    -- Single-line <-> Multiline code
-    { 'echasnovski/mini.splitjoin', version = false },
-
     -- Automatic pair insertion
     'tmsvg/pear-tree',
 
@@ -35,28 +32,17 @@ local module = {
     -- mini.surround
     require'mini.surround'.setup{
       mappings = {
-       add = 'Sa',
-       delete = 'Sd',
-       find = 'Sf',
-       find_left = 'SF',
-       highlight = 'Sh',
-       replace = 'Sr',
-       suffix_last = '',
-       suffix_next = '',
-       update_n_lines = '',
-     },
-    }
-
-    -- mini.splitjoin
-    local splitjoin = require'mini.splitjoin'
-    splitjoin.setup{
-      mappings = {
-        toggle = '',
-        split = '',
-        join = '',
+        add = 'Sa',
+        delete = 'Sd',
+        find = 'Sf',
+        find_left = 'SF',
+        highlight = 'Sh',
+        replace = 'Sr',
+        suffix_last = '',
+        suffix_next = '',
+        update_n_lines = '',
       },
     }
-    UseKeymap('splitjoin', function () splitjoin.toggle() end)
 
     -- smart comma
     UseKeymap('smart_comma', function ()
@@ -119,11 +105,11 @@ local module = {
     UseKeymap('toggle_eol_semicolon', function () vim.cmd'SemiToggle' end)
 
     -- move lines
-    vim.keymap.set('v', '<c-j>', function()
+    vim.keymap.set('v', '<m-j>', function()
       local count = vim.v.count1  -- Get the count or default to 1
       return ":move '>+" .. count .. '<cr>gv=gv'
     end, { expr = true, silent = true })
-    vim.keymap.set('v', '<c-k>', function()
+    vim.keymap.set('v', '<m-k>', function()
       local count = vim.v.count1
       return ":move '<-" .. (count + 1) .. '<cr>gv=gv'
     end, { expr = true, silent = true })
@@ -134,9 +120,111 @@ local module = {
       vim.cmd'%s/\\s\\+$//e'
     end)
 
+    -- insert blank lines
+    UseKeymap('insert_blank_above', function ()
+      vim.cmd'put! _'
+      vim.cmd'norm j'
+    end)
+    UseKeymap( 'insert_blank_below', function ()
+      vim.cmd'put _'
+      vim.cmd'norm k'
+    end)
+
+    -- delete above / below
+    UseKeymap('delete_below', function ()
+      local saved_pos = vim.fn.winsaveview()
+      vim.cmd'norm jddk'
+      vim.fn.winrestview(saved_pos)
+    end)
+    UseKeymap('delete_above', function ()
+      vim.cmd'norm kdd'
+    end)
+
     -- remove empty lines
-    vim.cmd[[ command! -range=% RemoveEmptyLines :<line1>,<line2>s/^\s*\n//g | noh ]]
-    UseKeymap('remove_empty_lines', function () vim.cmd'RemoveEmptyLines' end)
+    -- FIXME: use UseKeymap
+    vim.cmd[[
+    xnoremap <silent> <leader>ee :RemoveEmptyLines<cr>
+    command! -range RemoveEmptyLines silent! <line1>,<line2>s/^\s*\n//g | noh
+    ]]
+    local function remove_empty_lines ()
+      local mode = vim.api.nvim_get_mode().mode
+      if mode:match'^v' then
+        vim.cmd'RemoveEmptyLines'
+        return
+      end
+      local cursorPos = unpack(vim.api.nvim_win_get_cursor(0))
+      local is_top = cursorPos == 1
+      local is_blank_top = false
+      local current = vim.api.nvim_get_current_line()
+      local is_empty = current:match'^%s*$'
+      if not is_empty then
+        return
+      end
+      while not is_blank_top do
+        current = vim.api.nvim_get_current_line()
+        is_empty = current:match'^%s*$'
+        if is_empty and not is_top then
+          if is_empty then vim.cmd'norm "_ddk' end
+        else
+          is_blank_top = true
+        end
+        if not is_empty or is_top then
+          is_blank_top = true
+        end
+      end
+      vim.cmd'norm j'
+      current = vim.api.nvim_get_current_line()
+      is_empty = current:match'^%s*$'
+      if not is_empty then
+        return
+      end
+      local loc = vim.api.nvim_buf_line_count(0)
+      local is_bottom = loc == cursorPos
+      local is_blank_bottom = false
+      while not is_blank_bottom do
+        current = vim.api.nvim_get_current_line()
+        is_empty = current:match'^%s*$'
+        if is_empty and not is_bottom then
+          if is_empty then vim.cmd'norm "_dd' end
+        end
+        if not is_empty or is_bottom then
+          is_blank_bottom = true
+        end
+      end
+    end
+    UseKeymap('remove_empty_lines', function ()
+      remove_empty_lines()
+    end)
+    UseKeymap('single_empty_line', function ()
+      remove_empty_lines()
+      vim.cmd'put! _'
+    end)
+    -- msdos remover
+    UseKeymap('msdos_remover', function ()
+      pcall(vim.cmd, ':%s/\r//g')
+      vim.cmd'nohlsearch'
+    end)
+    -- revert buffer
+    UseKeymap('revert_buffer', function ()
+      local saved_pos = vim.fn.winsaveview()
+      vim.cmd'e!'
+      vim.fn.winrestview(saved_pos)
+    end)
+
+    -- splitjoin
+    UseKeymap('split', function ()
+      require'treesj'.split()
+      vim.cmd'echo ""'
+    end)
+    UseKeymap('join', function ()
+      require"treesj".join()
+      vim.cmd'echo ""'
+    end)
+
+    -- delete forward
+    UseKeymap('delete_forward', function ()
+      vim.cmd'norm! x'
+    end)
   end,
 }
 

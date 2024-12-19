@@ -9,7 +9,7 @@ local module = {
         highlight = { backdrop = false },
         modes = {
           char = { enabled = false },
-          search = { enabled = true },
+          search = { enabled = false },
         },
       },
     },

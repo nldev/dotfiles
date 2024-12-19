@@ -12,7 +12,7 @@ local module = {
     -- Ensure signcolumn is on by default.
     vim.o.signcolumn = 'yes'
 
-    -- Apply settings to all existing windows.
+    -- Persist settings on all buffers except ones with special rules (like terminals).
     local function apply_settings ()
       for _, win in ipairs(vim.api.nvim_list_wins()) do
         vim.api.nvim_win_set_option(win, 'number', vim.o.number)
@@ -21,13 +21,26 @@ local module = {
       end
     end
     apply_settings()
-
-    -- Ensure all new windows and buffers inherit these settings.
-    vim.api.nvim_create_autocmd({ 'WinEnter', 'BufWinEnter', 'VimResized' }, {
+    vim.api.nvim_create_autocmd({
+      'TermOpen',
+      'WinEnter',
+      'BufWinEnter',
+      'VimResized',
+    }, {
       callback = function ()
-        vim.wo.number = vim.o.number
-        vim.wo.relativenumber = vim.o.relativenumber
-        vim.wo.signcolumn = vim.o.signcolumn
+        if vim.bo.buftype == 'terminal' then
+          vim.wo.number = false
+          vim.wo.relativenumber = false
+          vim.wo.signcolumn = 'no'
+        elseif  vim.bo.filetype == 'workspaces' then
+          vim.wo.number = true
+          vim.wo.relativenumber = false
+          vim.wo.signcolumn = 'no'
+        else
+          vim.wo.number = vim.o.number
+          vim.wo.relativenumber = vim.o.relativenumber
+          vim.wo.signcolumn = vim.o.signcolumn
+        end
       end
     })
 

@@ -1,6 +1,7 @@
 # settings
 $env.config = {
   show_banner: false,
+  edit_mode: vi,
 }
 
 alias e = editor

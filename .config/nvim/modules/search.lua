@@ -3,10 +3,6 @@ local module = {
   desc = 'fuzzy finders',
   plugins = {
     {
-      'ibhagwan/fzf-lua',
-      config = function () end,
-    },
-    {
       'nvim-telescope/telescope.nvim',
       dependencies = { 'nvim-lua/plenary.nvim' },
     },
@@ -25,22 +21,6 @@ local module = {
     }
   },
   fn = function ()
-    local fzf = require'fzf-lua'
-    fzf.setup{
-      -- 'max-perf',
-      winopts = {
-        height = 0.5,
-        row = 1.0,
-        width = 1.0,
-        col = 0.5,
-        preview = {
-          layout = 'horizontal',
-          width = 0.5,
-        },
-        backdrop = 100,
-      },
-      files = { silent = true },
-    }
     require'telescope'.setup{
       defaults = {
         layout_strategy = 'horizontal',
@@ -56,10 +36,16 @@ local module = {
       },
     }
     require'telescope'.load_extension'fzf'
-    -- require'telescope-all-recent'.setup{
-    --   default = { sorting = 'frecency' },
-    -- }
+    require'telescope-all-recent'.setup{
+      default = { sorting = 'frecency' },
+      pickers = {
+        pickers = { disable = true },
+        builtin = { disable = true },
+        planets = { disable = true },
+      },
+    }
     local telescope = require'telescope.builtin'
+    UseKeymap('search_oldfiles', function () telescope.oldfiles() end)
     UseKeymap('search_files', function () telescope.find_files() end)
     UseKeymap('search_live_grep', function () telescope.live_grep() end)
     UseKeymap('search_help', function () telescope.help_tags() end)
@@ -69,14 +55,10 @@ local module = {
     UseKeymap('search_diagnostics', function () telescope.diagnostics() end)
     UseKeymap('search_command_history', function () telescope.command_history() end)
     UseKeymap('search_grep', function ()
-      if vim.api.nvim_buf_line_count(0) > 5000 then
-        fzf.grep_curbuf()
-      else
-        telescope.current_buffer_fuzzy_find()
-      end
+      telescope.current_buffer_fuzzy_find()
     end)
-    UseKeymap('search_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
-    UseKeymap('search_code_actions', function () fzf.lsp_code_actions() end)
+    -- UseKeymap('search_workspace_diagnostics', function () fzf.diagnostics_workspace() end)
+    -- UseKeymap('search_code_actions', function () fzf.lsp_code_actions() end)
     -- UseKeymap('search_given', function ()
     --   require'telescope.builtin'.find_files{ cwd = '~/notes' }
     -- end)

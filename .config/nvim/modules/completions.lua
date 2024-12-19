@@ -34,7 +34,7 @@ local module = {
       },
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
-        { name = 'vsnip' },
+        -- { name = 'vsnip' },
         -- { name = 'luasnip' },
         -- { name = 'ultisnips' },
         -- { name = 'snippy' },
@@ -52,9 +52,8 @@ local module = {
       mapping = cmp.mapping.preset.cmdline(),
       sources = cmp.config.sources({
         { name = 'path' },
-      },
-      {
-        { name = 'cmdline' },
+        -- Fixes freezing when entering !
+        { name = 'cmdline', keyword_pattern = [[\!\@<!\w*]] },
       }),
       matching = {
         disallow_symbol_nonprefix_matching = false,

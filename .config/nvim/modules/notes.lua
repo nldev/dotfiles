@@ -3,11 +3,11 @@ local module = {
   desc = 'Note-taking utilities',
   dependencies = { 'search', 'files' },
   plugins = {
-    -- {
-    --   'nvim-orgmode/orgmode',
-    --   event = 'VeryLazy',
-    --   ft = { 'org' },
-    -- },
+    {
+      'nvim-orgmode/orgmode',
+      event = 'VeryLazy',
+      ft = { 'org' },
+    },
     -- {
     --   'nvim-orgmode/telescope-orgmode.nvim',
     --   event = 'VeryLazy',
@@ -31,26 +31,12 @@ local module = {
     'meanderingprogrammer/render-markdown.nvim',
   },
   fn = function ()
-    -- vim.api.nvim_create_autocmd('FileType', {
-    --   pattern = { 'text', 'org', 'markdown' },
-    --   callback = function ()
-    --     vim.wo.wrap = true
-    --   end,
-    -- })
-    -- vim.api.nvim_create_autocmd('FileType', {
-    --   pattern = '*',
-    --   callback = function ()
-    --     if not vim.tbl_contains({ 'text', 'org', 'markdown' }, vim.bo.filetype) then
-    --       vim.wo.wrap = false
-    --     end
-    --   end,
-    -- })
-    -- local org = require'orgmode'
-    -- org.setup{
-    --   org_agenda_files = '~/notes/**/*',
-    --   org_default_notes_file = '~/notes/inbox.org',
-    --   mappings = { disable_all = true },
-    -- }
+    local org = require'orgmode'
+    org.setup{
+      org_agenda_files = '~/notes/**/*',
+      org_default_notes_file = '~/notes/inbox.org',
+      mappings = { disable_all = true },
+    }
     -- local roam = require'org-roam'
     -- roam.setup{
     --   directory = '~/notes',
@@ -76,8 +62,8 @@ local module = {
     --     toggle_roam_buffer_fixed = '',
     --   },
     -- }
-    -- UseKeymap('note_agenda', function () org.action'agenda.prompt' end)
-    -- UseKeymap('note_todo', function () org.action'capture.prompt' end)
+    UseKeymap('note_agenda', function () org.action'agenda.prompt' end)
+    UseKeymap('note_todo', function () org.action'capture.prompt' end)
     -- UseKeymap('note_capture', function () roam.api.capture_node() end)
     -- -- UseKeymap('note_insert', function () roam.api.complete_node() end)
     -- UseKeymap('note_normal_insert', function () roam.api.insert_node() end)

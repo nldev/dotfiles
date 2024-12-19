@@ -4,6 +4,7 @@ local module = {
   dependencies = { 'search' },
   plugins = {
     'brenoprata10/nvim-highlight-colors',
+
     -- themes
     'pbrisbin/vim-colors-off',
     'rose-pine/neovim',
@@ -38,6 +39,7 @@ local module = {
     'sainnhe/sonokai',
     'sainnhe/edge',
     'shatur/neovim-ayu',
+    'cpwrs/americano.nvim',
   },
   fn = function ()
     -- Fix colors
@@ -49,10 +51,10 @@ local module = {
     -- My override colors
     local function override_colors()
       vim.cmd'hi FlashCurrent    guibg=#ff69b4 guifg=#000000'
-      vim.cmd'hi FlashMatch      guibg=#aabbff guifg=#000000'
       vim.cmd'hi FlashLabel      guibg=#cccccc guifg=#000000'
       vim.cmd'hi IncSearch       guibg=#ff69b4 guifg=#000000'
       vim.cmd'hi Search          guibg=#aabbff guifg=#000000'
+      vim.cmd'hi FlashMatch      guibg=#aabbff guifg=#000000'
       vim.cmd'set cursorline'
       vim.cmd'highlight clear CursorLine'
     end

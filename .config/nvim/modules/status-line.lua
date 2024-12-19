@@ -24,6 +24,11 @@ function _G.GetBufferName ()
   return vim.fn.expand'%f'
 end
 
+function _G.IsModified ()
+  return vim.bo.modified
+end
+
+
 local function status_simple ()
   -- reset status line
   vim.opt.statusline = ''
@@ -46,7 +51,7 @@ local function status_normal ()
   vim.opt.statusline:append'%{v:lua.GetBufferName()}'
 
   -- modified status
-  vim.opt.statusline:append'%m'
+  vim.opt.statusline:append'%{v:lua.IsModified() ? "  [+]" : ""}'
 
   -- git branch name (only if inside repo)
   vim.opt.statusline:append' %{get(b:,"gitsigns_head","") != "" ? "<".get(b:,"gitsigns_head","").">" : ""}'
@@ -57,17 +62,17 @@ local function status_normal ()
   -- right-align remaining statusline
   vim.opt.statusline:append'%='
 
-  -- buffer language
-  vim.opt.statusline:append'%{!empty(&filetype) ? &filetype : &buftype}'
-
   -- hex char under cursor
-  vim.opt.statusline:append' 0x%B'
+  -- vim.opt.statusline:append' 0x%B'
 
   -- column
-  vim.opt.statusline:append' %v'
+  vim.opt.statusline:append'%v'
 
   -- percentage through the file
   vim.opt.statusline:append' %p%%'
+
+  -- buffer language
+  vim.opt.statusline:append' %{!empty(&filetype) ? &filetype : &buftype}'
 end
 
 module.fn = function ()

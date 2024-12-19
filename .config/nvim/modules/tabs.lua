@@ -86,6 +86,7 @@ local module = {
       end)
     end)
     UseKeymap('vim_tab_close', function () vim.cmd'tabclose' end)
+    UseKeymap('vim_tab_only', function () vim.cmd'tabonly' end)
     UseKeymap('vim_tab_move_left', function () vim.cmd'tabm -1' end)
     UseKeymap('vim_tab_move_right', function () vim.cmd'tabm +1' end)
     UseKeymap('vim_tab_move_first', function () vim.cmd'tabm 0' end)

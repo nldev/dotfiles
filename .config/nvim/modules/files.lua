@@ -33,6 +33,7 @@ local module = {
     UseKeymap('empty_go_file', function () create_temp_file('go', 'go') end)
     UseKeymap('empty_fish_file', function () create_temp_file('fish', 'fish') end)
     UseKeymap('empty_nushell_file', function () create_temp_file('nu', 'nu') end)
+    UseKeymap('empty_markdown_file', function () create_temp_file('md', 'markdown') end)
     UseKeymap('empty_sh_file', function ()
       create_temp_file('sh', 'sh')
       vim.api.nvim_feedkeys('i#!/bin/sh\n\n', 'n', false)
@@ -43,9 +44,12 @@ local module = {
       vim.api.nvim_feedkeys('i#!/bin/bash\n\n', 'n', false)
       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<esc>', true, false, true), 'n', false)
     end)
+    UseKeymap('empty_sql_file', function () create_temp_file('sql', 'sql') end)
+    UseKeymap('empty_graphql_file', function () create_temp_file('graphql', 'graphql') end)
     UseKeymap('search_config', function () require'telescope.builtin'.find_files{ cwd = '~/.config' } end)
     UseKeymap('search_vim_context', function () require'telescope.builtin'.find_files{ cwd = '~/.context/nvim' } end)
     UseKeymap('search_vim_modules', function () require'telescope.builtin'.find_files{ cwd = '~/.config/nvim/modules' } end)
+    UseKeymap('search_context', function () require'telescope.builtin'.find_files{ cwd = '~/.context' } end)
     UseKeymap('open_config', function () files.open('~/.config', false) end)
     UseKeymap('open_config_vim_api', function () vim.cmd'e ~/.config/nvim/api.lua' end)
     UseKeymap('open_config_vim_autocmds', function () vim.cmd'e ~/.config/nvim/autocmds.lua' end)
@@ -53,6 +57,7 @@ local module = {
     UseKeymap('open_config_vim_init', function () vim.cmd'e ~/.config/nvim/init.lua' end)
     UseKeymap('open_config_vim_keymaps', function () vim.cmd'e ~/.config/nvim/keymaps.lua' end)
     UseKeymap('open_config_vim_modules', function () files.open('~/.config/nvim/modules', false) end)
+    UseKeymap('open_context', function () files.open'~/.context' end)
     UseKeymap('open_dev', function () files.open('~/dev', false) end)
     UseKeymap('open_file_browser', function () files.open(vim.api.nvim_buf_get_name(0), false) end)
     UseKeymap('open_home', function () files.open('~', false) end)
@@ -60,6 +65,11 @@ local module = {
     UseKeymap('open_project_browser', function () files.open(vim.fn.getcwd(), false) end)
     UseKeymap('open_root', function () files.open('/', false) end)
     UseKeymap('open_temp', function () files.open('/tmp', false) end)
+    UseKeymap('reload_file', function ()
+      local winview = vim.fn.winsaveview()
+      vim.cmd'e'
+      vim.fn.winrestview(winview)
+    end)
   end
 }
 

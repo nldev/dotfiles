@@ -6,7 +6,7 @@ local module = {
     'tpope/vim-sleuth',
   },
   fn = function ()
-    vim.cmd('filetype indent on')
+    vim.cmd'filetype indent on'
     vim.opt.smartindent = true
     vim.opt.autoindent = true
     vim.opt.cindent = true
@@ -15,6 +15,21 @@ local module = {
     vim.o.tabstop = 2
     -- FIXME: use UseKeymap
     vim.api.nvim_set_keymap('i', '<cr>', 'v:lua.__smart_newline__()', { noremap = true, expr = true, silent = true })
+    -- indent line
+    UseKeymap('indent_line', function ()
+      local mode = vim.api.nvim_get_mode().mode
+      if mode:match'^v' then
+        vim.cmd'norm ='
+      else
+        vim.cmd'norm =='
+      end
+    end)
+    -- indent all
+    UseKeymap('indent_all', function ()
+      local winview = vim.fn.winsaveview()
+      vim.cmd'norm ggvG='
+      vim.fn.winrestview(winview)
+    end)
   end
 }
 
