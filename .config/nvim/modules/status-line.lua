@@ -1,17 +1,107 @@
 local module = {
   name = 'status-line',
   desc = 'configures the status line',
-  plugins = {},
   dependencies = { 'git', 'terminal' },
+  plugins = {},
 }
 
-function _G.GetBufferName ()
+local excluded_buftypes = { 'prompt', 'terminal' }
+local excluded_filetypes = { 'gitcommit', 'workspaces', 'harpoon', 'minifiles' }
+
+_G.__statusline__ = {}
+
+function _G.__statusline__.RenderStatusLeft ()
+  local statusline = ''
+
+  -- buffer name
+  statusline = statusline .. _G.__statusline__.GetBufferName()
+
+  -- exclude certain buffers
+  for _, bt in ipairs(excluded_buftypes) do
+    if vim.bo.buftype == bt then
+      return statusline
+    end
+  end
+  for _, ft in ipairs(excluded_filetypes) do
+    if vim.bo.filetype == ft then
+      return statusline
+    end
+  end
+
+  -- modified status
+  if vim.bo.modified then
+    statusline = statusline .. ' [+]'
+  end
+
+  -- git status
+  local git_branch = vim.b.gitsigns_head or ''
+  if git_branch ~= '' then
+    statusline = statusline .. ' <' .. git_branch .. '>'
+  end
+  statusline = statusline .. ' ' .. (vim.b.gitsigns_status or '')
+
+  return statusline
+end
+
+function _G.__statusline__.RenderStatusRight ()
+  if vim.bo.filetype == 'TelescopePrompt' then
+    return 'telescope'
+  end
+  if vim.bo.filetype == 'workspaces' then
+    return 'workspaces'
+  end
+  if vim.bo.filetype == 'harpoon' then
+    return 'harpoon'
+  end
+  if vim.bo.filetype == 'minifiles' then
+    return 'minifiles'
+  end
+  if vim.bo.buftype == 'terminal' then
+    return 'terminal'
+  end
+
+  local statusline = ''
+
+  -- exclude certain buffers
+  for _, bt in ipairs(excluded_buftypes) do
+    if vim.bo.buftype == bt then
+      return statusline
+    end
+  end
+  for _, ft in ipairs(excluded_filetypes) do
+    if vim.bo.filetype == ft then
+      return statusline
+    end
+  end
+
+  -- column
+  local col = vim.fn.col'.'
+  statusline = statusline .. col
+
+  -- percentage through buffer
+  local percent = math.floor((vim.fn.line'.' / vim.fn.line'$') * 100)
+  statusline = statusline .. ' ' .. percent .. '% '
+
+  -- buffer language
+  local lang = vim.bo.filetype ~= '' and vim.bo.filetype or vim.bo.buftype
+  statusline = statusline .. lang
+
+  return statusline
+end
+
+function _G.__statusline__.GetBufferName ()
+  if vim.bo.filetype == 'workspaces' then
+    return ''
+  end
+  if vim.bo.filetype == 'harpoon' then
+    return ''
+  end
   if vim.bo.buftype == 'terminal' then
     local job_id = vim.b.terminal_job_id
     if job_id then
       for name, stored_job_id in pairs(_G.__terminals__) do
         if stored_job_id == job_id then
-          return 'term:' .. name
+          return name
         end
       end
     end
@@ -24,72 +114,17 @@ function _G.GetBufferName ()
   return vim.fn.expand'%f'
 end
 
-function _G.IsModified ()
-  return vim.bo.modified
-end
-
-
-local function status_simple ()
-  -- reset status line
-  vim.opt.statusline = ''
-
-  -- hide command
-  vim.o.showcmd = false
-
-   -- file path and modified flag
-  vim.opt.statusline:append'%f '
-end
-
-local function status_normal ()
-  -- hide command
-  vim.o.showcmd = true
-
-  -- reset status line
-  vim.opt.statusline = ''
-
-  -- buffer name
-  vim.opt.statusline:append'%{v:lua.GetBufferName()}'
-
-  -- modified status
-  vim.opt.statusline:append'%{v:lua.IsModified() ? "  [+]" : ""}'
-
-  -- git branch name (only if inside repo)
-  vim.opt.statusline:append' %{get(b:,"gitsigns_head","") != "" ? "<".get(b:,"gitsigns_head","").">" : ""}'
-
-  -- git status
-  vim.opt.statusline:append' %{get(b:,"gitsigns_status","")}'
-
-  -- right-align remaining statusline
-  vim.opt.statusline:append'%='
-
-  -- hex char under cursor
-  -- vim.opt.statusline:append' 0x%B'
-
-  -- column
-  vim.opt.statusline:append'%v'
-
-  -- percentage through the file
-  vim.opt.statusline:append' %p%%'
-
-  -- buffer language
-  vim.opt.statusline:append' %{!empty(&filetype) ? &filetype : &buftype}'
+local function render ()
+  vim.opt.statusline = '%{v:lua.__statusline__.RenderStatusLeft()}%=%{v:lua.__statusline__.RenderStatusRight()}'
 end
 
 module.fn = function ()
-  -- Use a global statusline.
+  -- hide command
+  vim.o.showcmd = true
+  -- use a global statusline
   vim.cmd'set laststatus=3'
-  -- :StatusNormal
-  vim.api.nvim_create_user_command('StatusNormal', function ()
-    status_normal()
-    vim.cmd'echo ""'
-  end, { nargs = 0 })
-  -- :StatusSimple
-  vim.api.nvim_create_user_command('StatusSimple', function ()
-    status_simple()
-    vim.cmd'echo ""'
-  end, { nargs = 0 })
-  -- Set default statusline.
-  status_normal()
+  -- render status
+  render()
 end
 
 return module

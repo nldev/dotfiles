@@ -152,6 +152,7 @@ local module = {
         vim.api.nvim_feedkeys('`', 'n', true)
       end)
       UseKeymap('select_between_space', function () vim.cmd'norm! v^og_o' end)
+      UseKeymap('select_all', function () vim.cmd'norm! ggVGo' end)
       UseKeymap('vim_spell_check', function ()
         if vim.wo.spell then
           print'spell check OFF'

@@ -74,7 +74,6 @@ function tmux-in
         pueued -d > /dev/null 2>&1
       end
       tmux -L $session_name new-session -d -s main -n vim 'rm -f /tmp/nvimsocket; fish -c "e; fish"'
-      tmux -L $session_name new-window -t main:9 -n emacs 'fish -c "emacs; fish"'
       tmux -L $session_name select-window -t main:0
       tmux -L $session_name attach-session -t $session_name
     else
