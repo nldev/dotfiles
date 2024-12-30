@@ -2,7 +2,7 @@ local module = {
   name = 'terminal',
   desc = 'terminal-related commands',
   fn = function ()
-    vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
+    vim.keymap.set('t', '<esc>', '<c-\\><c-n>G0')
     -- terminal system
     _G.__terminals__ = {}
     local term_list = {}
@@ -41,13 +41,13 @@ local module = {
       end
       Tnew(name)
     end
-    function _G.Tnew (name)
+    function _G.Tnew (name, cmd)
       if name and _G.__terminals__[name] then
-        print('Error: A terminal named ' .. name .. ' already exists.')
+        Tgo(name)
         return
       end
       if not name then
-        name = string.format('%08x', math.random(0, 0xffffffff))
+        name = vim.fn.printf('%08x', vim.fn.rand())
       end
       local index = 1
       while term_list[index] do
@@ -57,6 +57,10 @@ local module = {
       term_list[index] = name
       Tname(name, true)
       Tsend(name, 'in ' .. name .. ' && exit')
+      if not not cmd then
+        Tsend(name, cmd)
+        Tsend(name, 'clear')
+      end
       vim.cmd'echo ""'
     end
     function _G.Tname (name, is_silent)
@@ -156,6 +160,18 @@ local module = {
       for index, name in pairs(term_list) do
         print(tostring(index) .. ': ' .. name)
       end
+    end
+    function _G.Tkill (name)
+      local job_id = _G.__terminals__[name]
+      if job_id then
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+          if vim.bo[buf].buftype == 'terminal' and vim.b[buf].terminal_job_id == job_id then
+            vim.api.nvim_buf_delete(buf, { force = true })
+          end
+        end
+      end
+      vim.cmd('silent! !tk ' .. name)
+      vim.cmd'echo ""'
     end
     function _G.Tsend (name, command)
       local job_id = _G.__terminals__[name]
@@ -257,6 +273,9 @@ local module = {
     vim.api.nvim_create_user_command('Tname', function (opts)
       _G.Tname(opts.args)
     end, { nargs = 1 })
+    vim.api.nvim_create_user_command('Tkill', function (opts)
+      _G.Tkill(opts.args)
+    end, { nargs = 1, complete = autocomplete })
     vim.api.nvim_create_user_command('Twhich', function ()
       _G.Twhich()
     end, { nargs = 0 })
@@ -351,6 +370,20 @@ local module = {
         end
       end)
     end)
+    UseKeymap('terminal_nu_add', function ()
+      vim.ui.input({ prompt = 'Add nushell terminal: ', default = '', cancelreturn = nil }, function (name)
+        if name and #name > 0 then
+          _G.Tnew(name, 'nu')
+        end
+      end)
+    end)
+    UseKeymap('terminal_bash_add', function ()
+      vim.ui.input({ prompt = 'Add bash terminal: ', default = '', cancelreturn = nil }, function (name)
+        if name and #name > 0 then
+          _G.Tnew(name, 'bash')
+        end
+      end)
+    end)
     UseKeymap('terminal_rename', function ()
       if vim.bo.buftype ~= 'terminal' then
         print'Error: Not inside a terminal buffer.'
@@ -363,6 +396,8 @@ local module = {
       end)
     end)
     UseKeymap('terminal_quickadd', function () Tnew() end)
+    UseKeymap('terminal_nu_quickadd', function () Tnew(nil, 'nu') end)
+    UseKeymap('terminal_bash_quickadd', function () Tnew(nil, 'bash') end)
     UseKeymap('terminal_switch', function () Tswitch() end)
     -- UseKeymap('terminal_list', function () Tlist() end)
     UseKeymap('terminal_cancel', function ()
@@ -383,13 +418,20 @@ local module = {
     UseKeymap('terminal_execute_4', function () terminal_execute(4) end)
     UseKeymap('terminal_execute_5', function () terminal_execute(5) end)
     UseKeymap('terminal_execute_last', function () terminal_execute_last() end)
-    UseKeymap('terminal_detach', function ()
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<c-\\><c-n>', true, false, true), 'n', true)
+    UseKeymap('terminal_kill', function ()
+      vim.ui.input({ prompt = 'Kill terminal: ', default = '', cancelreturn = nil }, function (name)
+        if name and #name > 0 then
+          _G.Tkill(name)
+        end
+      end)
     end)
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()
+        vim.api.nvim_buf_set_keymap(0, 'n', '<c-c>', 'i<c-c><c-\\><c-n>G0', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(0, 'n', '<c-l>', 'i<c-l><c-\\><c-n>G0', { noremap = true, silent = true })
         vim.api.nvim_buf_set_keymap(0, 'n', '<m-d>', 'i<m-d><c-\\><c-n>', { noremap = true, silent = true })
         vim.api.nvim_buf_set_keymap(0, 'n', '<m-u>', 'i<m-u><c-\\><c-n>', { noremap = true, silent = true })
+        vim.api.nvim_buf_set_keymap(0, 'n', '<c-r>', 'i<c-r>', { noremap = true, silent = true })
       end,
     })
   end,

@@ -1,22 +1,50 @@
 # settings
 set fish_greeting ''
+
+
+
+# variables
+## constants
+set DOCKER_DIR '/mnt/e/sync/docker'
+## tmux
 if set -q SSH_CLIENT; or set -q SSH_TTY
   set -gx IS_TMUX_REMOTE 1
 else
   set -gx IS_TMUX_REMOTE 0
 end
-
-
-
-# homebrew
+## windows
+if test -e /proc/sys/fs/binfmt_misc/WSLInterop
+  set IS_WSL = 0
+else
+  set IS_WSL = 1
+end
+## linux
 if test (uname) = 'Linux'
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  set IS_LINUX 1
+  if string match -q "*ARCH*" $os_info
+    set IS_ARCH_LINUX 1
+  else
+    set IS_ARCH_LINUX 0
+  end
+else
+  set IS_LINUX 0
 end
 
 
 
-# constants
-set DOCKER_DIR '/mnt/e/sync/docker'
+# package management
+if set -q IS_LINUX
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+end
+if set -q IS_ARCH_LINUX
+  alias pac='yay -S --noconfirm --answeredit No'
+  alias unpac='sudo pacman -Rns --noconfirm'
+end
+
+
+
+# commands
+bind \cz 'fg; commandline -f repaint'
 
 
 
@@ -161,28 +189,35 @@ zoxide init fish | source
 
 
 
-# wsl only
-function is-wsl
-  if test -e /proc/sys/fs/binfmt_misc/WSLInterop
-    return 0
+# yt-dlp
+function play
+  if set -q IS_WSL
+    if not test -e /mnt/e/app/mpv/mpv.exe
+      echo 'Error: mpv.exe is not installed or not in PATH'
+      return 1
+    end
+    if not command -v yt-dlp > /dev/null
+      echo 'Error: yt-dlp is not installed or not in PATH'
+      return 1
+    end
+    set -l url $argv[1]
+    set -l name (yt-dlp --no-warnings --get-title $url)
+    set -l file /tmp/$name.mp4
+    if not test -e $file
+      yt-dlp --progress --no-warnings --quiet -o $file $url
+    end
+    fish -c "/mnt/e/app/mpv/mpv.exe '$file' 2&>1" &
   end
-  return 1
-end
-
-if test -d /mnt/e/sync/notes/me
-#  if is-wsl
-#    if not mountpoint -q /home/$USER/notes
-#      sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
-#    end
-#  end
 end
 
 
 
-# arch linux only
-if string match -q "*ARCH*" $os_info
-  alias pac='yay -S --noconfirm --answeredit No'
-  alias unpac='sudo pacman -Rns --noconfirm'
-  return 0
-end
+# notes
+# if test -d /mnt/e/sync/notes/me
+#   if is-wsl
+#     if not mountpoint -q /home/$USER/notes
+#       sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
+#     end
+#   end
+# end
 

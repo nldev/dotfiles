@@ -6,7 +6,7 @@ local module = {
 }
 
 local excluded_buftypes = { 'prompt', 'terminal' }
-local excluded_filetypes = { 'gitcommit', 'workspaces', 'harpoon', 'minifiles' }
+local excluded_filetypes = { 'aerial', 'aerial-nav', 'gitcommit', 'workspaces', 'harpoon', 'minifiles' }
 
 _G.__statusline__ = {}
 
@@ -15,6 +15,11 @@ function _G.__statusline__.RenderStatusLeft ()
 
   -- buffer name
   statusline = statusline .. _G.__statusline__.GetBufferName()
+
+  -- return early for some buffers
+  if vim.api.nvim_buf_get_name(0) == '/home/user/.local/share/nvim/scratch.txt' then
+    return statusline
+  end
 
   -- exclude certain buffers
   for _, bt in ipairs(excluded_buftypes) do
@@ -44,6 +49,9 @@ function _G.__statusline__.RenderStatusLeft ()
 end
 
 function _G.__statusline__.RenderStatusRight ()
+  if vim.bo.filetype == '' and vim.bo.buftype == '' then
+    return ''
+  end
   if vim.bo.filetype == 'TelescopePrompt' then
     return 'telescope'
   end
@@ -52,6 +60,12 @@ function _G.__statusline__.RenderStatusRight ()
   end
   if vim.bo.filetype == 'harpoon' then
     return 'harpoon'
+  end
+  if vim.bo.filetype == 'aerial' then
+    return 'aerial'
+  end
+  if vim.bo.filetype == 'aerial-nav' then
+    return 'aerial-nav'
   end
   if vim.bo.filetype == 'minifiles' then
     return 'minifiles'
@@ -90,11 +104,18 @@ function _G.__statusline__.RenderStatusRight ()
 end
 
 function _G.__statusline__.GetBufferName ()
+  if vim.api.nvim_buf_get_name(0) == '/home/user/.local/share/nvim/scratch.txt' then
+    return 'scratchpad'
+  end
   if vim.bo.filetype == 'workspaces' then
     return ''
   end
   if vim.bo.filetype == 'harpoon' then
     return ''
+  end
+  -- FIXME: get actual model
+  if vim.bo.filetype == 'codecompanion' then
+    return 'gpt-4o'
   end
   if vim.bo.buftype == 'terminal' then
     local job_id = vim.b.terminal_job_id

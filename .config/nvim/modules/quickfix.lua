@@ -11,36 +11,18 @@ local module = {
     require'quicker'.setup()
     require'bqf'.setup{
       func_map = {
-        split = '_',         -- <c-x>
-        vsplit = '|',        -- <c-v>
-        pscrollup = '',      -- <c-b>
-        pscrolldown = '',    -- <c-f>
-        -- open = '',        -- <cr>
-        -- openc = '',       -- o
-        -- drop = '',        -- O
-        -- tabdrop = '',     --
-        -- tab = '',         -- t
-        -- tabb = '',        -- T
-        -- tabc = '',        -- <c-t>
-        -- prevfile = '',    -- <c-p>
-        -- nextfile = '',    -- <c-n>
-        -- prevhist = '',    -- <
-        -- nexthist = '',    -- >
-        -- lastleave = '',   -- '"
-        -- stoggleup = '',   -- <s-tab>
-        -- stoggledown = '', -- <tab>
-        -- stogglevm = '',   -- <tab>
-        -- stogglebuf = '',  -- '<tab>
-        -- sclear = '',      -- z<tab>
-        -- pscrollorig = '', -- zo
-        -- ptogglemode = '', -- zp
-        -- ptoggleitem = '', -- p
-        -- ptoggleauto = '', -- P
-        -- filter = '',      -- zn
-        -- filterr = '',     -- zN
-        -- fzffilter = '',   -- zf
+        split = '_',
+        vsplit = '|',
+        pscrollup = '',
+        pscrolldown = '',
+        prevfile = '<c-p>',
+        nextfile = '<c-n>',
+        prevhist = '<',
+        nexthist = '>',
       },
     }
+    vim.cmd[[com! QFReverse call setqflist(reverse(getqflist()))]]
+    UseKeymap('qf_reverse', function () vim.cmd'QFReverse' end)
     UseKeymap('qf_toggle', function ()
         for _, win in ipairs(vim.fn.getwininfo()) do
           if win.quickfix == 1 then
@@ -65,7 +47,12 @@ local module = {
         vim.cmd'copen'
       end
     end)
-    UseKeymap('qf_close', function () vim.cmd'cclose' end)
+    UseKeymap('qf_close', function ()
+      vim.cmd[[
+        copen
+        wincmd c
+      ]]
+    end)
     UseKeymap('qf_next', function () pcall(vim.cmd, 'cn') end)
     UseKeymap('qf_previous', function () pcall(vim.cmd, 'cp') end)
     UseKeymap('qf_first', function () vim.cmd'cfirst' end)
@@ -134,6 +121,13 @@ local module = {
         vim.cmd'cclose'
       elseif not qf_was_selected then
         vim.cmd'wincmd p'
+      end
+    end)
+    UseKeymap('qf_focus', function ()
+      if vim.bo.filetype == 'qf' then
+        vim.cmd'wincmd p'
+      else
+        vim.cmd'copen'
       end
     end)
   end

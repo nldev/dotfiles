@@ -9,7 +9,13 @@ vim.g.maplocalleader = ' '
 
 local lazy_path = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 local fns = {}
-local plugins = {}
+local plugins = {
+  -- FIXME: move elsewhere
+  {
+    dir = '~/dev/notes',
+    options = { debug = true },
+  },
+}
 
 _G.Load = function (path)
   path = vim.fn.expand(path)
@@ -81,7 +87,7 @@ _G.Init = function ()
     end
   end
   if not vim.loop.fs_stat(lazy_path) then
-    vim.fn.system {
+    vim.fn.system{
       'git',
       'clone',
       '--filter=blob:none',

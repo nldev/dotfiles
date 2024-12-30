@@ -26,7 +26,6 @@ local module = {
       vim.cmd'echo ""'
     end
 
-
     function _G.__workspaces__.open_workspaces_buffer()
       if vim.bo.filetype == 'workspaces' then
         _G.__workspaces__.delete_whitespace()
@@ -58,6 +57,12 @@ local module = {
       vim.api.nvim_open_win(buf, true, opts)
       vim.cmd'edit ~/.local/share/nvim/me.workspaces'
       vim.cmd'norm! gg'
+      for i = 1, vim.fn.line'$' do
+        if vim.fn.match(vim.fn.getline(i), vim.fn.getcwd()) >= 0 then
+          vim.api.nvim_win_set_cursor(0, { i, 0 })
+          break
+        end
+      end
     end
 
     function _G.__workspaces__.cd_to_directory ()
@@ -74,7 +79,7 @@ local module = {
         print('Changed workspace to ' .. label)
         vim.defer_fn(function () vim.cmd'echo ""' end, 2000)
       else
-        print('Error: Directory ' .. dir .. ' does not exist')
+        print('Error: Directory ' .. dir .. ' does not exist.')
       end
     end
 
@@ -82,6 +87,12 @@ local module = {
       local count = vim.v.count
       if count == 0 then
         _G.__workspaces__.cd_to_directory()
+        return
+      end
+      local buffer = vim.api.nvim_get_current_buf()
+      local total_lines = vim.api.nvim_buf_line_count(buffer)
+      if count > total_lines then
+        print('Error: Workspace ' .. count .. ' does not exist.')
         return
       end
       local max_line = vim.api.nvim_buf_line_count(0)
@@ -109,7 +120,7 @@ local module = {
       end
     end
 
-    -- Autocommand
+    -- Autocommands
     vim.api.nvim_create_augroup('Workspaces', { clear = true })
     vim.api.nvim_create_autocmd('FileType', {
       group = 'Workspaces',

@@ -11,9 +11,11 @@ local module = {
   },
   fn = function ()
     local cmp = require'cmp'
+
+    -- setup nvim-cmp
     cmp.setup{
       snippet = {
-        expand = function(args)
+        expand = function (args)
           -- vim.fn['vsnip#anonymous'](args.body)
           -- require('luasnip').lsp_expand(args.body)
           -- require('snippy').expand_snippet(args.body)
@@ -64,11 +66,45 @@ local module = {
         disallow_prefix_unmatching = false,
       },
     })
+
+    -- setup nvim-cmp capabilities
     local capabilities = require'cmp_nvim_lsp'.default_capabilities()
     require'lspconfig'['ts_ls'].setup{ capabilities = capabilities }
     require'lspconfig'['lua_ls'].setup{ capabilities = capabilities }
     require'lspconfig'['pyright'].setup{ capabilities = capabilities }
     require'lspconfig'['html'].setup{ capabilities = capabilities }
+
+    -- disable autocompletions in ex mode
+    local was_enabled = cmp.get_config().enabled
+    vim.api.nvim_create_autocmd('CmdlineEnter', {
+      callback = function ()
+        if vim.fn.mode(1):sub(1, 2) == 'cv' then
+          was_enabled = cmp.get_config().enabled
+          cmp.setup{ enabled = false }
+          cmp.close()
+        end
+      end,
+    })
+    vim.api.nvim_create_autocmd('CmdlineLeave', {
+      callback = function () cmp.setup{ enabled = was_enabled } end,
+    })
+
+    -- keymaps
+    UseKeymap('toggle_completions', function ()
+      local is_enabled = cmp.get_config().enabled
+      local is_cmd_mode = vim.fn.mode(1):sub(1, 1) == 'c'
+      cmp.setup{ enabled = not is_enabled }
+      if is_enabled then
+        if not is_cmd_mode then
+          print'completions OFF'
+        end
+        cmp.close()
+      else
+        if not is_cmd_mode then
+          print'completions ON'
+        end
+      end
+    end)
   end,
 }
 

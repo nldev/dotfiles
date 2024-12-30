@@ -76,7 +76,7 @@ local module = {
     -- Keymaps
     UseKeymap('vim_tab_quickadd', function () vim.cmd'tabnew' end)
     UseKeymap('vim_tab_add', function ()
-      vim.ui.input({ prompt = 'Add named tab: ', default = '', cancelreturn = nil }, function (name)
+      vim.ui.input({ prompt = 'Add tab: ', default = '', cancelreturn = nil }, function (name)
         if name and #name > 0 then
           vim.cmd'tabnew'
           tab_manager.assign_name(vim.api.nvim_get_current_tabpage(), name)

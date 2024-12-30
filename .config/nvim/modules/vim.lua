@@ -1,6 +1,7 @@
 local module = {
   name = 'vim',
   desc = 'general settings',
+  dependencies = { 'commands' },
   plugins = {
     -- 'airblade/vim-rooter',
     -- 'karb94/neoscroll.nvim',
@@ -12,8 +13,11 @@ local module = {
     -- use unix style line endings
     vim.cmd'set fileformat=unix'
 
-    -- do not wrap text
-    vim.wo.wrap = false
+    -- use perl regex
+    vim.cmd[[
+    nnoremap / /\v
+    nnoremap ? ?\v
+    ]]
 
     -- do not line break
     vim.wo.linebreak = false
@@ -27,14 +31,19 @@ local module = {
     -- sync clipboard between OS and nvim
     vim.o.clipboard = 'unnamedplus'
 
-    -- disable swap
-    vim.o.swapfile = false
-
     -- enable break indent
     vim.o.breakindent = true
 
-    -- save undo history
-    vim.o.undofile = true
+    -- recovery
+    vim.opt.backup = false
+    vim.opt.swapfile = false
+    vim.opt.backupdir = vim.fn.expand'~/.local/share/nvim/backup//'
+    vim.opt.directory = vim.fn.expand'~/.local/share/nvim/swap//'
+    vim.opt.undolevels = 100000
+    if vim.fn.has'persistent_undo' == 1 then
+      vim.opt.undofile = true
+      vim.opt.undodir = vim.fn.expand'~/.local/share/nvim/undo//'
+    end
 
     -- case-insensitive searching
     vim.o.ignorecase = true
@@ -71,105 +80,155 @@ local module = {
     -- linebreak when wrapping is on
     vim.wo.linebreak = true
 
+    -- incremental search preview
+    vim.cmd'set inccommand=split'
+
     -- ensure path includes subdirectories
     vim.o.path = vim.o.path .. '**'
 
-    -- textobject for current line between whitespace
-    vim.cmd'xnoremap ic g_o^'
-    vim.cmd'onoremap ic :<c-u>normal! vic<cr>'
+    -- disable netrw banner
+    vim.g.netrw_banner = 0
 
-    -- smooth scrolling
-    -- local neoscroll = require'neoscroll'
-    -- neoscroll.setup()
-    -- local keymap = {
-      --   ['<c-u>'] = function() neoscroll.ctrl_u{ duration = 100 } end,
-      --   ['<c-d>'] = function() neoscroll.ctrl_d{ duration = 100 } end,
-      --   ['<c-b>'] = function() neoscroll.ctrl_b{ duration = 150 } end,
-      --   ['<c-f>'] = function() neoscroll.ctrl_f{ duration = 150 } end,
-      --   ['<c-y>'] = function() neoscroll.scroll(-0.1, { move_cursor = false; duration = 100 }) end,
-      --   ['<c-e>'] = function() neoscroll.scroll(0.1, { move_cursor = false; duration = 100 }) end,
-      --   ['zt']    = function() neoscroll.zt{ half_win_duration = 100 } end,
-      --   ['zz']    = function() neoscroll.zz{ half_win_duration = 100 } end,
-      --   ['zb']    = function() neoscroll.zb{ half_win_duration = 100 } end,
-      -- }
-      -- local modes = { 'n', 'v', 'x' }
-      -- for key, func in pairs(keymap) do
-      --   vim.keymap.set(modes, key, func)
-      -- end
+    -- command window
+    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
+      callback = function ()
+        local type = vim.fn.getcmdwintype()
+        if type == ':' then
+          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', 'VY:@"<cr>', { noremap = true, silent = true })
+        elseif type == '/' then
+          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', '0v$hy:execute "/" . @<cr>', { noremap = true, silent = true })
+        elseif type == '?' then
+          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', '0v$hy:execute "?" . @<cr>', { noremap = true, silent = true })
+        end
+      end,
+    })
 
-      -- keybinds
-      -- UseKeymap('vim_quick_delete', function ()
-      --   vim.api.nvim_feedkeys('dd', 'n', true)
-      -- end)
-      UseKeymap('vim_wrap', function ()
-        if vim.wo.wrap then
-          print'wrap OFF'
-          vim.wo.wrap = false
-        else
-          print'wrap ON'
-          vim.wo.wrap = true
-        end
-      end)
-      UseKeymap('vim_kill_buffers', function ()
-        vim.cmd'%bd!'
-        vim.cmd'echo ""'
-      end)
-      UseKeymap('vim_delete_buffer', function ()
-        local saved_buf = vim.api.nvim_get_current_buf()
-        vim.cmd'bprevious'
-        vim.api.nvim_buf_delete(saved_buf, { force = true })
-        vim.cmd'echo ""'
-      end)
-      UseKeymap('vim_only_buffer', function ()
-        local saved_pos = vim.fn.winsaveview()
-        vim.cmd'%bd!|e#|bd!#'
-        vim.fn.winrestview(saved_pos)
-      end)
-      UseKeymap('vim_previous_buffer', function () vim.cmd'b#' end)
-      UseKeymap('select_last_paste', function () vim.cmd'norm! `[v`]' end)
-      UseKeymap('select_last_insert', function () vim.cmd'norm! `[v`]h' end)
-      UseKeymap('vim_source', function ()
-        local persistence = require'persistence'
-        if persistence then
-          persistence.save()
-        end
-        local path = vim.fn.stdpath'config'
-        vim.cmd('so ' .. path .. '/init.lua')
-        vim.cmd'nohlsearch'
-        print('init.lua loaded')
-      end)
-      -- FIXME: UseKeymap for this
-      vim.api.nvim_set_keymap('v', '<leader>ve', ":'<,'>so<cr>", { noremap = true, silent = true })
-      UseKeymap('vim_eval', function ()
-        local filetype = vim.fn.expand'%:e'
-        if filetype == 'lua' or filetype == 'vim' then
-          vim.cmd'so %'
-        else
-          print('Error: Unsupported filetype for sourcing (' .. filetype .. ')')
-        end
-      end)
-      UseKeymap('goto_mark', function ()
-        vim.api.nvim_feedkeys('`', 'n', true)
-      end)
-      UseKeymap('select_between_space', function () vim.cmd'norm! v^og_o' end)
-      UseKeymap('select_all', function () vim.cmd'norm! ggVGo' end)
-      UseKeymap('vim_spell_check', function ()
-        if vim.wo.spell then
-          print'spell check OFF'
-          vim.wo.spell = false
-        else
-          print'spell check ON'
-          vim.wo.spell = true
-        end
-      end)
-      UseKeymap('cant_close_vim', function ()
-        vim.cmd':qa!'
-      end)
-      UseKeymap('yank_filename', function ()
-        vim.cmd'let @+ = expand("%")'
-      end)
+    -- wrapping
+    local wrap = false
+    local function apply_wrap ()
+      if vim.bo.filetype == 'terminal' then
+        vim.opt.wrap = false
+        vim.opt.linebreak = false
+      elseif vim.bo.filetype == 'text' or vim.bo.filetype == 'markdown' or vim.bo.filetype == 'org' then
+        vim.opt.wrap = true
+        vim.opt.linebreak = true
+      else
+        vim.opt.wrap = wrap
+        vim.opt.linebreak = wrap
+      end
     end
-  }
+    vim.api.nvim_create_autocmd({
+      'TermOpen',
+      'WinEnter',
+      'BufEnter',
+      'BufCreate',
+      'BufWinEnter',
+      'VimResized',
+      'VimEnter',
+    }, { callback = function () apply_wrap() end })
+    UseKeymap('vim_wrap', function ()
+      if vim.wo.wrap then
+        print'wrap OFF'
+        wrap = false
+        apply_wrap()
+      else
+        print'wrap ON'
+        wrap = true
+        apply_wrap()
+      end
+    end)
 
-  return module
+    -- textobject for current line between whitespace
+    vim.api.nvim_set_keymap('x', 'il', ':<c-u>norm! ^vg_<cr>', { noremap = true, silent = true })
+    vim.api.nvim_set_keymap('o', 'il', ':<c-u>norm! ^vg_<cr>', { noremap = true, silent = true })
+
+    -- textobject for left / right of assignment
+    -- vim.api.nvim_set_keymap('x', '-', ':<c-u>norm! ^vt=h<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('o', '-', ':<c-u>norm! ^vt=h<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('x', '=', ':<c-u>norm! ^t=lllvg_<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('o', '=', ':<c-u>norm! ^t=lllvg_<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('x', '_', ':<c-u>norm! ^vt:<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('o', '_', ':<c-u>norm! ^vt:<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('x', '+', ':<c-u>norm! ^t:lllvg_<cr>', { noremap = true, silent = true })
+    -- vim.api.nvim_set_keymap('o', '+', ':<c-u>norm! ^t:lllvg_<cr>', { noremap = true, silent = true })
+
+    UseKeymap('vim_kill_buffers', function ()
+      vim.cmd'%bd!'
+      vim.cmd'echo ""'
+    end)
+    UseKeymap('vim_delete_buffer', function ()
+      local saved_buf = vim.api.nvim_get_current_buf()
+      vim.cmd'bprevious'
+      vim.api.nvim_buf_delete(saved_buf, { force = true })
+      vim.cmd'echo ""'
+    end)
+    UseKeymap('vim_only_buffer', function ()
+      local saved_pos = vim.fn.winsaveview()
+      vim.cmd'%bd!|e#|bd!#'
+      vim.fn.winrestview(saved_pos)
+    end)
+    UseKeymap('vim_previous_buffer', function () vim.cmd'b#' end)
+    UseKeymap('select_last_paste', function () vim.cmd'norm! `[v`]' end)
+    UseKeymap('select_last_insert', function () vim.cmd'norm! `[v`]h' end)
+    UseKeymap('vim_source', function ()
+      local persistence = require'persistence'
+      if persistence then
+        persistence.save()
+      end
+      local path = vim.fn.stdpath'config'
+      vim.cmd('so ' .. path .. '/init.lua')
+      vim.cmd'nohlsearch'
+      print'init.lua loaded'
+    end)
+    -- FIXME: add vim_eval_line: <leader>vE
+    -- FIXME: UseKeymap for this
+    vim.api.nvim_set_keymap('v', '<leader>ve', ":'<,'>so<cr>", { noremap = true, silent = true })
+    UseKeymap('vim_eval', function ()
+      local saved_pos = vim.fn.winsaveview()
+      local filetype = vim.fn.expand'%:e'
+      if filetype == 'lua' or filetype == 'vim' then
+        vim.cmd'so %'
+        vim.cmd'nohlsearch'
+        vim.fn.winrestview(saved_pos)
+        vim.api.nvim_feedkeys(
+          vim.api.nvim_replace_termcodes('<esc>', true, false, true),
+          'n',
+          false
+        )
+      else
+        print('Error: Unsupported filetype for sourcing (' .. filetype .. ')')
+      end
+    end)
+    UseKeymap('goto_mark', function ()
+      vim.api.nvim_feedkeys('`', 'n', true)
+    end)
+    UseKeymap('select_between_space', function () vim.cmd'norm! v^og_o' end)
+    UseKeymap('select_all', function () vim.cmd'norm! ggVGo' end)
+    UseKeymap('vim_spell_check', function ()
+      if vim.wo.spell then
+        print'spell check OFF'
+        vim.wo.spell = false
+      else
+        print'spell check ON'
+        vim.wo.spell = true
+      end
+    end)
+    UseKeymap('cant_close_vim', function ()
+      vim.cmd':qa!'
+    end)
+    UseKeymap('yank_filename', function ()
+      vim.cmd'let @+ = expand("%")'
+    end)
+    UseKeymap('window_left', function () vim.cmd'wincmd h' end)
+    UseKeymap('window_down', function () vim.cmd'wincmd j' end)
+    UseKeymap('window_up', function () vim.cmd'wincmd k' end)
+    UseKeymap('window_right', function () vim.cmd'wincmd l' end)
+    UseKeymap('vim_quick_delete', function () vim.api.nvim_feedkeys('dd', 'n', true) end)
+    UseKeymap('kill_tmux', function () vim.cmd'silent! !tk' end)
+    UseKeymap('exit_tmux', function () vim.cmd'silent! !out' end)
+    UseKeymap('smart_center', function () vim.cmd'Z' end)
+  end
+}
+
+return module
 

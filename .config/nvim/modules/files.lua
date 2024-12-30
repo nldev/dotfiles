@@ -18,6 +18,39 @@ local module = {
         use_as_default_explorer = false,
       },
     }
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'minifiles',
+      callback = function (event)
+        local opts = { buffer = event.buf, noremap = true, silent = true }
+        vim.keymap.set('n', '<esc>', function () files.close() end, opts)
+        vim.keymap.set('n', '<cr>', function ()
+          local count = vim.v.count
+          if count == 0 then
+            files.go_in()
+          else
+            local max_line = vim.api.nvim_buf_line_count(0)
+            local line = math.min(count, max_line)
+            vim.api.nvim_win_set_cursor(0, { line, 0 })
+            files.go_in()
+          end
+          files.close()
+        end, { buffer = event.buf, noremap = true, silent = true })
+      end,
+    })
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'MiniFilesWindowUpdate',
+      callback = function ()
+        vim.wo.number = true
+      end,
+    })
+    vim.api.nvim_create_autocmd('BufLeave', {
+      pattern = '*',
+      callback = function ()
+        if vim.bo.filetype == 'minifiles' then
+          vim.wo.number = false
+        end
+      end,
+    })
     local function create_temp_file (extension, filetype)
       local timestamp = os.date'%Y%m%d-%H%M%S'
       local filepath = string.format('/tmp/%s.%s', timestamp, extension)

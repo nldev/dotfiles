@@ -19,25 +19,26 @@ local module = {
     'tpope/vim-abolish',
   },
   fn = function ()
-    -- virtual edit for visual block mode
-    vim.opt.virtualedit = 'block'
-
     -- pear-tree
-    vim.cmd'let g:pear_tree_smart_openers = 1'
-    vim.cmd'let g:pear_tree_smart_closers = 1'
-    vim.cmd'let g:pear_tree_smart_backspace = 1'
-    vim.cmd'let g:pear_tree_map_special_keys = 0'
-    vim.cmd'imap <BS> <Plug>(PearTreeBackspace)'
+    vim.g.pear_tree_smart_openers = 1
+    vim.g.pear_tree_smart_closers = 1
+    vim.g.pear_tree_smart_backspace = 1
+    vim.g.pear_tree_map_special_keys = 0
+    vim.g.pear_tree_ft_disabled = { 'TelescopePrompt' }
+    vim.cmd[[
+    imap <BS> <Plug>(PearTreeBackspace)
+    autocmd FileType TelescopePrompt imap <buffer> <BS> <BS>
+    ]]
 
     -- mini.surround
     require'mini.surround'.setup{
       mappings = {
-        add = 'Sa',
-        delete = 'Sd',
-        find = 'Sf',
-        find_left = 'SF',
-        highlight = 'Sh',
-        replace = 'Sr',
+        add = 'gsa',
+        delete = 'gsd',
+        find = 'gsf',
+        find_left = 'gsF',
+        highlight = 'gsh',
+        replace = 'gsr',
         suffix_last = '',
         suffix_next = '',
         update_n_lines = '',
@@ -105,7 +106,7 @@ local module = {
     UseKeymap('toggle_eol_semicolon', function () vim.cmd'SemiToggle' end)
 
     -- move lines
-    vim.keymap.set('v', '<m-j>', function()
+    vim.keymap.set('v', '<m-j>', function ()
       local count = vim.v.count1  -- Get the count or default to 1
       return ":move '>+" .. count .. '<cr>gv=gv'
     end, { expr = true, silent = true })
@@ -164,7 +165,9 @@ local module = {
         current = vim.api.nvim_get_current_line()
         is_empty = current:match'^%s*$'
         if is_empty and not is_top then
-          if is_empty then vim.cmd'norm "_ddk' end
+          if is_empty then
+            vim.cmd'norm "_ddk'
+          end
         else
           is_blank_top = true
         end
@@ -225,6 +228,48 @@ local module = {
     UseKeymap('delete_forward', function ()
       vim.cmd'norm! x'
     end)
+
+    -- replace
+    UseKeymap('replace', function ()
+      vim.ui.input({ prompt = 'Replace: ', default = '', cancelreturn = nil }, function (text)
+        if text and #text > 0 then
+          vim.cmd(string.format("%%s//%s", text))
+        end
+      end)
+    end)
+
+    -- rename
+    UseKeymap('rename', function ()
+      local current_name = vim.fn.expand'<cword>'
+      vim.ui.input({ prompt = 'Rename ' .. current_name .. ': ', default = '', cancelreturn = nil }, function (name)
+        if name and #name > 0 then
+          vim.lsp.buf.rename(name)
+          vim.cmd'echo ""'
+        end
+      end)
+    end)
+
+    -- redirect
+    local letter = ''
+    UseKeymap('redirect', function ()
+      if letter == '' then
+        local char = vim.fn.nr2char(vim.fn.getchar())
+        if char:match'^[a-zA-Z]$' then
+          letter = char
+          print('redirecting messages to @' .. letter)
+          vim.cmd('redir! @' .. letter)
+        else
+          letter = ''
+        end
+      else
+        vim.cmd'redir END'
+        print'stopped redirecting messages'
+        letter = ''
+      end
+    end)
+
+    -- nuke
+    UseKeymap('nuke', function () vim.cmd'silent! norm! ggVGx' end)
   end,
 }
 

@@ -48,8 +48,34 @@ local module = {
     -- Enable color code highlighting
     require'nvim-highlight-colors'.setup{}
 
+    -- Minimum LineNr brightness
+    local function hex_to_rgb (hex)
+      local r = tonumber(hex:sub(2, 3), 16)
+      local g = tonumber(hex:sub(4, 5), 16)
+      local b = tonumber(hex:sub(6, 7), 16)
+      return r, g, b
+    end
+    local function rgb_to_brightness (r, g, b)
+      return 0.299 * r + 0.587 * g + 0.114 * b
+    end
+    local function ensure_min_brightness (group, min_brightness)
+      local color = vim.api.nvim_get_hl(0, { name = group }).fg
+      if color then
+        local hex_color = string.format('#%06x', color)
+        local r, g, b = hex_to_rgb(hex_color)
+        local brightness = rgb_to_brightness(r, g, b)
+        if brightness < min_brightness then
+          local scale = min_brightness / brightness
+          r = math.min(255, math.floor(r * scale))
+          g = math.min(255, math.floor(g * scale))
+          b = math.min(255, math.floor(b * scale))
+          vim.api.nvim_set_hl(0, group, { fg = string.format('#%02x%02x%02x', r, g, b) })
+        end
+      end
+    end
+
     -- My override colors
-    local function override_colors()
+    local function override_colors ()
       vim.cmd'hi FlashCurrent    guibg=#ff69b4 guifg=#000000'
       vim.cmd'hi FlashLabel      guibg=#cccccc guifg=#000000'
       vim.cmd'hi IncSearch       guibg=#ff69b4 guifg=#000000'
@@ -57,6 +83,7 @@ local module = {
       vim.cmd'hi FlashMatch      guibg=#aabbff guifg=#000000'
       vim.cmd'set cursorline'
       vim.cmd'highlight clear CursorLine'
+      ensure_min_brightness('LineNr', 100)
     end
 
     -- My color scheme
@@ -115,6 +142,7 @@ local module = {
       override_colors()
     end
 
+    -- Keymaps
     local telescope = require'telescope.builtin'
     local actions = require'telescope.actions'
     local action_state = require'telescope.actions.state'

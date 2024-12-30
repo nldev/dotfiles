@@ -14,6 +14,7 @@ local module = {
   fn = function ()
     local codecompanion = require'codecompanion'
     local last_win = vim.api.nvim_get_current_win()
+    local layout = nil
     UseKeymap('ai_chat', function ()
       local current_tab = vim.api.nvim_get_current_tabpage()
       local current_buf = vim.api.nvim_get_current_buf()
@@ -28,12 +29,18 @@ local module = {
           if buf == current_buf then
             vim.api.nvim_set_current_win(last_win)
           end
+          if layout then
+            vim.cmd(layout)
+            layout = nil
+          end
         end
       end
       if not is_open then
+        layout = vim.fn.winrestcmd()
         last_win = vim.api.nvim_get_current_win()
         vim.cmd'CodeCompanionChat'
         vim.cmd'wincmd H'
+        vim.api.nvim_win_set_width(0, math.min(53, vim.o.columns / 2))
       end
     end)
     UseKeymap('ai_inline', function () vim.cmd'CodeCompanion' end)
@@ -71,29 +78,10 @@ local module = {
     vim.api.nvim_create_user_command('SaveOpenAIAPIKey', function()
       local api_key = vim.fn.input'Enter your OpenAI API key: '
       local key_path = vim.fn.stdpath'data' .. '/openai_api_key.txt'
-      vim.fn.writefile({api_key}, key_path)
+      vim.fn.writefile({ api_key }, key_path)
       auth()
     end, {})
     auth()
-    -- vim.api.nvim_create_autocmd('BufEnter', {
-    --   callback = function ()
-    --     local buf_name = vim.api.nvim_buf_get_name(0)
-    --     local is_code_companion = buf_name:find'%[CodeCompanion%]'
-    --     local current_hex_id = 0
-    --     if is_code_companion ~= 0 then
-    --       current_hex_id = buf_name:match'%[CodeCompanion%] (%S+)'
-    --     end
-    --     if (current_hex_id ~= hex_id) and (current_hex_id ~= 0) and (hex_id ~= 0) then
-    --       print('hello')
-    --       vim.cmd'call feedkeys("\\<c-c>")'
-    --     end
-    --     if buf_name:find'%[CodeCompanion%]' then
-    --       if current_hex_id ~= 0 then
-    --         hex_id = current_hex_id
-    --       end
-    --     end
-    --   end
-    -- })
   end,
 }
 

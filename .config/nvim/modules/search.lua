@@ -4,11 +4,10 @@ local module = {
   plugins = {
     {
       'nvim-telescope/telescope.nvim',
-      dependencies = { 'nvim-lua/plenary.nvim' },
-    },
-    {
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release',
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+        'natecraddock/telescope-zf-native.nvim'
+      },
     },
     {
       'prochri/telescope-all-recent.nvim',
@@ -25,17 +24,17 @@ local module = {
       defaults = {
         layout_strategy = 'horizontal',
         layout_config = {
-          height = math.floor(vim.o.lines / 2),
-          width = vim.o.columns,
+          height = 0.5,
+          width = 9999,
           anchor = 'S',
           anchor_padding = 0,
           prompt_position = 'bottom',
-          preview_width= 0.5,
+          preview_width = 0.5,
           preview_cutoff = 60,
         },
       },
     }
-    require'telescope'.load_extension'fzf'
+    require'telescope'.load_extension'zf-native'
     require'telescope-all-recent'.setup{
       default = { sorting = 'frecency' },
       pickers = {
@@ -49,11 +48,13 @@ local module = {
     UseKeymap('search_files', function () telescope.find_files() end)
     UseKeymap('search_live_grep', function () telescope.live_grep() end)
     UseKeymap('search_help', function () telescope.help_tags() end)
+    UseKeymap('search_man', function () telescope.man_pages() end)
     UseKeymap('search_buffers', function () telescope.buffers() end)
     UseKeymap('search_symbols', function () telescope.lsp_document_symbols() end)
     UseKeymap('search_references', function () telescope.lsp_references() end)
     UseKeymap('search_diagnostics', function () telescope.diagnostics() end)
     UseKeymap('search_command_history', function () telescope.command_history() end)
+    UseKeymap('search_vim_grep', function () require'telescope.builtin'.live_grep{ cwd = '~/.config/nvim' } end)
     UseKeymap('search_grep', function ()
       telescope.current_buffer_fuzzy_find()
     end)
