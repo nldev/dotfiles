@@ -3,6 +3,13 @@ local module = {
   desc = 'defines a universal clear and cancel keymap.',
   plugins = {},
   fn = function ()
+    -- helpers
+    local function is_floating_window (win_id)
+      local config = vim.api.nvim_win_get_config(win_id or 0)
+      return config.relative ~= ''
+    end
+
+    -- keymaps
     UseKeymap('soft_cancel', function ()
       vim.cmd'noh'
       vim.cmd'echo ""'
@@ -23,6 +30,11 @@ local module = {
         vim.cmd'bd!'
       -- terminal
       elseif vim.bo.buftype == 'terminal' then
+        if is_floating_window(0) then
+          vim.cmd'wincmd c'
+        else
+          vim.api.nvim_feedkeys('i\x03\x1c\x0eG0', 'n', true)
+        end
       -- close lsp info window
       elseif vim.bo.filetype == 'markdown' and is_nofile then
         vim.api.nvim_win_close(0, true)
@@ -61,6 +73,9 @@ local module = {
       -- close lsp info window
       elseif vim.fn.mode(1):sub(1, 1) == 'n' then
         vim.api.nvim_feedkeys('lh', 'n', false)
+      -- close scratchpad
+      elseif vim.api.nvim_buf_get_name(0) == '/home/user/.local/share/nvim/scratch.txt' then
+        _G.ScratchpadClose()
       end
 
       -- clear search highlights

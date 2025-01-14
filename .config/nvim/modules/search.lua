@@ -24,12 +24,12 @@ local module = {
       defaults = {
         layout_strategy = 'horizontal',
         layout_config = {
-          height = 0.5,
+          height = 0.4,
           width = 9999,
           anchor = 'S',
           anchor_padding = 0,
           prompt_position = 'bottom',
-          preview_width = 0.5,
+          preview_width = 0.4,
           preview_cutoff = 60,
         },
       },
@@ -45,7 +45,13 @@ local module = {
     }
     local telescope = require'telescope.builtin'
     UseKeymap('search_oldfiles', function () telescope.oldfiles() end)
-    UseKeymap('search_files', function () telescope.find_files() end)
+    UseKeymap('search_files', function ()
+      if vim.bo.buftype == 'terminal' then
+        telescope.find_files{ cwd = vim.fn.getcwd() }
+      else
+        telescope.find_files()
+      end
+    end)
     UseKeymap('search_live_grep', function () telescope.live_grep() end)
     UseKeymap('search_help', function () telescope.help_tags() end)
     UseKeymap('search_man', function () telescope.man_pages() end)

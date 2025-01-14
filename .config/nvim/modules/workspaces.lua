@@ -7,6 +7,30 @@ local module = {
     local virtual_namespace = vim.api.nvim_create_namespace'workspaces_virtual'
     vim.cmd'au BufRead,BufNewFile *.workspaces set filetype=workspaces'
 
+    -- change cwd to current files directory
+    local function find_git_root (path)
+      local git_path = path .. '/.git'
+      if vim.fn.isdirectory(git_path) == 1 then
+        return path
+      end
+      local parent = vim.fn.fnamemodify(path, ':h')
+      if parent == path then
+        return nil
+      end
+      return find_git_root(parent)
+    end
+    UseKeymap('cd_into', function ()
+      local git_root = find_git_root(vim.fn.expand'%:p:h')
+      if git_root then
+        vim.cmd('cd ' .. git_root)
+        print('Changed CWD to ' .. git_root)
+      else
+        vim.cmd'cd %:h'
+        print('Changed CWD to ' .. vim.fn.expand'%:p:h')
+      end
+      vim.defer_fn(function () vim.cmd'echo ""' end, 1500)
+    end)
+
     -- API
     _G.__workspaces__ = {}
 
@@ -77,7 +101,7 @@ local module = {
         vim.cmd('cd ' .. dir)
         vim.cmd'bdelete!'
         print('Changed workspace to ' .. label)
-        vim.defer_fn(function () vim.cmd'echo ""' end, 2000)
+        vim.defer_fn(function () vim.cmd'echo ""' end, 1500)
       else
         print('Error: Directory ' .. dir .. ' does not exist.')
       end

@@ -2,6 +2,7 @@ local module = {
   name = 'terminal',
   desc = 'terminal-related commands',
   fn = function ()
+    -- use esc to leave terminal
     vim.keymap.set('t', '<esc>', '<c-\\><c-n>G0')
     -- terminal system
     _G.__terminals__ = {}
@@ -427,7 +428,6 @@ local module = {
     end)
     vim.api.nvim_create_autocmd('TermOpen', {
       callback = function ()
-        vim.api.nvim_buf_set_keymap(0, 'n', '<c-c>', 'i<c-c><c-\\><c-n>G0', { noremap = true, silent = true })
         vim.api.nvim_buf_set_keymap(0, 'n', '<c-l>', 'i<c-l><c-\\><c-n>G0', { noremap = true, silent = true })
         vim.api.nvim_buf_set_keymap(0, 'n', '<m-d>', 'i<m-d><c-\\><c-n>', { noremap = true, silent = true })
         vim.api.nvim_buf_set_keymap(0, 'n', '<m-u>', 'i<m-u><c-\\><c-n>', { noremap = true, silent = true })

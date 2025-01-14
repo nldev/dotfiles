@@ -43,6 +43,7 @@ local module = {
     vim.api.nvim_create_user_command('Delete', function ()
       vim.cmd'exec \'silent !rm %\' | bdelete!'
     end, { nargs = 0 })
+    UseKeymap('vim_delete_file', function () vim.cmd'Delete' end)
 
     -- :Rename
     vim.api.nvim_create_user_command('Rename', function (args)

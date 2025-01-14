@@ -26,6 +26,10 @@ local module = {
         vim.opt.number = false
         vim.opt.relativenumber = false
         vim.opt.signcolumn = 'no'
+      elseif vim.b.note_type then
+        vim.opt.number = false
+        vim.opt.relativenumber = false
+        vim.opt.signcolumn = 'no'
       elseif vim.bo.filetype == 'workspaces' or vim.bo.filetype == 'aerial' then
         vim.opt.number = true
         vim.opt.relativenumber = false

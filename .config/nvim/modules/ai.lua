@@ -40,7 +40,7 @@ local module = {
         last_win = vim.api.nvim_get_current_win()
         vim.cmd'CodeCompanionChat'
         vim.cmd'wincmd H'
-        vim.api.nvim_win_set_width(0, math.min(53, vim.o.columns / 2))
+        vim.api.nvim_win_set_width(0, math.min(53, math.ceil(vim.o.columns / 2)))
       end
     end)
     UseKeymap('ai_inline', function () vim.cmd'CodeCompanion' end)

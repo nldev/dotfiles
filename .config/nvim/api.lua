@@ -7,15 +7,8 @@ _G.__autocmds__ = {}
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-local lazy_path = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+local lazy_path = vim.fn.stdpath'data' .. '/lazy/lazy.nvim'
 local fns = {}
-local plugins = {
-  -- FIXME: move elsewhere
-  {
-    dir = '~/dev/notes',
-    options = { debug = true },
-  },
-}
 
 _G.Load = function (path)
   path = vim.fn.expand(path)
@@ -76,7 +69,7 @@ _G.Init = function ()
             end
             if current_module.plugins then
               for _, plugin in ipairs(current_module.plugins) do
-                table.insert(plugins, plugin)
+                table.insert(_G.CustomPlugins, plugin)
               end
             end
             loaded[current] = true
@@ -98,7 +91,7 @@ _G.Init = function ()
   end
   vim.opt.rtp:prepend(lazy_path)
   if not _G.__load_plugins_once__ then
-    require'lazy'.setup(plugins)
+    require'lazy'.setup(_G.CustomPlugins)
   end
   _G.__load_plugins_once__ = true
   for _, fn in ipairs(fns) do

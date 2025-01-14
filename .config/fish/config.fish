@@ -212,12 +212,12 @@ end
 
 
 
-# notes
-# if test -d /mnt/e/sync/notes/me
-#   if is-wsl
-#     if not mountpoint -q /home/$USER/notes
-#       sudo mount --bind /mnt/e/sync/notes/me /home/$USER/notes
-#     end
-#   end
-# end
+# contexts
+if test -d ~/.contexts
+  for repo in ~/.contexts/*
+    if test -d $repo/config/fish
+      test -f $repo/config/fish/init.fish; and source $repo/config/fish/init.fish
+    end
+  end
+end
 
