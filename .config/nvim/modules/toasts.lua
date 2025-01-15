@@ -18,8 +18,10 @@ local module = {
       else
         for i, msg in ipairs(message) do
           vim.api.nvim_buf_set_lines(buf, i - 1, -1, false, { ' ' .. msg })
+          if #message[i] > len then
+            len = #message[i]
+          end
         end
-        len = #message[1]
         height = #message
       end
       local ui = vim.api.nvim_list_uis()[1]
