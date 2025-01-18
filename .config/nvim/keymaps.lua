@@ -97,6 +97,7 @@ DefKeymap{
   notes_explore = { 'F', prefix = 'note', mode = { 'n' }, desc = 'notes explore' },
   notes_search = { 'f', prefix = 'note', mode = { 'n' }, desc = 'notes [f]ind' },
   notes_add = { 'a', prefix = 'note', mode = { 'n' }, desc = 'notes [a]dd' },
+  notes_undo = { 'u', prefix = 'note', mode = { 'n' }, desc = 'notes [u]ndo' },
   notes_inbox = { 'i', prefix = 'note', mode = { 'n' }, desc = 'notes [i]nbox' },
   notes_toggle = { 'n', prefix = 'note', mode = { 'n' }, desc = 'notes toggle' },
   notes_grep = { '/', prefix = 'note', mode = { 'n' }, desc = 'notes grep' },

@@ -49,6 +49,9 @@ function _G.__statusline__.RenderStatusLeft ()
 end
 
 function _G.__statusline__.RenderStatusRight ()
+  if vim.b.note_type then
+    return 'markdown'
+  end
   if vim.bo.filetype == '' and vim.bo.buftype == '' then
     return ''
   end

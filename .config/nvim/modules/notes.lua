@@ -21,6 +21,7 @@ local module = {
     UseKeymap('notes_goto_bookmark_3', function () Notes.goto_bookmark(3) end)
     UseKeymap('notes_goto_bookmark_4', function () Notes.goto_bookmark(4) end)
     UseKeymap('notes_goto_bookmark_5', function () Notes.goto_bookmark(5) end)
+    UseKeymap('notes_undo', function () Notes.undo() end)
     UseKeymap('notes_bookmarks', function () Notes.bookmarks() end)
     UseKeymap('notes_search', function () require'telescope.builtin'.find_files{
       cwd = dir,
