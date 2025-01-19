@@ -46,6 +46,9 @@ local module = {
     UseKeymap('vim_delete_file', function () vim.cmd'Delete' end)
 
     -- :Rename
+    local function autocomplete ()
+      return { vim.fn.expand'%:t', vim.fn.expand'%:p' }
+    end
     vim.api.nvim_create_user_command('Rename', function (args)
       local current_file = vim.fn.expand'%:p'
       local current_dir = vim.fn.fnamemodify(current_file, ':h')
@@ -63,7 +66,7 @@ local module = {
       vim.cmd('edit ' .. escaped_new_path)
     end, {
       nargs = 1,
-      complete = 'file',
+      complete = autocomplete,
     })
   end,
 }
