@@ -15,7 +15,7 @@ local module = {
     vim.api.nvim_create_user_command('V', function (opts)
       local start_line = opts.line1
       local end_line = opts.line2 or start_line
-      vim.cmd('norm ' .. start_line .. 'G0v' .. end_line .. 'G$')
+      vim.cmd('norm ' .. start_line .. 'G0V' .. end_line .. 'G$')
     end, { range = true })
 
     -- :Messages
