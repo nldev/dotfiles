@@ -70,12 +70,12 @@ local module = {
       -- close peek definition window
       elseif vim.bo.buftype == 'nofile' and is_floating then
         vim.api.nvim_win_close(0, true)
+      -- close scratchpad
+      elseif vim.api.nvim_buf_get_name(0) == vim.fn.expand'~/.local/share/nvim/scratch.txt' then
+        _G.ScratchpadClose()
       -- close lsp info window
       elseif vim.fn.mode(1):sub(1, 1) == 'n' then
         vim.api.nvim_feedkeys('lh', 'n', false)
-      -- close scratchpad
-      elseif vim.api.nvim_buf_get_name(0) == '/home/user/.local/share/nvim/scratch.txt' then
-        _G.ScratchpadClose()
       end
 
       -- clear search highlights

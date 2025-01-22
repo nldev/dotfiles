@@ -64,7 +64,7 @@ local module = {
       opts = opts or {}
       local entries = get_headings()
       pickers.new(opts, {
-        prompt_title = 'Find Topics',
+        prompt_title = 'Find Topic',
         finder = finders.new_table({
           results = entries,
           entry_maker = function(entry)
