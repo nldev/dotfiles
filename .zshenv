@@ -7,7 +7,7 @@ export IS_TMUX_REMOTE=0
 
 ## windows
 export IS_WSL=0
-[[ -e /proc/sys/fs/binfmt_misc/WSLInterop ]] || export IS_WSL=1
+[[ -e /proc/sys/fs/binfmt_misc/WSLInterop ]] && export IS_WSL=1
 
 ## mac
 export IS_MAC=0
@@ -25,7 +25,10 @@ fi
 ## path
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-if [[ $IS_MAC -eq 1 ]]; then
+if [[ $IS_WSL -eq 1 ]]; then
+  export PATH="/home/linuxbrew/.linuxbrew/opt/uutils-coreutils/libexec/uubin:$PATH"
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+elif [[ $IS_MAC -eq 1 ]]; then
   export PATH="/opt/homebrew/bin:$PATH"
   export PATH="/opt/homebrew/opt/uutils-coreutils/libexec/uubin:$PATH"
 fi
