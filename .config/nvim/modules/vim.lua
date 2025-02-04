@@ -89,20 +89,6 @@ local module = {
     -- disable netrw banner
     vim.g.netrw_banner = 0
 
-    -- command window
-    vim.api.nvim_create_autocmd({ 'BufEnter' }, {
-      callback = function ()
-        local type = vim.fn.getcmdwintype()
-        if type == ':' then
-          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', 'VY:@"<cr>', { noremap = true, silent = true })
-        elseif type == '/' then
-          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', '0v$hy:execute "/" . @<cr>', { noremap = true, silent = true })
-        elseif type == '?' then
-          vim.api.nvim_buf_set_keymap(0, 'n', '<c-k>', '0v$hy:execute "?" . @<cr>', { noremap = true, silent = true })
-        end
-      end,
-    })
-
     -- wrapping
     local wrap = false
     local function apply_wrap ()

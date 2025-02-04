@@ -40,6 +40,7 @@ local module = {
     'sainnhe/edge',
     'shatur/neovim-ayu',
     'cpwrs/americano.nvim',
+    'dgox16/oldworld.nvim',
   },
   fn = function ()
     -- Fix colors

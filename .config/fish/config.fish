@@ -7,36 +7,48 @@ set fish_greeting ''
 ## constants
 set DOCKER_DIR '/mnt/e/sync/docker'
 ## tmux
-if set -q SSH_CLIENT; or set -q SSH_TTY
+set -gx IS_TMUX_REMOTE 0
+if test $SSH_CLIENT
   set -gx IS_TMUX_REMOTE 1
 else
   set -gx IS_TMUX_REMOTE 0
 end
 ## windows
+set -gx IS_WSL 0
 if test -e /proc/sys/fs/binfmt_misc/WSLInterop
-  set IS_WSL = 0
+  set -gx IS_WSL 0
 else
-  set IS_WSL = 1
+  set -gx IS_WSL 1
+end
+## mac
+set -gx IS_MAC 0
+if test (uname) = 'Darwin'
+  set -gx IS_MAC 1
 end
 ## linux
-if test (uname) = 'Linux'
-  set IS_LINUX 1
+set -gx IS_LINUX 0
+set -gx IS_ARCH_LINUX 0
+if test (uname) = "Linux"
+  set -gx IS_LINUX 1
   if string match -q "*ARCH*" $os_info
-    set IS_ARCH_LINUX 1
+    set -gx IS_ARCH_LINUX 1
   else
-    set IS_ARCH_LINUX 0
+    set -gx IS_ARCH_LINUX 0
   end
 else
-  set IS_LINUX 0
+  set -gx IS_LINUX 0
 end
 
 
 
 # package management
-if set -q IS_LINUX
+if test $IS_MAC -eq 1
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+end
+if test $IS_LINUX -eq 1
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 end
-if set -q IS_ARCH_LINUX
+if test $IS_ARCH_LINUX -eq 1
   alias pac='yay -S --noconfirm --answeredit No'
   alias unpac='sudo pacman -Rns --noconfirm'
 end
@@ -71,6 +83,7 @@ alias phpv='switch-php-version'
 
 # paths
 set -U fish_user_paths $fish_user_paths ~/.config/composer/vendor/bin
+set -U fish_user_paths $fish_user_paths /opt/homebrew/bin
 set -U fish_user_paths $fish_user_paths ~/.config/emacs/bin
 
 
@@ -191,7 +204,7 @@ zoxide init fish | source
 
 # yt-dlp
 function play
-  if set -q IS_WSL
+  if test $IS_WSL
     if not test -e /mnt/e/app/mpv/mpv.exe
       echo 'Error: mpv.exe is not installed or not in PATH'
       return 1
@@ -209,6 +222,11 @@ function play
     fish -c "/mnt/e/app/mpv/mpv.exe '$file' 2&>1" &
   end
 end
+
+
+
+# starship
+starship init fish | source
 
 
 
