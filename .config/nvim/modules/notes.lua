@@ -7,7 +7,7 @@ local module = {
   -- },
   fn = function ()
     local dir = vim.fn.expand'~/notes'
-    require'notes'.setup{ debug = true }
+    require'notes'.setup()
     UseKeymap('notes_inbox', function () Notes.inbox() end)
     UseKeymap('notes_toc', function () Notes.toc() end)
     UseKeymap('notes_toggle', function () Notes.toggle() end)
