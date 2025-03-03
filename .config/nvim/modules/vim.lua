@@ -210,8 +210,8 @@ local module = {
     UseKeymap('window_up', function () vim.cmd'wincmd k' end)
     UseKeymap('window_right', function () vim.cmd'wincmd l' end)
     UseKeymap('vim_quick_delete', function () vim.api.nvim_feedkeys('dd', 'n', true) end)
-    UseKeymap('kill_tmux', function () vim.cmd'silent! !tk' end)
-    UseKeymap('exit_tmux', function () vim.cmd'silent! !out' end)
+    UseKeymap('kill_tmux', function () vim.cmd'!tmux -L main kill-session -t main' end)
+    UseKeymap('exit_tmux', function () vim.cmd'!tmux -L main detach' end)
     UseKeymap('smart_center', function () vim.cmd'Z' end)
   end
 }

@@ -7,6 +7,11 @@ dofile(config .. '/keymaps.lua')
 
 -- register custom plugins
 _G.CustomPlugins = {
+  -- {
+  --   dependencies = { 'nvim-telescope/telescope.nvim' },
+  --   dir = '~/dev/notes-old',
+  --   options = { debug = true },
+  -- },
   {
     dependencies = { 'nvim-telescope/telescope.nvim' },
     dir = '~/dev/notes',

@@ -177,14 +177,11 @@ local module = {
     local next_hunk_repeat, prev_hunk_repeat = ts_repeat_move.make_repeatable_move_pair(gs.next_hunk, gs.prev_hunk)
     vim.keymap.set({ 'n', 'x', 'o' }, ']h', next_hunk_repeat)
     vim.keymap.set({ 'n', 'x', 'o' }, '[h', prev_hunk_repeat)
-    -- local width = 30
-    -- local height = math.max(5, line_count + 2)
-    --   width = width,
-    --   height = height,
-    --   row = math.floor(((vim.o.lines - height) / 2) - 1),
-    --   col = math.floor((vim.o.columns - width) / 2),
     require'aerial'.setup{
       post_jump_cmd = 'norm! zt',
+      manage_folds = false,
+      link_folds_to_tree = false,
+      link_tree_to_folds = false,
       float = {
         border = 'rounded',
         relative = 'editor',

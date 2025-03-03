@@ -25,6 +25,7 @@ fi
 ## path
 export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 if [[ $IS_WSL -eq 1 ]]; then
   export PATH="/home/linuxbrew/.linuxbrew/opt/uutils-coreutils/libexec/uubin:$PATH"
   export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
